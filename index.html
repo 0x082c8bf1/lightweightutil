@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+		<meta name="viewport" content="initial-scale=1">
+
+		<title>Lightweight Utility</title>
+		<link rel="stylesheet" type="text/css" href="dashboard.css"/>
+		<link rel="stylesheet" type="text/css" href="multitimer.css"/>
+		<script src="multitimer.js" type="text/javascript"></script>
+		<script src="textbox.js" type="text/javascript"></script>
+		<script src="codeEditor.js" type="text/javascript"></script>
+		<script src="keyCodeReader.js" type="text/javascript"></script>
+		<script src="colorPicker.js" type="txt/javascript"></script>
+	</head>
+	<body onload="initCodeEditorListeners()">
+		<noscript>JavaScript is required by many of the utilities, enable it for the best experience.</noscript>
+		<!-- Multi timer -->
+		<div class="module">
+			<div class="fs30b" id="multitimer">Multi timer</div>
+			<div id="timers" class="flex-container">
+				<template id="timer_tmplt">
+					<span class="timer">
+						<input type="text" class="name" value="Timer"/>
+						<input class="x-button button" type="button" value="x">
+						<br/>
+						<input type="button" class="start-button button" value="Start"/>
+						<span hidden class="time-display"></span>
+						<span class="time-input">
+							<input class="h-input width2" type="text" placeholder = "HH">
+							<span>:</span>
+							<input class="m-input width2" type="text" value=1 placeholder = "MM">
+							<span>:</span>
+							<input class="s-input width2" type="text" placeholder = "SS">
+						</span>
+					</span>
+				</template>
+				<input type="button" id="insertButton" class="button" value="+" onclick="mt_addTimer();">
+			</div>
+		</div>
+		
+		<!-- text box -->
+		<div class="module">
+			<div class="fs30b" id="textbox">TextBox</div>
+			<textarea id = "textarea" placeholder="Your text here." onkeyup="tb_updateCharacterCounts()"></textarea>
+			<br/>
+			<span id="characterCount">0</span> characters, <span id="wordCount">0</span> words.
+			<br/>
+			<input type="button" class="button" value="Sort lines" onclick="tb_alphabetizeLines()">
+			<input type="button" class="button" value="Uppercase" onclick="tb_toUpper()">
+			<input type="button" class="button" value="Lowercase" onclick="tb_toLower()">
+			<input type="button" class="button" value="Randomcase" onclick="tb_toRandom()">
+			<input type="button" class="button" value="Invertcase" onclick="tb_toInvert()">
+			<br/>
+			<span>Replace </span> 
+			<input type="text" id="replaceInputPattern"> 
+			<span> with </span> 
+			<input type="text" id="replaceOutputPattern"> 
+			<input type="button" class="button" value="go" onclick="tb_replace()">
+			<input type="checkbox" id="regexSearch" hidden>
+			<span>Regex<span>
+		</div>
+
+		<!-- code editor -->
+		<div class="module">
+			<div class="fs30b" id="codeEditor">Code Editor</div>
+			<textarea id="codeEditorTextarea" tabIndex="-1" placeholder="Your code here."></textarea>
+			<br/>
+			<abbr title="Use output('value') to write to the output. The return value is the return value of the last executed statement.">
+				<input type="button" class="button" value="JS eval" onclick="evalTextBox()"/>
+			</abbr>
+			<input type="button" class="button" value="Wrap in ()" onclick="parenWrap()"/>
+			<br/>
+			<span id="codeEditorOutput"></span>
+			<br/>
+			<span id="codeEditorReturnValue"></span>
+		</div>
+
+		<!-- keycode reader -->
+		<div class="module">
+			<div class="fs30b">KeyCode Reader</div>
+			<input type="text" id="keycodeReader" placeholder="Click here" tabindex="-1"/>
+			<div id="keycodeOutput"></div>
+			<input type="button" id="resetKeyCodeOutput" hidden class="button" value="Reset" onclick="resetKeyCodeOutput()"/>
+		</div>
+
+		<!-- color picker -->
+		<!-- <div class="module">
+			<canvas id="colorPickerCanvas" width="256" height="256"></canvas> 
+		</div> -->
+
+		<!-- time calculator -->
+		<!--
+		<div class="fs30b" id="timecalc">Time calculator</div>
+		<input id="time1" type="text"/>
+		<select name="action" id="action">
+		<option value="plus">+</option>
+		<option value="minus">-</option>
+		</select>
+		<input id="time2" type="text"/>
+		-->
+		<footer>
+			<span>LightweightUtil is a collection of open source lightweight utility applications, with no external dependencies, no ads, and minimal assets which stores all data locally.</span>
+			<a href="https://github.com/0x082c8bf1/lightweightutil" target="_blank">[Source code]</a>
+		</footer>
+	</body>
+</html>

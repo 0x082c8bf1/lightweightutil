@@ -1,0 +1,23 @@
+.flex-container {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.flex-container > span {
+	width: auto;
+	padding-bottom: 10px;
+	padding-right: 50px;
+	padding-top: 10px;
+}
+
+.width2{
+	width: 3ch;
+}
+
+#insertButton {
+	width: 40px;
+	height: 40px;
+	font-size: 30px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}

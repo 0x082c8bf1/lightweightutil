@@ -334,6 +334,10 @@ function mt_saveAllTimers(){
 //load all of the timers from localStorage
 function mt_loadAllTimers(){
 	let obj = JSON.parse(localStorage.getItem("mt_timers"));
+
+	if (obj == null)
+		return;
+
 	for(let i=0; i<obj.length; i++){
 		mt_addTimer();
 		timers[timers.length-1].createFromString(obj[i]);

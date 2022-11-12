@@ -344,6 +344,24 @@ function mt_loadAllTimers(){
 	}
 }
 
+//create a timer with initlized values, intended to be used with the JS eval Code Editor option
+function mt_createWith(hours, minutes, seconds, name, started){
+	//create timer
+	mt_addTimer();
+	let newTimer = timers[timers.length-1];
+	
+	//setup passed values
+	newTimer.hInput.value = hours;
+	newTimer.mInput.value = minutes;
+	newTimer.sInput.value = seconds;
+	newTimer.nameInput.value = name;
+
+	//start if applicable
+	if (started){
+		newTimer.startButtonEvent(newTimer);
+	}
+}
+
 //load the timers when the page loads
 if (document.readyState === 'complete') {
 	mt_loadAllTimers();

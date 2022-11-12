@@ -20,7 +20,7 @@ textarea, input {
 }
 
 textarea {
-    width: 80%; 
+    width: 100%; 
     height: 15em;
 }
 
@@ -58,3 +58,14 @@ footer > span, a {
     margin-bottom: 10px;
     padding: 10px;
 }
+
+.container > .module{
+    margin-left: 5px;
+    margin-right: 5px;
+    flex-grow: 1;
+}
+
+.container {
+    display: flex;
+}
+

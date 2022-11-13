@@ -1,11 +1,7 @@
 //updates the parent progress bar width of the element passed to it
 function updateBar(obj){
     //get the progressbar entry
-    while (obj != document.body && !obj.classList.contains("pb_entry")){
-        obj = obj.parentElement;
-    }
-    //this does nothing other than make the variable name make more sense
-    let progressBarEntry = obj;
+    let progressBarEntry = getParentOfClass(obj, "pb_entry");
 
     //calculate the percent
     let percent = progressBarEntry.querySelector(".pb_completedNumber").value;
@@ -30,10 +26,80 @@ function processAllBars(){
     }
 }
 
-function pb_addBar(){
+function pb_addBar(obj){
+    let mod = getModule(obj);
+
     //create from template
-    let element = document.querySelector("#pb_tmplt").content.cloneNode(true);
+    let element = mod.querySelector("#pb_tmplt").content.cloneNode(true);
+    let created = element.querySelector(".pb_entry");
 
     //add element to dom
-    document.getElementById("pb_bars").insertBefore(element, document.getElementById("pb_insertButton"));
+    mod.querySelector("#pb_bars").insertBefore(element, mod.querySelector("#pb_insertButton"));
+
+    return created;
+}
+
+function pb_deleteBar(element){
+    let bar = getParentOfClass(element, "pb_entry");
+    bar.parentNode.removeChild(bar);
+}
+
+function pb_saveBars(obj){
+    let mod = getModule(obj);
+
+    let saveObj = [];
+
+    let entries = mod.querySelectorAll(".pb_entry");
+    for(let i=0; i<entries.length; i++){
+        let curBar = {};
+
+        curBar.done = entries[i].querySelector(".pb_completedNumber").value;
+        curBar.total = entries[i].querySelector(".pb_totalNumber").value;
+        curBar.name = entries[i].querySelector(".pb_label").value;
+
+        saveObj.push(curBar);
+    }
+
+    localStorage.setItem("pb_bars", JSON.stringify(saveObj));
+
+    console.log("saved bars.");
+}
+
+function pb_loadBars(obj){
+	let loadedObj = JSON.parse(localStorage.getItem("pb_bars"));
+
+	if (loadedObj == null)
+		return;
+
+	for(let i=0; i<loadedObj.length; i++){
+		let newBar = pb_addBar(obj);
+		
+        newBar.querySelector(".pb_completedNumber").value = loadedObj[i].done;
+        newBar.querySelector(".pb_totalNumber").value = loadedObj[i].total;
+        newBar.querySelector(".pb_label").value = loadedObj[i].name;
+	}
+
+    processAllBars();
+}
+
+//init the progress bars
+function pb_init(){
+    let barContainer = document.getElementById("pb_bars");
+
+    barContainer.addEventListener("click", function(){
+        pb_saveBars(this);
+    });
+
+    barContainer.addEventListener("keyup", function(){
+        pb_saveBars(this);
+    })
+
+    pb_loadBars(document.getElementById("pb_bars"));
+}
+
+//load the progressBars when the page loads
+if (document.readyState === 'complete') {
+	pb_init();
+} else {
+	window.addEventListener("load", pb_init);
 }

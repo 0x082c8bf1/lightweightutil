@@ -72,7 +72,7 @@
 			<!-- code editor -->
 			<div class="module">
 				<div class="fs30b" id="codeEditor">Code Editor</div>
-				<textarea id="codeEditorTextarea" tabIndex="-1" placeholder="Your code here." style="width: 1600px"></textarea>
+				<textarea id="codeEditorTextarea" tabIndex="-1" placeholder="Your code here."></textarea>
 				<br/>
 				<abbr title="Use output('value') to write to the output. The return value is the return value of the last executed statement.">
 					<input type="button" class="button" value="JS eval" onclick="evalTextBox()"/>
@@ -85,7 +85,7 @@
 			</div>
 
 			<!-- keycode reader -->
-			<div class="module">
+			<div class="module" style="max-width: 250px">
 				<div class="fs30b">KeyCode Reader</div>
 				<input type="text" id="keycodeReader" placeholder="Click here" tabindex="-1"/>
 				<div id="keycodeOutput"></div>

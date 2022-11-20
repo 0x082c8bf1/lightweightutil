@@ -362,9 +362,4 @@ function mt_createWith(hours, minutes, seconds, name, started){
 	}
 }
 
-//load the timers when the page loads
-if (document.readyState === 'complete') {
-	mt_loadAllTimers();
-} else {
-	window.addEventListener("load", mt_loadAllTimers);
-}
+dashboard.setOnLoad(mt_loadAllTimers);

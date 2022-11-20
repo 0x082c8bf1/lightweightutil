@@ -61,8 +61,6 @@ function pb_saveBars(obj){
     }
 
     localStorage.setItem("pb_bars", JSON.stringify(saveObj));
-
-    console.log("saved bars.");
 }
 
 function pb_loadBars(obj){
@@ -97,9 +95,4 @@ function pb_init(){
     pb_loadBars(document.getElementById("pb_bars"));
 }
 
-//load the progressBars when the page loads
-if (document.readyState === 'complete') {
-	pb_init();
-} else {
-	window.addEventListener("load", pb_init);
-}
+dashboard.setOnLoad(pb_init);

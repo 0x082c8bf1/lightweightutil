@@ -25,9 +25,5 @@ function resetKeyCodeOutput(){
     document.getElementById("resetKeyCodeOutput").hidden = true;
 }
 
-//init on load
-if (document.readyState === 'complete') {
-    initKeyCodeReader();
-} else {
-    window.addEventListener("load", initKeyCodeReader);
-}
+dashboard.setOnLoad(initKeyCodeReader);
+

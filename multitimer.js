@@ -109,6 +109,9 @@ dashboard.registerModule({
 			this.timer.addEventListener("keydown", function(e){
 				if(e.code == "Enter" || e.code == "NumpadEnter"){
 					_this.startButtonEvent(_this);
+					//we have to explicitly call saveAllTimers because might hide the element that we hit enter on, and 
+					//the event won't bubble if that's the case
+					_this.module.saveAllTimers();
 				}
 			});
 		}
@@ -259,7 +262,7 @@ dashboard.registerModule({
 				case "Resume":
 					//update the resume display
 					let timeRemaining = this.duration-(this.msOffset);
-					this.timeDisplay.innerHTML = getDurationAsString(timeRemaining);
+					this.timeDisplay.innerHTML = this.module.getDurationAsString(timeRemaining);
 					break;
 				case "Reset":
 					this.updateRinger(this, true); //make it ring
@@ -298,7 +301,6 @@ dashboard.registerModule({
 				for(let i=0;i<_this.timers.length; i++){
 					_this.timers[i].tick();
 				}
-				_this.saveAllTimers();
 			}, 100);
 		}
 	},
@@ -316,7 +318,6 @@ dashboard.registerModule({
 		if(this.timers.length == 0){
 			clearInterval(this.timerTickInterval);
 			this.timerTickInterval = null;
-			this.saveAllTimers();
 		}
 	},
 
@@ -371,6 +372,7 @@ dashboard.registerModule({
 			}
 		}
 
+		//event listerner for adding a timer
 		document.querySelector(".mt_insertButton").addEventListener("click", function(){
 			_this.addTimer();
 		});
@@ -378,5 +380,12 @@ dashboard.registerModule({
 		//load
 		this.loadAllTimers();
 
+		//event listeners for saving the timers
+		document.querySelector("#timers").addEventListener("click", function(){
+			_this.saveAllTimers();
+		});
+		document.querySelector("#timers").addEventListener("keyup", function(){
+			_this.saveAllTimers();
+		});
 	},
 });

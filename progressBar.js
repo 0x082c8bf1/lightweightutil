@@ -1,98 +1,120 @@
 //updates the parent progress bar width of the element passed to it
-function updateBar(obj){
-    //get the progressbar entry
-    let progressBarEntry = getParentOfClass(obj, "pb_entry");
+dashboard.registerModule({
+	name: "progressBar",
 
-    //calculate the percent
-    let percent = progressBarEntry.querySelector(".pb_completedNumber").value;
-    percent /= progressBarEntry.querySelector(".pb_totalNumber").value;
-    percent *= 100;
+	updateBar: function(obj){
+		//get the progressbar entry
+		let progressBarEntry = getParentOfClass(obj, "pb_entry");
 
-    //clamp number to a valid percent
-    if (percent > 100)
-        percent = 100;
-    if (percent < 0)
-        percent = 0;
+		//calculate the percent
+		let percent = progressBarEntry.querySelector(".pb_completedNumber").value;
+		percent /= progressBarEntry.querySelector(".pb_totalNumber").value;
+		percent *= 100;
 
-    //set the width of the bar
-    progressBarEntry.querySelector(".progressBar").style.width=percent+"%";
-}
+		//clamp number to a valid percent
+		if (percent > 100)
+			percent = 100;
+		if (percent < 0)
+			percent = 0;
 
-//updates all of the progess bar widths
-function processAllBars(){
-    let entries = document.querySelectorAll(".pb_entry");
-    for(let i=0; i<entries.length; i++){
-        updateBar(entries[i]);
-    }
-}
+		//set the width of the bar
+		progressBarEntry.querySelector(".progressBar").style.width=percent+"%";
+	},
 
-function pb_addBar(obj){
-    let mod = getModule(obj);
+	//updates all of the progess bar widths
+	processAllBars: function(){
+		let entries = document.querySelectorAll(".pb_entry");
+		for(let i=0; i<entries.length; i++){
+			this.updateBar(entries[i]);
+		}
+	},
 
-    //create from template
-    let element = mod.querySelector("#pb_tmplt").content.cloneNode(true);
-    let created = element.querySelector(".pb_entry");
+	addBar: function(obj){
+		let _this = this;
+		let mod = getModule(obj);
 
-    //add element to dom
-    mod.querySelector("#pb_bars").insertBefore(element, mod.querySelector("#pb_insertButton"));
+		//create from template
+		let element = mod.querySelector("#pb_tmplt").content.cloneNode(true);
+		let created = element.querySelector(".pb_entry");
 
-    return created;
-}
+		//add bar event listeners
+		created.querySelector(".pb_completedNumber").addEventListener("input", function(){
+			_this.updateBar(this);
+		});
+		created.querySelector(".pb_totalNumber").addEventListener("input", function(){
+			_this.updateBar(this);
+		});
+		created.querySelector(".pb_deleteButton").addEventListener("click", function(){
+			_this.deleteBar(this);
+		});
 
-function pb_deleteBar(element){
-    let bar = getParentOfClass(element, "pb_entry");
-    bar.parentNode.removeChild(bar);
-}
+		//add element to dom
+		mod.querySelector("#pb_bars").insertBefore(element, mod.querySelector("#pb_insertButton"));
 
-function pb_saveBars(obj){
-    let mod = getModule(obj);
+		return created;
+	},
 
-    let saveObj = [];
+	deleteBar: function(element){
+		let bar = getParentOfClass(element, "pb_entry");
+		bar.parentNode.removeChild(bar);
+	},
 
-    let entries = mod.querySelectorAll(".pb_entry");
-    for(let i=0; i<entries.length; i++){
-        let curBar = {};
+	saveBars: function(obj){
+		let mod = getModule(obj);
 
-        curBar.done = entries[i].querySelector(".pb_completedNumber").value;
-        curBar.total = entries[i].querySelector(".pb_totalNumber").value;
-        curBar.name = entries[i].querySelector(".pb_label").value;
+		let saveObj = [];
 
-        saveObj.push(curBar);
-    }
+		let entries = mod.querySelectorAll(".pb_entry");
+		for(let i=0; i<entries.length; i++){
+			let curBar = {};
 
-    localStorage.setItem("pb_bars", JSON.stringify(saveObj));
-}
+			curBar.done = entries[i].querySelector(".pb_completedNumber").value;
+			curBar.total = entries[i].querySelector(".pb_totalNumber").value;
+			curBar.name = entries[i].querySelector(".pb_label").value;
 
-function pb_loadBars(obj){
-	let loadedObj = JSON.parse(localStorage.getItem("pb_bars"));
+			saveObj.push(curBar);
+		}
 
-	if (loadedObj == null)
-		return;
+		localStorage.setItem("pb_bars", JSON.stringify(saveObj));
+	},
 
-	for(let i=0; i<loadedObj.length; i++){
-		let newBar = pb_addBar(obj);
+	loadBars: function(obj){
+		let loadedObj = JSON.parse(localStorage.getItem("pb_bars"));
+
+		if (loadedObj == null)
+			return;
+
+		for(let i=0; i<loadedObj.length; i++){
+			let newBar = this.addBar(obj);
+
+			newBar.querySelector(".pb_completedNumber").value = loadedObj[i].done;
+			newBar.querySelector(".pb_totalNumber").value = loadedObj[i].total;
+			newBar.querySelector(".pb_label").value = loadedObj[i].name;
+		}
+
+		this.processAllBars();
+	},
+
+	//init the progress bars
+	init: function(){
+		let _this = this;
+
+		let barContainer = document.querySelector("#pb_bars");
+
+		//create module event listeners
+		barContainer.addEventListener("click", function(){
+			_this.saveBars(this);
+		});
 		
-        newBar.querySelector(".pb_completedNumber").value = loadedObj[i].done;
-        newBar.querySelector(".pb_totalNumber").value = loadedObj[i].total;
-        newBar.querySelector(".pb_label").value = loadedObj[i].name;
-	}
+		barContainer.addEventListener("keyup", function(){
+			_this.saveBars(this);
+		})
 
-    processAllBars();
-}
+		document.querySelector("#pb_insertButton").addEventListener("click",function(){
+			_this.addBar(this);
+		});
 
-//init the progress bars
-function pb_init(){
-    let barContainer = document.getElementById("pb_bars");
-
-    barContainer.addEventListener("click", function(){
-        pb_saveBars(this);
-    });
-
-    barContainer.addEventListener("keyup", function(){
-        pb_saveBars(this);
-    })
-
-    pb_loadBars(document.getElementById("pb_bars"));
-}
-
-dashboard.setOnLoad(pb_init);
+		//load from localStorage
+		this.loadBars(document.querySelector("#pb_bars"));
+	},
+});

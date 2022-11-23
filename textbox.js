@@ -1,84 +1,113 @@
-//updates the character and word counts of the text area
-//words are considered any string of non-whitespace seperated by whitespace on either side
-function tb_updateCharacterCounts(){
-	let input = document.getElementById("textarea").value;
-	
-	//character count
-	document.getElementById("characterCount").innerHTML = input.length;
-	
-	//word count
-	let truncatedInput = input.trim();
-	let words = truncatedInput.split(new RegExp(/\s+/));
-	
-	let wordCount = 0;
-	if(truncatedInput!="")
-		wordCount = words.length;
-	
-	document.getElementById("wordCount").innerHTML = wordCount;
-}
+dashboard.registerModule({
+	name: "textbox",
 
-//sorts all of the lines in the textbox alphabetically (does not ignore case)
-function tb_alphabetizeLines(){
-	let input = document.getElementById("textarea");
-	let lines = input.value.split("\n");
-	lines.sort();
+	//updates the character and word counts of the text area
+	//words are considered any string of non-whitespace seperated by whitespace on either side
+	updateCharacterCounts: function(){
+		let input = document.querySelector("#textarea").value;
+		
+		//character count
+		document.querySelector("#characterCount").innerHTML = input.length;
+		
+		//word count
+		let truncatedInput = input.trim();
+		let words = truncatedInput.split(new RegExp(/\s+/));
+		
+		let wordCount = 0;
+		if(truncatedInput!="")
+			wordCount = words.length;
+		
+		document.querySelector("#wordCount").innerHTML = wordCount;
+	},
 
-	let output = "";
-	for(let i=0; i<lines.length; i++){
-		output += lines[i];
-		if(i != lines.length-1){//if not the last line
-			output += "\n";
+	//sorts all of the lines in the textbox alphabetically (does not ignore case)
+	alphabetizeLines: function(){
+		let input = document.querySelector("#textarea");
+		let lines = input.value.split("\n");
+		lines.sort();
+
+		let output = "";
+		for(let i=0; i<lines.length; i++){
+			output += lines[i];
+			if(i != lines.length-1){//if not the last line
+				output += "\n";
+			}
 		}
-	}
 
-	input.value = output;
-}
+		input.value = output;
+	},
 
-function tb_toUpper(){
-	let input = document.getElementById("textarea");
-	input.value = input.value.toUpperCase();
-}
+	toUpper: function(){
+		let input = document.querySelector("#textarea");
+		input.value = input.value.toUpperCase();
+	},
 
-function tb_toLower(){
-	let input = document.getElementById("textarea");
-	input.value = input.value.toLowerCase();
-}
+	toLower: function(){
+		let input = document.querySelector("#textarea");
+		input.value = input.value.toLowerCase();
+	},
 
-function tb_toRandom(){
-	let output = "";
-	let input = document.getElementById("textarea");
-	let text = input.value;
-	for(let i=0; i<text.length; i++){
-		let number = Math.floor(Math.random() * 2);
-		output += (number===0 ? text[i].toLowerCase() : text[i].toUpperCase());
-	}
-	input.value = output;
-}
+	toRandom: function(){
+		let output = "";
+		let input = document.querySelector("#textarea");
+		let text = input.value;
+		for(let i=0; i<text.length; i++){
+			let number = Math.floor(Math.random() * 2);
+			output += (number===0 ? text[i].toLowerCase() : text[i].toUpperCase());
+		}
+		input.value = output;
+	},
 
-function tb_toInvert(){
-	let output = "";
-	let input = document.getElementById("textarea");
-	let text = input.value;
-	for(let i=0; i<text.length; i++){
-		output += ((text[i] >= 'A' && text[i] <= 'Z') ? text[i].toLowerCase() : text[i].toUpperCase());
-	}
-	input.value = output;
-}
+	toInvert: function(){
+		let output = "";
+		let input = document.querySelector("#textarea");
+		let text = input.value;
+		for(let i=0; i<text.length; i++){
+			output += ((text[i] >= 'A' && text[i] <= 'Z') ? text[i].toLowerCase() : text[i].toUpperCase());
+		}
+		input.value = output;
+	},
 
-function regexEscapeString(input){
-	return input.replace
-}
+	regexEscapeString: function(input){
+		return input.replace
+	},
 
-function tb_replace(){
-	let inputPattern; 
-	if (document.getElementById("regexSearch").value)
-		inputPattern = new RegExp(document.getElementById("replaceInputPattern").value, 'g');
-	else
-		inputPattern = document.getElementById("replaceInputPattern").value;
+	replace: function(){
+		let inputPattern; 
+		if (document.querySelector("#regexSearch").value)
+			inputPattern = new RegExp(document.querySelector("#replaceInputPattern").value, 'g');
+		else
+			inputPattern = document.querySelector("#replaceInputPattern").value;
 
-	let outputPattern = document.getElementById("replaceOutputPattern").value;
+		let outputPattern = document.querySelector("#replaceOutputPattern").value;
 
-	let input = document.getElementById("textarea");
-	input.value = input.value.replaceAll(inputPattern, outputPattern);
-	//todo allow for captures to be used in the output
-}
+		let input = document.querySelector("#textarea");
+		input.value = input.value.replaceAll(inputPattern, outputPattern);
+		//todo allow for captures to be used in the output
+	},
+
+	init: function(){
+		let _this = this;
+		document.querySelector(".tb_sort").addEventListener("click",function(){
+			_this.alphabetizeLines();
+		});
+		document.querySelector(".tb_toupper").addEventListener("click",function(){
+			_this.toUpper();
+		});
+		document.querySelector(".tb_tolower").addEventListener("click",function(){
+			_this.toLower();
+		});
+		document.querySelector(".tb_torand").addEventListener("click",function(){
+			_this.toRandom();
+		});
+		document.querySelector(".tb_toinvert").addEventListener("click",function(){
+			_this.toInvert();
+		});
+		document.querySelector(".tb_repace").addEventListener("click",function(){
+			_this.replace();
+		});
+		document.querySelector("#textarea").addEventListener("keyup",function(){
+			_this.updateCharacterCounts();
+		});
+	},
+});

@@ -18,8 +18,8 @@
 		<script src="colorPicker.js" type="text/javascript"></script>
 		<script src="progressBar.js" type="text/javascript"></script>
 	</head>
-	<body onload="initCodeEditorListeners()">
-		<noscript>JavaScript is required by many of the utilities, enable it for the best experience.</noscript>
+	<body>
+		<noscript>JavaScript is required, enable it for the best experience.</noscript>
 		<div class="container">
 			<!-- Multi timer -->
 			<div class="module">
@@ -41,30 +41,30 @@
 							</span>
 						</span>
 					</template>
-					<input type="button" id="insertButton" class="button" value="+" onclick="mt_addTimer();">
+					<input type="button" id="insertButton" class="button mt_insertButton" value="+">
 				</div>
-		</div>
+			</div>
 		</div>
 		
 		<div class="container">
 			<!-- text box -->
 			<div class="module">
 				<div class="fs30b" id="textbox">TextBox</div>
-				<textarea id = "textarea" placeholder="Your text here." onkeyup="tb_updateCharacterCounts()"></textarea>
+				<textarea id="textarea" placeholder="Your text here."></textarea>
 				<br/>
 				<span id="characterCount">0</span> characters, <span id="wordCount">0</span> words.
 				<br/>
-				<input type="button" class="button" value="Sort lines" onclick="tb_alphabetizeLines()">
-				<input type="button" class="button" value="Uppercase" onclick="tb_toUpper()">
-				<input type="button" class="button" value="Lowercase" onclick="tb_toLower()">
-				<input type="button" class="button" value="Randomcase" onclick="tb_toRandom()">
-				<input type="button" class="button" value="Invertcase" onclick="tb_toInvert()">
+				<input type="button" class="button tb_sort" value="Sort lines">
+				<input type="button" class="button tb_toupper" value="Uppercase">
+				<input type="button" class="button tb_tolower" value="Lowercase">
+				<input type="button" class="button tb_torand" value="Randomcase">
+				<input type="button" class="button tb_toinvert" value="Invertcase">
 				<br/>
 				<span>Replace </span> 
 				<input type="text" id="replaceInputPattern"> 
 				<span> with </span> 
 				<input type="text" id="replaceOutputPattern"> 
-				<input type="button" class="button" value="go" onclick="tb_replace()">
+				<input type="button" class="button tb_repace" value="go">
 				<input type="checkbox" id="regexSearch" hidden>
 				<span>Regex<span>
 			</div>
@@ -76,9 +76,9 @@
 				<textarea id="codeEditorTextarea" tabIndex="-1" placeholder="Your code here."></textarea>
 				<br/>
 				<abbr title="Use output('value') to write to the output. The return value is the return value of the last executed statement.">
-					<input type="button" class="button" value="JS eval" onclick="evalTextBox()"/>
+					<input type="button" class="button ce_eval" value="JS eval"/>
 				</abbr>
-				<input type="button" class="button" value="Wrap in ()" onclick="parenWrap()"/>
+				<input type="button" class="button ce_pwrap" value="Wrap in ()"/>
 				<br/>
 				<span id="codeEditorOutput"></span>
 				<br/>
@@ -90,7 +90,7 @@
 				<div class="fs30b">KeyCode Reader</div>
 				<input type="text" id="keycodeReader" placeholder="Click here" tabindex="-1"/>
 				<div id="keycodeOutput"></div>
-				<input type="button" id="resetKeyCodeOutput" hidden class="button" value="Reset" onclick="resetKeyCodeOutput()"/>
+				<input type="button" id="resetKeyCodeOutput" hidden class="button" value="Reset"/>
 			</div>
 		</div>
 
@@ -101,18 +101,18 @@
 				<div id="pb_bars">
 					<template id="pb_tmplt">
 						<span class="pb_entry">
-							<input type="number" min=0 class="width6 pb_completedNumber" value=0 oninput="updateBar(this)">
+							<input type="number" min=0 class="width6 pb_completedNumber" value=0>
 							<span>/</span>
-							<input type="number" min=1 class="width6 pb_totalNumber" value=1 oninput="updateBar(this)">
+							<input type="number" min=1 class="width6 pb_totalNumber" value=1>
 							<span class="bar">
 								<input type="text" class="pb_label" value="Progress bar">
 								<span class="progressBar"></span>
 							</span>
-							<input type="button" class="button" value="x" onclick="pb_deleteBar(this)">
+							<input type="button" class="button pb_deleteButton" value="x">
 							<br/>
 						</span>
 					</template>
-					<input type="button" id="pb_insertButton" class="button" value="+" onclick="pb_addBar(this);">
+					<input type="button" id="pb_insertButton" class="button" value="+">
 				</div>
 			</div>
 		</div>

@@ -108,6 +108,22 @@ dashboard.registerModule({
 		});
 	},
 
+	instantiate: function(where){
+        where.innerHTML = /*html*/`
+			<div class="fs30b" id="codeEditor">Code Editor</div>
+			<textarea id="codeEditorTextarea" tabIndex="-1" placeholder="Your code here."></textarea>
+			<br/>
+			<abbr title="Use output('value') to write to the output. The return value is the return value of the last executed statement.">
+				<input type="button" class="button ce_eval" value="JS eval"/>
+			</abbr>
+			<input type="button" class="button ce_pwrap" value="Wrap in ()"/>
+			<br/>
+			<span id="codeEditorOutput"></span>
+			<br/>
+			<span id="codeEditorReturnValue"></span>
+        `
+    },
+
 	parenWrap: function (){
 		let codeEditor = document.querySelector("#codeEditorTextarea");
 		codeEditor.value = "(" + codeEditor.value + ")";

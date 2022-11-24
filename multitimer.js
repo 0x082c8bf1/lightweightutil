@@ -388,4 +388,29 @@ dashboard.registerModule({
 			_this.saveAllTimers();
 		});
 	},
+
+	instantiate: function(where){
+        where.innerHTML = /*html*/`
+			<div class="fs30b" id="multitimer">Multi timer</div>
+			<div id="timers" class="flex-container">
+				<template id="timer_tmplt">
+					<span class="timer">
+						<input type="text" class="name" value="Timer"/>
+						<input class="x-button button" type="button" value="x">
+						<br/>
+						<input type="button" class="start-button button" value="Start"/>
+						<span hidden class="time-display"></span>
+						<span class="time-input">
+							<input class="h-input width2" type="text" placeholder = "HH">
+							<span>:</span>
+							<input class="m-input width2" type="text" value=1 placeholder = "MM">
+							<span>:</span>
+							<input class="s-input width2" type="text" placeholder = "SS">
+						</span>
+					</span>
+				</template>
+				<input type="button" id="mt_insertButton" class="button mt_insertButton" value="+">
+			</div>
+		`
+    },
 });

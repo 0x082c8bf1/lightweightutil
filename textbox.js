@@ -110,4 +110,27 @@ dashboard.registerModule({
 			_this.updateCharacterCounts();
 		});
 	},
+
+	instantiate: function(where){
+        where.innerHTML = /*html*/`
+			<div class="fs30b" id="textbox">TextBox</div>
+			<textarea id="textarea" placeholder="Your text here."></textarea>
+			<br/>
+			<span id="characterCount">0</span> characters, <span id="wordCount">0</span> words.
+			<br/>
+			<input type="button" class="button tb_sort" value="Sort lines">
+			<input type="button" class="button tb_toupper" value="Uppercase">
+			<input type="button" class="button tb_tolower" value="Lowercase">
+			<input type="button" class="button tb_torand" value="Randomcase">
+			<input type="button" class="button tb_toinvert" value="Invertcase">
+			<br/>
+			<span>Replace </span> 
+			<input type="text" id="replaceInputPattern"> 
+			<span> with </span> 
+			<input type="text" id="replaceOutputPattern"> 
+			<input type="button" class="button tb_repace" value="go">
+			<input type="checkbox" id="regexSearch" hidden>
+			<span hidden>Regex<span>
+        `
+    },
 });

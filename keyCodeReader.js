@@ -27,6 +27,15 @@ dashboard.registerModule({
         });
     },
 
+    instantiate: function(where){
+        where.innerHTML = /*html*/`
+            <div class="fs30b">KeyCode Reader</div>
+            <input type="text" id="keycodeReader" placeholder="Click here" tabindex="-1"/>
+            <div id="keycodeOutput"></div>
+            <input type="button" id="resetKeyCodeOutput" hidden class="button" value="Reset"/>
+        `
+    },
+
     resetKeyCodeOutput: function(){
         document.querySelector("#keycodeOutput").innerHTML = "";
         document.querySelector("#keycodeReader").value = "";

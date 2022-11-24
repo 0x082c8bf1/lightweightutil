@@ -117,4 +117,26 @@ dashboard.registerModule({
 		//load from localStorage
 		this.loadBars(document.querySelector("#pb_bars"));
 	},
+
+	instantiate: function(where){
+        where.innerHTML = /*html*/`
+			<div class="fs30b" id="progressTracker">Progress Tracker</div>
+			<div id="pb_bars">
+				<template id="pb_tmplt">
+					<span class="pb_entry">
+						<input type="number" min=0 class="width6 pb_completedNumber" value=0>
+						<span>/</span>
+						<input type="number" min=1 class="width6 pb_totalNumber" value=1>
+						<span class="bar">
+							<input type="text" class="pb_label" value="Progress bar">
+							<span class="progressBar"></span>
+						</span>
+						<input type="button" class="button pb_deleteButton" value="x">
+						<br/>
+					</span>
+				</template>
+				<input type="button" id="pb_insertButton" class="button" value="+">
+			</div>
+        `
+    },
 });

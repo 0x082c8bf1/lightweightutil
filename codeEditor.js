@@ -94,7 +94,7 @@ dashboard.registerModule({
 				codeEditor.selectionEnd = newCursorPos;
 			}else if(e.code == "KeyR" && e.ctrlKey){
 				e.preventDefault();
-				evalTextBox();
+				_this.evalTextBox();
 			}
 		});	
 

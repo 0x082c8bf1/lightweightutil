@@ -178,11 +178,25 @@ dashboard.registerModule({
 
 		//function that is called when the start button is clicked
 		startButtonEvent(_this){
+			let hours, mins, secs;
+			
 			//strip non-numeric characters from time
 			let pattern = /\D/g;
-			let hours = _this.hInput.value.replace(pattern, "");
-			let mins = _this.mInput.value.replace(pattern, "");
-			let secs = _this.sInput.value.replace(pattern, "");
+			
+			//parse days in hours
+			let dPattern = /(\d+)d(\d*)/;
+			let hMatches = _this.hInput.value.match(dPattern);
+			//parse d for days in hours if applicable
+			if (hMatches){
+				hMatches[2] = hMatches[2] == "" ? 0 : hMatches[2];
+				hours = parseInt(hMatches[1])*24 + parseInt(hMatches[2]);
+			}else{
+				hours = _this.hInput.value.replace(pattern, "");
+			}
+			
+
+			mins = _this.mInput.value.replace(pattern, "");
+			secs = _this.sInput.value.replace(pattern, "");
 
 			if(_this.startButton.value == "Start" || _this.startButton.value == "Resume"){//if timer should resume
 				if(_this.startButton.value == "Start"){//if timer needs to read duration

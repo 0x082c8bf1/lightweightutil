@@ -13,3 +13,8 @@ function getParentOfClass(element, className){
 
     return element;
 }
+
+//this is used for intentional logging, as opposed to debug printing.
+function log(m){
+    console.log(m);
+}

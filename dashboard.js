@@ -28,18 +28,18 @@ var dashboard = {
 		//save the module
 		this.modules[module.name] = module;
 
-		console.log("Registed module: " + module.name);
+		log("Registed module: " + module.name);
 	},
 
 	//take the modules and create their elements, then call the onload handler
 	startModules: function(){
-		console.log("creating layout");
+		log("creating layout");
 		dashboard.createLayout();
 		
 		for(let moduleName in dashboard.modules){
 			let module = dashboard.modules[moduleName];
 
-			console.log("Starting module: " + module.name);
+			log("Starting module: " + module.name);
 
 			//run the modules init function if one exists
 			if (module.init){
@@ -93,7 +93,6 @@ var dashboard = {
 
 				//apply module settings
 				if (mConfig.width){
-					console.log("width");
 					module.style.maxWidth = mConfig.width;
 				}
 

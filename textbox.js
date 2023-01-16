@@ -1,6 +1,8 @@
 dashboard.registerModule({
 	name: "textbox",
 
+	_self: null,
+
 	//updates the character and word counts of the text area
 	//words are considered any string of non-whitespace seperated by whitespace on either side
 	updateCharacterCounts: function(){
@@ -86,6 +88,18 @@ dashboard.registerModule({
 		//todo allow for captures to be used in the output
 	},
 
+	handleFind: function(e){
+		if(e.key == 'f' && e.ctrlKey) {
+			e.preventDefault();
+			let fs = document.querySelector(".findSpan");
+			fs.hidden = !fs.hidden;
+			if (!fs.hidden)
+				document.querySelector("#replaceInputPattern").focus();
+			else
+				document.querySelector("#textarea").focus();
+		}
+	},
+
 	init: function(){
 		let _this = this;
 		document.querySelector(".tb_sort").addEventListener("click",function(){
@@ -109,9 +123,14 @@ dashboard.registerModule({
 		document.querySelector("#textarea").addEventListener("keyup",function(){
 			_this.updateCharacterCounts();
 		});
+		_self.addEventListener("keydown",function(e){
+			_this.handleFind(e);
+		});
 	},
 
 	instantiate: function(where){
+		_self = where;
+
         where.innerHTML = /*html*/`
 			<div class="fs30b" id="textbox">TextBox</div>
 			<textarea id="textarea" placeholder="Your text here."></textarea>
@@ -124,13 +143,15 @@ dashboard.registerModule({
 			<input type="button" class="button tb_torand" value="Randomcase">
 			<input type="button" class="button tb_toinvert" value="Invertcase">
 			<br/>
-			<span>Replace </span> 
-			<input type="text" id="replaceInputPattern"> 
-			<span> with </span> 
-			<input type="text" id="replaceOutputPattern"> 
-			<input type="button" class="button tb_repace" value="go">
-			<input type="checkbox" id="regexSearch" hidden>
-			<span hidden>Regex<span>
+			<span class="findSpan" hidden>
+				<span>Replace </span> 
+				<input type="text" id="replaceInputPattern"> 
+				<span> with </span> 
+				<input type="text" id="replaceOutputPattern"> 
+				<input type="button" class="button tb_repace" value="go">
+				<input type="checkbox" id="regexSearch" hidden>
+				<span hidden>Regex<span>
+			</span>
         `
     },
 });

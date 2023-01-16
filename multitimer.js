@@ -176,27 +176,35 @@ dashboard.registerModule({
 
 		}
 
+		//takes a string and tries it's best to assume what was supposed to be typed in as a number
+		makeValidNumber(input){
+			let pattern = /[^\d|^\.]/g;
+			
+			return input.replace(pattern, "");
+		}
+
 		//function that is called when the start button is clicked
 		startButtonEvent(_this){
 			let hours, mins, secs;
-			
-			//strip non-numeric characters from time
-			let pattern = /\D/g;
-			
-			//parse days in hours
-			let dPattern = /(\d+)d(\d*)/;
-			let hMatches = _this.hInput.value.match(dPattern);
-			//parse d for days in hours if applicable
-			if (hMatches){
-				hMatches[2] = hMatches[2] == "" ? 0 : hMatches[2];
-				hours = parseInt(hMatches[1])*24 + parseInt(hMatches[2]);
+
+			if (_this.hInput.value.includes("d")){
+				//split at first d
+				let hval = hours = _this.hInput.value;
+				let splitPos = hval.indexOf("d");
+				let seg1 = hval.substring(0,splitPos);
+				let seg2 = hval.substring(splitPos+1);
+
+				let dys = parseFloat(_this.makeValidNumber(seg1));
+				let hrs = parseFloat(_this.makeValidNumber(seg2));
+
+				hours = dys*24 + hrs;
+
 			}else{
-				hours = _this.hInput.value.replace(pattern, "");
+				hours = _this.makeValidNumber(_this.hInput.value);
 			}
 			
-
-			mins = _this.mInput.value.replace(pattern, "");
-			secs = _this.sInput.value.replace(pattern, "");
+			mins = _this.makeValidNumber(_this.mInput.value);
+			secs = _this.makeValidNumber(_this.sInput.value);
 
 			if(_this.startButton.value == "Start" || _this.startButton.value == "Resume"){//if timer should resume
 				if(_this.startButton.value == "Start"){//if timer needs to read duration

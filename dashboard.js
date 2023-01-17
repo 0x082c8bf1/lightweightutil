@@ -1,16 +1,5 @@
 var dashboard = {
-	pendingInits: [],
 	modules: [],
-	hasRun: false,
-
-	//calls the function passed to it when the page is done loading, or right away if the page is already loaded
-	setOnLoad: function(m){
-		if(!dashboard.hasRun){
-			dashboard.pendingInits.push(m);
-		}else{
-			m.init();
-		}
-	},
 
 	//registers a module object
 	registerModule: function(module){
@@ -31,78 +20,95 @@ var dashboard = {
 		log("Registed module: " + module.name);
 	},
 
-	//take the modules and create their elements, then call the onload handler
 	startModules: function(){
 		log("creating layout");
-		dashboard.createLayout();
+		dashboard.layout.create();
 		
 		for(let moduleName in dashboard.modules){
 			let module = dashboard.modules[moduleName];
 
 			log("Starting module: " + module.name);
+		}
+	},
 
-			//run the modules init function if one exists
-			if (module.init){
-				module.init();
+	layout: {
+		config: null,
+		parsed: false,
+
+		reload: function(){
+			document.querySelector("#layout").innerHTML = "";
+			dashboard.startModules();
+		},
+
+		//create a new module on the document body
+		appendNewContainer: function(){
+			let c = document.createElement("div");
+			c.classList.add("container");
+			document.querySelector("#layout").appendChild(c);
+			return c;
+		},
+
+		//add a module to a container
+		appendModuleToContainer: function(container){
+			let m = document.createElement("div");
+			m.classList.add("module");
+			container.appendChild(m);
+			return m;
+		},
+
+		create: function(){
+			//if the config is not loaded, try to load it
+			if(this.config == null){
+				this.config = localStorage.getItem("db_config");
 			}
-		}
-	},
-
-	//calls all of the functions and purges the list
-	processOnLoad: function(){
-		hasRun = true;
-		for(let i=dashboard.pendingInits.length-1; i>=0; i--){
-			dashboard.pendingInits[i].init();
-			dashboard.pendingInits.pop();
-		}
-	},
-
-	//create a new module on the document body
-	appendNewContainer: function(){
-		let c = document.createElement("div");
-		c.classList.add("container");
-		document.querySelector("#layout").appendChild(c);
-		return c;
-	},
-
-	//add a module to a container
-	appendModuleToContainer: function(container){
-		let m = document.createElement("div");
-		m.classList.add("module");
-		container.appendChild(m);
-		return m;
-	},
-
-	createLayout: function(){
-		let config = [
-			[{name: "multitimer"}],
-			[{name: "textbox"}],
-			[{name: "codeEditor"}, {name: "keyCode", width: "250px"}],
-			[{name: "progressBar"}]
-		];
-
-		//create containers
-		for(let cPos = 0; cPos<config.length; cPos++){
-			let container = this.appendNewContainer();
 			
-			//create modules
-			for(let mPos = 0; mPos<config[cPos].length; mPos++){
-				let module = this.appendModuleToContainer(container);
+			//if the config is still not loaded, default it
+			if (this.config == null){
+				//default config if none exists
+				log("Using default config.");
+				this.config = [
+					[{name: "multitimer"}],
+					[{name: "textbox"}],
+					[{name: "codeEditor"}, {name: "keyCode", width: "250px"}],
+					[{name: "progressBar"}]
+				];
+				this.parsed = true;
+				//TODO: Add a way to save this to localStorage optionally
+//				localStorage.setItem("db_config", JSON.stringify(this.config));
+			}
 
-				let mConfig = config[cPos][mPos];
+			if (!this.parsed){
+				this.config = JSON.parse(this.config);
+			}
 
-				//apply module settings
-				if (mConfig.width){
-					module.style.maxWidth = mConfig.width;
-				}
+			//create containers
+			for(let cPos = 0; cPos<this.config.length; cPos++){
+				let container = this.appendNewContainer();
+				
+				//create modules
+				for(let mPos = 0; mPos<this.config[cPos].length; mPos++){
+					let module = this.appendModuleToContainer(container);
+					let mConfig = this.config[cPos][mPos];
 
-				//instantiate the module
-				let instFunc = this.modules[mConfig.name].instantiate;
-				if (instFunc){
-					instFunc(module);
+					//apply module settings
+					if (mConfig.width){
+						module.style.maxWidth = mConfig.width;
+					}
+
+					//instantiate the module
+					let instFunc = dashboard.modules[mConfig.name].instantiate;
+					if (instFunc){
+						instFunc(module);
+					}
+
+					//init the modules
+					let imodule = dashboard.modules[mConfig.name];
+					if (imodule.init){
+						imodule.init();
+					}
 				}
 			}
-		}
+		},
 	},
 }
 

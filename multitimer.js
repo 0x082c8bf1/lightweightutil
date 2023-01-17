@@ -188,14 +188,19 @@ dashboard.registerModule({
 			let hours, mins, secs;
 
 			if (_this.hInput.value.includes("d")){
-				//split at first d
+				//get the left and right of "d"
 				let hval = hours = _this.hInput.value;
 				let splitPos = hval.indexOf("d");
-				let seg1 = hval.substring(0,splitPos);
-				let seg2 = hval.substring(splitPos+1);
+				let lSeg = hval.substring(0,splitPos);
+				let rSeg = hval.substring(splitPos+1);
 
-				let dys = parseFloat(_this.makeValidNumber(seg1));
-				let hrs = parseFloat(_this.makeValidNumber(seg2));
+				//convert left and right to numbers
+				let dys = parseFloat(_this.makeValidNumber(lSeg));
+				let hrs = parseFloat(_this.makeValidNumber(rSeg));
+				
+				//handle not putting a number before or after "d"
+				dys = (isNaN(dys)) ? 0 : dys;
+				hrs = (isNaN(hrs)) ? 0 : hrs;
 
 				hours = dys*24 + hrs;
 

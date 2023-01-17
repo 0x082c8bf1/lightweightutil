@@ -359,6 +359,9 @@ dashboard.registerModule({
 
 	//load all of the timers from localStorage
 	loadAllTimers: function(){
+		//reset timers, this fixes an issue with timers being duplicated when a layout reload is called.
+		this.timers = [];
+
 		let obj = JSON.parse(localStorage.getItem("mt_timers"));
 
 		if (obj == null)

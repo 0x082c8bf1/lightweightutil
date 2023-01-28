@@ -12,12 +12,12 @@ dashboard.registerModule({
 			var output = function(value){
 				outputDiv.innerHTML += value + "<br/>";
 			}
-			
+
 			let input = document.querySelector("#codeEditorTextarea").value;
 			//reset output span
 			outputDiv.innerHTML = "";
 			outputDiv.style.color = "white";
-			
+
 			//eval, catch errors and set output to red
 			let returnVal;
 			try{
@@ -85,7 +85,7 @@ dashboard.registerModule({
 
 				//add brackets around the selected line
 				/*
-				codeEditor.value = codeEditor.value.substring(0,lastNewLinePos) + "[" + 
+				codeEditor.value = codeEditor.value.substring(0,lastNewLinePos) + "[" +
 					codeEditor.value.substring(lastNewLinePos, nextNewLinePos) + "]" + codeEditor.value.substring(nextNewLinePos, codeEditor.value.length);
 				*/
 
@@ -96,7 +96,7 @@ dashboard.registerModule({
 				e.preventDefault();
 				_this.evalTextBox();
 			}
-		});	
+		});
 
 		//add event listeners
 		let _this = this;
@@ -109,7 +109,7 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-        where.innerHTML = /*html*/`
+		where.innerHTML = /*html*/`
 			<div class="fs30b" id="codeEditor">Code Editor</div>
 			<textarea id="codeEditorTextarea" tabIndex="-1" placeholder="Your code here."></textarea>
 			<br/>
@@ -121,8 +121,8 @@ dashboard.registerModule({
 			<span id="codeEditorOutput"></span>
 			<br/>
 			<span id="codeEditorReturnValue"></span>
-        `
-    },
+		`
+	},
 
 	parenWrap: function (){
 		let codeEditor = document.querySelector("#codeEditorTextarea");

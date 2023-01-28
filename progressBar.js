@@ -105,7 +105,7 @@ dashboard.registerModule({
 		barContainer.addEventListener("click", function(){
 			_this.saveBars(this);
 		});
-		
+
 		barContainer.addEventListener("keyup", function(){
 			_this.saveBars(this);
 		})
@@ -119,7 +119,7 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-        where.innerHTML = /*html*/`
+		where.innerHTML = /*html*/`
 			<div class="fs30b" id="progressTracker">Progress Tracker</div>
 			<div id="pb_bars">
 				<template id="pb_tmplt">
@@ -137,6 +137,6 @@ dashboard.registerModule({
 				</template>
 				<input type="button" id="pb_insertButton" class="button" value="+">
 			</div>
-        `
-    },
+		`
+	},
 });

@@ -23,7 +23,7 @@ var dashboard = {
 	startModules: function(){
 		log("creating layout");
 		dashboard.layout.create();
-		
+
 		for(let moduleName in dashboard.modules){
 			let module = dashboard.modules[moduleName];
 
@@ -61,7 +61,7 @@ var dashboard = {
 			if(this.config == null){
 				this.config = localStorage.getItem("db_config");
 			}
-			
+
 			//if the config is still not loaded, default it
 			if (this.config == null){
 				//default config if none exists
@@ -84,7 +84,7 @@ var dashboard = {
 			//create containers
 			for(let cPos = 0; cPos<this.config.length; cPos++){
 				let container = this.appendNewContainer();
-				
+
 				//create modules
 				for(let mPos = 0; mPos<this.config[cPos].length; mPos++){
 					let module = this.appendModuleToContainer(container);

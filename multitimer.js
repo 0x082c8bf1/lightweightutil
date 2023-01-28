@@ -109,7 +109,7 @@ dashboard.registerModule({
 			this.timer.addEventListener("keydown", function(e){
 				if(e.code == "Enter" || e.code == "NumpadEnter"){
 					_this.startButtonEvent(_this);
-					//we have to explicitly call saveAllTimers because might hide the element that we hit enter on, and 
+					//we have to explicitly call saveAllTimers because might hide the element that we hit enter on, and
 					//the event won't bubble if that's the case
 					_this.module.saveAllTimers();
 				}
@@ -160,7 +160,7 @@ dashboard.registerModule({
 			//start ringing
 			if(_this.module.numberOfRingingTimers>0){
 				if(_this.module.timerRingInterval == null){
-					_this.module.loadedAudio.play();//ring immediately 
+					_this.module.loadedAudio.play();//ring immediately
 					//schedule rings every 1000ms until reset
 					_this.module.timerRingInterval = setInterval(function(){
 						_this.module.loadedAudio.play();
@@ -179,7 +179,7 @@ dashboard.registerModule({
 		//takes a string and tries it's best to assume what was supposed to be typed in as a number
 		makeValidNumber(input){
 			let pattern = /[^\d|^\.]/g;
-			
+
 			return input.replace(pattern, "");
 		}
 
@@ -197,7 +197,7 @@ dashboard.registerModule({
 				//convert left and right to numbers
 				let dys = parseFloat(_this.makeValidNumber(lSeg));
 				let hrs = parseFloat(_this.makeValidNumber(rSeg));
-				
+
 				//handle not putting a number before or after "d"
 				dys = (isNaN(dys)) ? 0 : dys;
 				hrs = (isNaN(hrs)) ? 0 : hrs;
@@ -207,7 +207,7 @@ dashboard.registerModule({
 			}else{
 				hours = _this.makeValidNumber(_this.hInput.value);
 			}
-			
+
 			mins = _this.makeValidNumber(_this.mInput.value);
 			secs = _this.makeValidNumber(_this.sInput.value);
 
@@ -378,7 +378,7 @@ dashboard.registerModule({
 		//create timer
 		this.addTimer();
 		let newTimer = timers[timers.length-1];
-		
+
 		//setup passed values
 		newTimer.hInput.value = hours;
 		newTimer.mInput.value = minutes;
@@ -420,7 +420,7 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-        where.innerHTML = /*html*/`
+		where.innerHTML = /*html*/`
 			<div class="fs30b" id="multitimer">Multi timer</div>
 			<div id="timers" class="flex-container">
 				<template id="timer_tmplt">
@@ -442,5 +442,5 @@ dashboard.registerModule({
 				<input type="button" id="mt_insertButton" class="button mt_insertButton" value="+">
 			</div>
 		`
-    },
+	},
 });

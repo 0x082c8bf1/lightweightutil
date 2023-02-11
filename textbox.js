@@ -7,18 +7,18 @@ dashboard.registerModule({
 	//words are considered any string of non-whitespace seperated by whitespace on either side
 	updateCharacterCounts: function(){
 		let input = document.querySelector("#textarea").value;
-		
+
 		//character count
 		document.querySelector("#characterCount").innerHTML = input.length;
-		
+
 		//word count
 		let truncatedInput = input.trim();
 		let words = truncatedInput.split(new RegExp(/\s+/));
-		
+
 		let wordCount = 0;
 		if(truncatedInput!="")
 			wordCount = words.length;
-		
+
 		document.querySelector("#wordCount").innerHTML = wordCount;
 	},
 
@@ -75,7 +75,7 @@ dashboard.registerModule({
 	},
 
 	replace: function(){
-		let inputPattern; 
+		let inputPattern;
 		if (document.querySelector("#regexSearch").value)
 			inputPattern = new RegExp(document.querySelector("#replaceInputPattern").value, 'g');
 		else
@@ -131,7 +131,7 @@ dashboard.registerModule({
 	instantiate: function(where){
 		_self = where;
 
-        where.innerHTML = /*html*/`
+		where.innerHTML = /*html*/`
 			<div class="fs30b" id="textbox">TextBox</div>
 			<textarea id="textarea" placeholder="Your text here."></textarea>
 			<br/>
@@ -144,14 +144,14 @@ dashboard.registerModule({
 			<input type="button" class="button tb_toinvert" value="Invertcase">
 			<br/>
 			<span class="findSpan" hidden>
-				<span>Replace </span> 
-				<input type="text" id="replaceInputPattern"> 
-				<span> with </span> 
-				<input type="text" id="replaceOutputPattern"> 
+				<span>Replace </span>
+				<input type="text" id="replaceInputPattern">
+				<span> with </span>
+				<input type="text" id="replaceOutputPattern">
 				<input type="button" class="button tb_repace" value="go">
 				<input type="checkbox" id="regexSearch" hidden>
 				<span hidden>Regex<span>
 			</span>
-        `
-    },
+		`
+	},
 });

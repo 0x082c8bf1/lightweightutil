@@ -3,6 +3,8 @@
     height: 20px;
     background-color: white;
     display: inline-block;
+    vertical-align: bottom;
+    margin-top: 5px;
 }
 
 .progressBar {

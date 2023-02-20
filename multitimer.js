@@ -250,10 +250,7 @@ dashboard.registerModule({
 			}
 		}
 
-		createFromString(str){
-			//parse string
-			let obj = JSON.parse(str);
-
+		createFromObject(obj){
 			if(obj.startDate != null)
 				obj.startDate = new Date(obj.startDate);
 
@@ -297,7 +294,7 @@ dashboard.registerModule({
 			}
 		}
 
-		convertToString(){
+		convertToSaveObject(){
 			let obj = {};
 
 			//save internal values
@@ -312,7 +309,7 @@ dashboard.registerModule({
 			obj.ss = this.sInput.value;
 			obj.name = this.nameInput.value;
 
-			return JSON.stringify(obj);
+			return obj;
 		}
 	},
 
@@ -352,7 +349,7 @@ dashboard.registerModule({
 	saveAllTimers: function(){
 		let obj = [];
 		for(let i=0; i<this.timers.length; i++){
-			obj.push(this.timers[i].convertToString());
+			obj.push(this.timers[i].convertToSaveObject());
 		}
 		localStorage.setItem("mt_timers", JSON.stringify(obj));
 	},
@@ -369,7 +366,7 @@ dashboard.registerModule({
 
 		for(let i=0; i<obj.length; i++){
 			this.addTimer();
-			this.timers[this.timers.length-1].createFromString(obj[i]);
+			this.timers[this.timers.length-1].createFromObject(obj[i]);
 		}
 	},
 

@@ -113,6 +113,7 @@ dashboard.registerModule({
 
 					if (nextPos != -1){
 						e.preventDefault();
+						let pos = this.selectionEnd + 1 + nextPos;
 						this.selectionEnd = pos;
 						this.selectionStart = pos;
 					}

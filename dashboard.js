@@ -60,6 +60,9 @@ var dashboard = {
 			//if the config is not loaded, try to load it
 			if(this.config == null){
 				this.config = localStorage.getItem("db_config");
+			} else {
+				//if it's already loaded, assume it's parsed.
+				this.parsed = true;
 			}
 
 			//if the config is still not loaded, default it

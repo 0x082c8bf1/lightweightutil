@@ -56,7 +56,18 @@ dashboard.registerModule({
 
 	deleteBar: function(element){
 		let bar = getParentOfClass(element, "pb_entry");
-		bar.parentNode.removeChild(bar);
+
+		let shouldDelete = true;
+
+		let completed = bar.querySelector(".pb_completedNumber").value;
+		let total = bar.querySelector(".pb_totalNumber").value;
+		let label = bar.querySelector(".pb_label").value;
+		if (completed < total){
+			shouldDelete = confirm("This progress bar (" + label + ") is not completed. Are you sure you would like to delete it?");
+		}
+
+		if (shouldDelete)
+			bar.parentNode.removeChild(bar);
 	},
 
 	saveBars: function(obj){

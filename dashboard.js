@@ -95,6 +95,21 @@ var dashboard = {
 						module.style.maxWidth = mConfig.width;
 					}
 
+					//handle updates
+					let lver = localStorage.getItem("lastVersion");
+					if (version > lver || (!lver && localStorage.length > 0)){
+						let updateFunc = dashboard.modules[mConfig.name].updates;
+						if (updateFunc){
+							let updates = updateFunc();
+							for(let i=0; i<updates.length; i++){
+								console.log(updates[i])
+								if (updates[i].ver < version){
+									updates[i].func();
+								}
+							}
+						}
+					}
+
 					//instantiate the module
 					let instFunc = dashboard.modules[mConfig.name].instantiate;
 					if (instFunc){
@@ -108,6 +123,7 @@ var dashboard = {
 					}
 				}
 			}
+			localStorage.setItem("lastVersion", version);
 		},
 	},
 }

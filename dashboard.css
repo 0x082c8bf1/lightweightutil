@@ -45,7 +45,7 @@ footer {
     padding-top: 10px;
 }
 
-footer > span, a {
+footer > span, footer > a {
     display: block;
     padding-left: 3em;
     padding-right: 3em;

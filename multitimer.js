@@ -445,7 +445,7 @@ dashboard.registerModule({
 	updates: function(){
 		return [
 			{ver: "0.9.0", func: function(){
-				console.log("Converting mt_timers to less excessive escaping.");
+				log("Converting mt_timers to less excessive escaping.");
 				let oldSave = localStorage.getItem("mt_timers");
 				localStorage.setItem("mt_timers.0.9.0", oldSave);
 				let firstParse = JSON.parse(oldSave);

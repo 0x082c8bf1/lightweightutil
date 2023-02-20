@@ -102,7 +102,6 @@ var dashboard = {
 						if (updateFunc){
 							let updates = updateFunc();
 							for(let i=0; i<updates.length; i++){
-								console.log(updates[i])
 								if (updates[i].ver < version){
 									updates[i].func();
 								}

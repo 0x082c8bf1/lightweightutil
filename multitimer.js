@@ -106,6 +106,19 @@ dashboard.registerModule({
 				_this.startButtonEvent(_this);
 			});
 
+			this.hInput.addEventListener("keydown", function(e){
+				if (e.code == "Tab"){
+					let remainingText = this.value.substring(this.selectionEnd, this.value.length);
+					let nextPos = remainingText.indexOf("d");
+
+					if (nextPos != -1){
+						e.preventDefault();
+						this.selectionEnd = pos;
+						this.selectionStart = pos;
+					}
+				}
+			});
+
 			this.timer.addEventListener("keydown", function(e){
 				if(e.code == "Enter" || e.code == "NumpadEnter"){
 					_this.startButtonEvent(_this);

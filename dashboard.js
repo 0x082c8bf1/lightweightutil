@@ -20,6 +20,13 @@ var dashboard = {
 		log("Registed module: " + module.name);
 	},
 
+	pageLoad: function(){
+		document.querySelector("#reloadLayout").addEventListener("click", function(){
+			dashboard.layout.reload();
+		});
+		dashboard.startModules();
+	},
+
 	startModules: function(){
 		log("creating layout");
 		dashboard.layout.create();
@@ -132,7 +139,7 @@ var dashboard = {
 
 //start loading the modules when the page is done loading
 if (document.readyState === 'complete') {
-	dashboard.startModules();
+	dashboard.pageLoad();
 } else {
-	window.addEventListener("load", dashboard.startModules);
+	window.addEventListener("load", dashboard.pageLoad);
 }

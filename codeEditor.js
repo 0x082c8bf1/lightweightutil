@@ -35,8 +35,33 @@ dashboard.registerModule({
 		}
 	},
 
+	getLines: function(text){
+		return text.split("\n");
+	},
+
+	getLineFromPos: function(lines, pos){
+		let charCount = 0;
+		let line = 0;
+		while(charCount+lines[line].length < pos){
+			charCount += lines[line].length+1;
+			line++;
+		}
+		return line;
+	},
+
+	writeFromLines: function(object, lines){
+		object.value = "";
+		for(let i=0; i<lines.length-1; i++){
+			object.value += lines[i] + "\n";
+		}
+		object.value += lines[lines.length-1];
+	},
+
 	init: function (){
 		let codeEditor = document.querySelector("#codeEditorTextarea");
+
+		//add event listeners
+		let _this = this;
 		codeEditor.addEventListener("keydown", function(e){
 			//allow typing tabs without changing the focus
 			if(e.code == "Tab"){
@@ -53,50 +78,33 @@ dashboard.registerModule({
 					codeEditor.value = start + "\t" + end;
 					codeEditor.selectionEnd = selectionEnd + 1;
 				} else {
-					let lines = codeEditor.value.split("\n");
+					let lines = _this.getLines(codeEditor.value);
 
 					let start = codeEditor.selectionStart;
 					let end = codeEditor.selectionEnd;
 
-					//find begining line
-					let charCount = 0;
-					let line = 0;
-					while(charCount+lines[line].length < start){
-						charCount += lines[line].length+1;
-						line++;
-					}
-
-					//find end line
-					let echarCount = 0;
-					let eline = 0;
-					while(echarCount+lines[eline].length < end){
-						echarCount += lines[eline].length+1;
-						eline++;
-					}
+					let sLine = _this.getLineFromPos(lines, start);
+					let eLine = _this.getLineFromPos(lines, end);
 
 					let startOffset = 0;
 					let endOffset = 0;
 					//modify selected lines
-					for(let i=line; i<eline+1; i++){
+					for(let i=sLine; i<eLine+1; i++){
 						if (e.shiftKey){
 							if (lines[i][0] == "\t"){
 								lines[i] = lines[i].substring(1);
 								endOffset--;
-								if (i==line) startOffset--;
+								if (i==sLine) startOffset--;
 							}
 						}else{
 							lines[i] = "\t" + lines[i];
 							endOffset++;
-							if (i==line) startOffset++;
+							if (i==sLine) startOffset++;
 						}
 					}
 
 					//write lines back out to textarea
-					codeEditor.value = "";
-					for(let i=0; i<lines.length; i++){
-						codeEditor.value += lines[i] + "\n";
-					}
-					codeEditor.value = codeEditor.value.substring(0, codeEditor.value.length-1);
+					_this.writeFromLines(codeEditor, lines);
 
 					//put the selection back
 					codeEditor.selectionStart = start + startOffset;
@@ -135,11 +143,48 @@ dashboard.registerModule({
 			}else if(e.code == "KeyR" && e.ctrlKey){
 				e.preventDefault();
 				_this.evalTextBox();
+			}else if(e.ctrlKey && e.shiftKey && (e.code == "ArrowUp" || e.code == "ArrowDown")){
+				e.preventDefault();
+
+				let lines = _this.getLines(codeEditor.value);
+
+				let start = codeEditor.selectionStart;
+				let end = codeEditor.selectionEnd;
+				let sLine = _this.getLineFromPos(lines, start);
+				let eLine = _this.getLineFromPos(lines, end);
+
+				let selOffset = 0;
+
+				if (e.code == "ArrowUp"){
+					let prefix = [];
+					if (sLine != 0)
+						prefix = lines.slice(0, sLine-1);
+					let moved = lines.slice(sLine-1, sLine);
+					let selected = lines.slice(sLine, eLine+1);
+					let suffix = lines.slice(eLine+1);
+
+					if (moved.length > 0)
+						selOffset -= moved[0].length+1;
+
+					lines = [].concat(prefix, selected, moved, suffix);
+				}else{
+					let prefix = lines.slice(0, sLine);
+					let selected = lines.slice(sLine, eLine+1);
+					let moved = lines.slice(eLine+1, eLine+2);
+					let suffix = lines.slice(eLine+2);
+
+					if (moved.length > 0)
+						selOffset += moved[0].length+1;
+
+					lines = [].concat(prefix, moved, selected, suffix);
+				}
+
+				_this.writeFromLines(codeEditor, lines);
+				codeEditor.selectionStart = start + selOffset;
+				codeEditor.selectionEnd = end + selOffset;
 			}
 		});
 
-		//add event listeners
-		let _this = this;
 		document.querySelector(".ce_eval").addEventListener("click", function(){
 			_this.evalTextBox();
 		});

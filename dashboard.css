@@ -29,6 +29,11 @@ textarea {
     border: 1px solid rgb(87, 87, 87);
 }
 
+.button:active {
+    background-color: black;
+    transform: translateY(2px);
+}
+
 abbr {
     text-decoration: none;
 }

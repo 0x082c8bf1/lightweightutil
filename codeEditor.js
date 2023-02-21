@@ -3,7 +3,6 @@ dashboard.registerModule({
 
 	evalTextBox: function(){
 		let shouldContinue = confirm("Eval can be unsafe, do not use this function unless you know exactly what the code is doing. Would you like to proceed?");
-		//let shouldContinue = true;//skip the confirmation
 
 		if(shouldContinue){
 			//define functions
@@ -43,17 +42,74 @@ dashboard.registerModule({
 			if(e.code == "Tab"){
 				e.preventDefault();
 
-				if(codeEditor.selectionStart == codeEditor.selectionEnd){
+				if(codeEditor.selectionStart == codeEditor.selectionEnd && !e.shiftKey){
+					//inline tabbing
 					let selectionStart = codeEditor.selectionStart;
 					let selectionEnd = codeEditor.selectionEnd;
 
-					let start = codeEditor.value.substring(0,selectionStart);
+					let start = codeEditor.value.substring(0, selectionStart);
 					let end = codeEditor.value.substring(selectionEnd, codeEditor.value.length);
 
 					codeEditor.value = start + "\t" + end;
-					codeEditor.selectionEnd = selectionEnd+1;
-				}else{
-					//TODO multi line tab
+					codeEditor.selectionEnd = selectionEnd + 1;
+				} else {
+
+					let lines = codeEditor.value.split("\n");
+
+					//normalize selection
+					let start = codeEditor.selectionStart;
+					let end = codeEditor.selectionEnd;
+					let swapSel = false;
+					if (start > end){
+						let temp = start;
+						start = end;
+						end = temp;
+						swapSel = true;
+					}
+
+					//find begining line
+					let charCount = 0;
+					let line = 0;
+					while(charCount+lines[line].length < start){
+						charCount += lines[line].length+1;
+						line++;
+					}
+
+					//find end line
+					let echarCount = 0;
+					let eline = 0;
+					while(echarCount+lines[eline].length < end){
+						echarCount += lines[eline].length+1;
+						eline++;
+					}
+
+					let startOffset = 0;
+					let endOffset = 0;
+					//modify selected lines
+					for(let i=line; i<eline+1; i++){
+						if (e.shiftKey){
+							if (lines[i][0] == "\t"){
+								lines[i] = lines[i].substring(1);
+								endOffset--;
+								if (i==line) startOffset--;
+							}
+						}else{
+							lines[i] = "\t" + lines[i];
+							endOffset++;
+							if (i==line) startOffset++;
+						}
+					}
+
+					//write lines back out to textarea
+					codeEditor.value = "";
+					for(let i=0; i<lines.length; i++){
+						codeEditor.value += lines[i] + "\n";
+					}
+					codeEditor.value = codeEditor.value.substring(0, codeEditor.value.length-1);
+
+					//put the selection back
+					codeEditor.selectionStart = start + startOffset;
+					codeEditor.selectionEnd = end + endOffset;
 				}
 			}
 			//allow ctrl+d to duplicate the currently selected lines

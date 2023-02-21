@@ -53,19 +53,10 @@ dashboard.registerModule({
 					codeEditor.value = start + "\t" + end;
 					codeEditor.selectionEnd = selectionEnd + 1;
 				} else {
-
 					let lines = codeEditor.value.split("\n");
 
-					//normalize selection
 					let start = codeEditor.selectionStart;
 					let end = codeEditor.selectionEnd;
-					let swapSel = false;
-					if (start > end){
-						let temp = start;
-						start = end;
-						end = temp;
-						swapSel = true;
-					}
 
 					//find begining line
 					let charCount = 0;
@@ -139,13 +130,6 @@ dashboard.registerModule({
 
 				let newCursorPos = codeEditor.selectionStart;
 
-				//add brackets around the selected line
-				/*
-				codeEditor.value = codeEditor.value.substring(0,lastNewLinePos) + "[" +
-					codeEditor.value.substring(lastNewLinePos, nextNewLinePos) + "]" + codeEditor.value.substring(nextNewLinePos, codeEditor.value.length);
-				*/
-
-				//duplicate the line right after the current line
 				codeEditor.value = start + "\n" + codeEditor.value.substring(startPos, endPos) + end;
 				codeEditor.selectionEnd = newCursorPos;
 			}else if(e.code == "KeyR" && e.ctrlKey){

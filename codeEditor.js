@@ -2,7 +2,7 @@ dashboard.registerModule({
 	name: "codeEditor",
 
 	evalTextBox: function(){
-		let shouldContinue = false;
+		let shouldContinue = true;
 
 		if (getSetting(this.name, "evalWarn"))
 			shouldContinue = confirm("Eval can be unsafe, do not use this function unless you know exactly what the code is doing. Would you like to proceed?");

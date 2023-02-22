@@ -33,6 +33,71 @@ var dashboard = {
 			document.querySelector("#settingsPane").hidden = settingsShown;
 			document.querySelector("#layout").hidden = !settingsShown;
 		});
+		document.querySelector("#export").addEventListener("click",function(){
+			let obj = {"storage" : {},"jsonFields" : []};
+			for(let i = 0, key = localStorage.key(i); i < localStorage.length; i++, key=localStorage.key(i)){
+				let value = localStorage.getItem(key);
+
+				try {
+					value = JSON.parse(value);
+					//save that it's a json object
+					obj.jsonFields.push(key);
+				} catch (e){}
+
+				obj["storage"][key] = value;
+			}
+			let string = JSON.stringify(obj, null, "\t") + "\n";
+
+			//download the file
+			let downloadAnchor = document.createElement("a");
+
+			let date = new Date();
+			let dateStr = date.getFullYear();
+			dateStr += "-" + date.getMonth()+1;
+			dateStr += "-" + date.getDate();
+
+			downloadAnchor.setAttribute("download","lwutilExport-" + dateStr + ".json");
+			downloadAnchor.setAttribute("href", 'data:text/plain;charset=utf-8,' + encodeURIComponent(string));
+			downloadAnchor.style.display = "none";
+			document.body.appendChild(downloadAnchor);
+			downloadAnchor.click();
+			document.body.removeChild(downloadAnchor);
+		});
+
+		document.querySelector("#import").addEventListener("click",function(){
+			const [file] = document.querySelector("#importFile").files;
+
+			if (!file)
+				return;
+
+			let doRead = confirm("Importing data will wipe all currently saved data. Would you like to continue?");
+			if (!doRead)
+				return;
+
+			//reset localStorage
+			localStorage.clear();
+
+			//load new daa
+			let fileReader = new FileReader();
+			fileReader.readAsText(file);
+			fileReader.addEventListener("load", function(){
+			let file = JSON.parse(fileReader.result);
+			let storage = file["storage"];
+			let jsonFields = file["jsonFields"];
+
+			for(let k in storage){
+				let data = storage[k];
+				 if (jsonFields.includes(k))
+					 data = JSON.stringify(data);
+
+				localStorage.setItem(k, data);
+			}
+
+			dashboard.layout.reload();
+			document.querySelector("#importFile").value = "";
+		});
+
+		});
 		document.querySelector("#saveSettings").addEventListener("click", function(){
 			let settings = document.querySelectorAll(".settingInput");
 			let newSettings = {};
@@ -111,6 +176,7 @@ var dashboard = {
 					[{name: "progressBar"}]
 				];
 				this.parsed = true;
+
 				//TODO: Add a way to save this to localStorage optionally
 //				localStorage.setItem("db_config", JSON.stringify(this.config));
 			}

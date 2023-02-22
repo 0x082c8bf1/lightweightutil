@@ -1,5 +1,6 @@
 dashboard.registerModule({
 	name: "keyCode",
+	displayName: "KeyCode Reader",
 
 	init: function(){
 		//add the event listner

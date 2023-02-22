@@ -254,7 +254,8 @@ var dashboard = {
 			let element = dashboard.layout.appendModuleToContainer(container);
 
 			let title = document.createElement("div");
-			title.innerHTML = name;
+			let displayName = dashboard.modules[name]["displayName"];
+			title.innerHTML = displayName ? displayName : name;
 			title.classList.add("fs30b");
 			element.appendChild(title);
 

@@ -1,6 +1,7 @@
 //updates the parent progress bar width of the element passed to it
 dashboard.registerModule({
 	name: "progressBar",
+	displayName: "Progress Tracker",
 
 	updateBar: function(obj){
 		//get the progressbar entry

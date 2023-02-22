@@ -1,5 +1,6 @@
 dashboard.registerModule({
 	name: "textbox",
+	displayName: "TextBox",
 
 	_self: null,
 

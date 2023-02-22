@@ -1,5 +1,6 @@
 dashboard.registerModule({
 	name: "multitimer",
+	displayName: "Multi timer",
 
 	//adds 0s to the begining of a number such that the minimum width is width
 	leftZeroFillNumber: function(num, width){

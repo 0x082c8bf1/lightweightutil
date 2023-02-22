@@ -39,6 +39,24 @@ dashboard.registerModule({
 		}
 	},
 
+	parenWrap: function (){
+		let codeEditor = document.querySelector("#codeEditorTextarea");
+		codeEditor.value = "(" + codeEditor.value + ")";
+	},
+
+	jsonBeautify: function(){
+		let codeEditor = document.querySelector("#codeEditorTextarea");
+		let outputDiv = document.querySelector("#codeEditorOutput");
+		try{
+			let obj = JSON.parse(codeEditor.value);
+			codeEditor.value = JSON.stringify(obj, null, "\t");
+			outputDiv.innerHTML = "";
+		}catch(error){
+			outputDiv.style.color = "red";
+			outputDiv.innerHTML += error + "<br/>";;
+		}
+	},
+
 	getLines: function(text){
 		return text.split("\n");
 	},
@@ -195,6 +213,9 @@ dashboard.registerModule({
 		document.querySelector(".ce_pwrap").addEventListener("click", function(){
 			_this.parenWrap();
 		});
+		document.querySelector(".ce_json").addEventListener("click",function(){
+			_this.jsonBeautify();
+		});
 	},
 
 	instantiate: function(where){
@@ -206,16 +227,12 @@ dashboard.registerModule({
 				<input type="button" class="button ce_eval" value="JS eval"/>
 			</abbr>
 			<input type="button" class="button ce_pwrap" value="Wrap in ()"/>
+			<input type="button" class="button ce_json" value="JSON beautify"/>
 			<br/>
 			<span id="codeEditorOutput"></span>
 			<br/>
 			<span id="codeEditorReturnValue"></span>
 		`
-	},
-
-	parenWrap: function (){
-		let codeEditor = document.querySelector("#codeEditorTextarea");
-		codeEditor.value = "(" + codeEditor.value + ")";
 	},
 
 	registerSettings: function(){

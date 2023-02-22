@@ -107,6 +107,9 @@ var dashboard = {
 					case "bool":
 						value = settings[i].checked;
 						break;
+					case "text":
+						value = settings[i].value;
+						break;
 				}
 
 				if (newSettings[settings[i].module] == null)
@@ -272,9 +275,15 @@ var dashboard = {
 						else
 							input.checked = false;
 						break;
+					case "text":
+						input = document.createElement("input");
+						input.type = "text";
+						input.id = name + "_" + mSettings[i]["name"];
+						input.value = getSetting(name, mSettings[i]["name"])
+						break;
 				}
 
-				//tell the element what it s
+				//tell the element what it is
 				input.dataType = mSettings[i]["type"];
 				input.name = mSettings[i]["name"];
 				input.module = name;

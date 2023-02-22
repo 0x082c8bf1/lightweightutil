@@ -37,6 +37,8 @@ dashboard.registerModule({
 		let element = mod.querySelector("#pb_tmplt").content.cloneNode(true);
 		let created = element.querySelector(".pb_entry");
 
+		element.querySelector(".pb_label").value = getSetting(this.name, "defaultName");
+
 		//add bar event listeners
 		created.querySelector(".pb_completedNumber").addEventListener("input", function(){
 			_this.updateBar(this);
@@ -139,7 +141,7 @@ dashboard.registerModule({
 						<span>/</span>
 						<input type="number" min=1 class="width6 pb_totalNumber" value=1>
 						<span class="bar">
-							<input type="text" class="pb_label" value="Progress bar">
+							<input type="text" class="pb_label">
 							<span class="progressBar"></span>
 						</span>
 						<input type="button" class="button pb_deleteButton" value="x">
@@ -149,5 +151,16 @@ dashboard.registerModule({
 				<input type="button" id="pb_insertButton" class="button" value="+">
 			</div>
 		`
+	},
+
+	registerSettings: function(){
+		return [
+			{
+				"name": "defaultName",
+				"description": "Default name when a progress bar is created",
+				"type": "text",
+				"default": "Progress bar",
+			},
+		]
 	},
 });

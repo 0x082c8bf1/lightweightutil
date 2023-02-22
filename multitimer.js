@@ -73,6 +73,8 @@ dashboard.registerModule({
 
 			//init element fragment
 			let element = timer_tmplt.content.cloneNode(true);
+			element.querySelector(".name").value = getSetting(module.name, "defaultName")
+
 			this.timer = element.querySelector(".timer");//the element that this timer object corresponds to
 
 			//add element to dom
@@ -436,7 +438,7 @@ dashboard.registerModule({
 			<div id="timers" class="flex-container">
 				<template id="timer_tmplt">
 					<span class="timer">
-						<input type="text" class="name" value="Timer"/>
+						<input type="text" class="name"/>
 						<input class="x-button button" type="button" value="x">
 						<br/>
 						<input type="button" class="start-button button" value="Start"/>
@@ -470,5 +472,16 @@ dashboard.registerModule({
 				localStorage.setItem("mt_timers", JSON.stringify(obj));
 			}},
 		];
-	}
+	},
+
+	registerSettings: function(){
+		return [
+			{
+				"name": "defaultName",
+				"description": "Default name when a timer is created",
+				"type": "text",
+				"default": "Timer",
+			},
+		]
+	},
 });

@@ -24,6 +24,34 @@ var dashboard = {
 		document.querySelector("#reloadLayout").addEventListener("click", function(){
 			dashboard.layout.reload();
 		});
+		document.querySelector("#settingsToggle").addEventListener("click", function(){
+			let settingsShown = document.querySelector("#layout").hidden;
+
+			if (!settingsShown)
+				dashboard.settings.createSettingsPane();
+
+			document.querySelector("#settingsPane").hidden = settingsShown;
+			document.querySelector("#layout").hidden = !settingsShown;
+		});
+		document.querySelector("#saveSettings").addEventListener("click", function(){
+			let settings = document.querySelectorAll(".settingInput");
+			let newSettings = {};
+			for(let i=0; i<settings.length; i++){
+				let value;
+				switch(settings[i].dataType){
+					case "bool":
+						value = settings[i].checked;
+						break;
+				}
+
+				if (newSettings[settings[i].module] == null)
+					newSettings[settings[i].module] = {};
+
+				newSettings[settings[i].module][settings[i].name] = value;
+			}
+
+			localStorage.setItem("settings", JSON.stringify(newSettings));
+		});
 		dashboard.startModules();
 	},
 
@@ -48,10 +76,10 @@ var dashboard = {
 		},
 
 		//create a new module on the document body
-		appendNewContainer: function(){
+		appendNewContainer: function(location){
 			let c = document.createElement("div");
 			c.classList.add("container");
-			document.querySelector("#layout").appendChild(c);
+			location.appendChild(c);
 			return c;
 		},
 
@@ -93,7 +121,7 @@ var dashboard = {
 
 			//create containers
 			for(let cPos = 0; cPos<this.config.length; cPos++){
-				let container = this.appendNewContainer();
+				let container = this.appendNewContainer(document.querySelector("#layout"));
 
 				//create modules
 				for(let mPos = 0; mPos<this.config[cPos].length; mPos++){
@@ -135,6 +163,72 @@ var dashboard = {
 			localStorage.setItem("lastVersion", version);
 		},
 	},
+	settings: {
+		createSettingsPane: function(){
+			document.querySelector("#settings").innerHTML = "";
+
+			for(let moduleName in dashboard.modules){
+				dashboard.settings.createSettingsModule(moduleName);
+			}
+		},
+
+		createSettingsModule: function(name){
+			let module = dashboard.modules[name];
+			let mSettingsFunc = module.registerSettings;
+			if (!mSettingsFunc)
+				return;
+
+			let mSettings = mSettingsFunc();
+
+			//if the module has a settings function, we create a module for it
+			let container = dashboard.layout.appendNewContainer(document.querySelector("#settingsPane"));
+			let element = dashboard.layout.appendModuleToContainer(container);
+
+			let title = document.createElement("div");
+			title.innerHTML = name;
+			title.classList.add("fs30b");
+			element.appendChild(title);
+
+			//go through the settings and create the entries for them
+			for(let i=0; i<mSettings.length; i++){
+				let desc = document.createElement("span");
+
+				//append input
+				let input;
+				switch(mSettings[i]["type"]){
+					case "bool":
+						input = document.createElement("input");
+						input.type = "checkbox";
+						input.id = name + "_" + mSettings[i]["name"];
+						let checked = getSetting(name, mSettings[i]["name"]);
+						if (checked)
+							input.checked = true;
+						else
+							input.checked = false;
+						break;
+				}
+
+				//tell the element what it s
+				input.dataType = mSettings[i]["type"];
+				input.name = mSettings[i]["name"];
+				input.module = name;
+				input.classList.add("settingInput");
+
+				element.appendChild(input);
+
+				//append description
+				desc.innerHTML = mSettings[i]["description"];
+				element.appendChild(desc);
+
+				//append linebreak
+				let br = document.createElement("br");
+				element.appendChild(br);
+			}
+
+			document.querySelector("#settings").appendChild(element);
+		},
+
+	}
 }
 
 //start loading the modules when the page is done loading

@@ -38,11 +38,19 @@
 		</select>
 		<input id="time2" type="text"/>
 		-->
+		<div id="settingsPane" hidden>
+			<div id="settings">
+			</div>
+			<input type="button" class="button" value="Save" id="saveSettings">
+		</div>
 		<footer>
 			<span>LightweightUtil is a collection of open source lightweight utility applications, with no external dependencies, no ads, and minimal assets which stores all data locally.</span>
 			<br/>
 			<table>
 				<tr>
+					<td>
+						<input id="settingsToggle" type="button" class="button" value="Toggle settings">
+					</td>
 					<td>
 						<a href="documentation.html">[Documentation]</a>
 					</td>
@@ -52,7 +60,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="button" id="reloadLayout" value="Reload layout">
+						<input type="button" class="button" id="reloadLayout" value="Reload layout">
 					</td>
 				</tr>
 			</table>

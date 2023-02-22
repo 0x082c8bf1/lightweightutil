@@ -2,7 +2,10 @@ dashboard.registerModule({
 	name: "codeEditor",
 
 	evalTextBox: function(){
-		let shouldContinue = confirm("Eval can be unsafe, do not use this function unless you know exactly what the code is doing. Would you like to proceed?");
+		let shouldContinue = false;
+
+		if (getSetting(this.name, "evalWarn"))
+			shouldContinue = confirm("Eval can be unsafe, do not use this function unless you know exactly what the code is doing. Would you like to proceed?");
 
 		if(shouldContinue){
 			//define functions
@@ -212,5 +215,16 @@ dashboard.registerModule({
 	parenWrap: function (){
 		let codeEditor = document.querySelector("#codeEditorTextarea");
 		codeEditor.value = "(" + codeEditor.value + ")";
+	},
+
+	registerSettings: function(){
+		return [
+			{
+				"name": "evalWarn",
+				"description": "Display warning when running eval",
+				"type": "bool",
+				"default": true,
+			},
+		]
 	},
 });

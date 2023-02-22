@@ -87,8 +87,8 @@ var dashboard = {
 
 			for(let k in storage){
 				let data = storage[k];
-				 if (jsonFields.includes(k))
-					 data = JSON.stringify(data);
+				if (jsonFields.includes(k))
+					data = JSON.stringify(data);
 
 				localStorage.setItem(k, data);
 			}

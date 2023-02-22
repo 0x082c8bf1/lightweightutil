@@ -1,28 +1,28 @@
 .bar {
-    width: 50%;
-    height: 20px;
-    background-color: white;
-    display: inline-block;
-    vertical-align: bottom;
-    margin-top: 5px;
+	width: 50%;
+	height: 20px;
+	background-color: white;
+	display: inline-block;
+	vertical-align: bottom;
+	margin-top: 5px;
 }
 
 .progressBar {
-    height: 100%;
-    background-color: green;
-    display: inline-block;
+	height: 100%;
+	background-color: green;
+	display: inline-block;
 }
 
 .width6 {
-    width: 6ch;
+	width: 6ch;
 }
 
 .pb_label {
-    background: transparent;
-    border: none;
-    color: black;
-    width: calc(50% - 25px);
-    position: absolute;
+	background: transparent;
+	border: none;
+	color: black;
+	width: calc(50% - 25px);
+	position: absolute;
 }
 
 #pb_insertButton {

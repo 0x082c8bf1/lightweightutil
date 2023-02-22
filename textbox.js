@@ -106,16 +106,36 @@ dashboard.registerModule({
 		document.querySelector(".tb_sort").addEventListener("click",function(){
 			_this.alphabetizeLines();
 		});
-		document.querySelector(".tb_toupper").addEventListener("click",function(){
+		let uc_button = document.querySelector(".tb_toupper");
+		let lc_button = document.querySelector(".tb_tolower");
+		let rc_button = document.querySelector(".tb_torand");
+		let ic_button = document.querySelector(".tb_toinvert");
+
+		//apply hide settings
+		if (!getSetting(_this.name, "showUpperButton")){
+			uc_button.hidden = true;
+		}
+		if (!getSetting(_this.name, "showLowerButton")){
+			lc_button.hidden = true;
+		}
+		if (!getSetting(_this.name, "showRandomButton")){
+			rc_button.hidden = true;
+		}
+		if (!getSetting(_this.name, "showInvertButton")){
+			ic_button.hidden = true;
+		}
+
+		//add event listeners
+		uc_button.addEventListener("click",function(){
 			_this.toUpper();
 		});
-		document.querySelector(".tb_tolower").addEventListener("click",function(){
+		lc_button.addEventListener("click",function(){
 			_this.toLower();
 		});
-		document.querySelector(".tb_torand").addEventListener("click",function(){
+		rc_button.addEventListener("click",function(){
 			_this.toRandom();
 		});
-		document.querySelector(".tb_toinvert").addEventListener("click",function(){
+		ic_button.addEventListener("click",function(){
 			_this.toInvert();
 		});
 		document.querySelector(".tb_repace").addEventListener("click",function(){
@@ -154,5 +174,34 @@ dashboard.registerModule({
 				<span hidden>Regex<span>
 			</span>
 		`
+	},
+
+	registerSettings: function(){
+		return [
+			{
+				"name": "showUpperButton",
+				"description": "Display uppercase button",
+				"type": "bool",
+				"default": true,
+			},
+			{
+				"name": "showLowerButton",
+				"description": "Display lowercase button",
+				"type": "bool",
+				"default": true,
+			},
+			{
+				"name": "showRandomButton",
+				"description": "Display randomcase button",
+				"type": "bool",
+				"default": false,
+			},
+			{
+				"name": "showInvertButton",
+				"description": "Display invertcase button",
+				"type": "bool",
+				"default": false,
+			},
+		]
 	},
 });

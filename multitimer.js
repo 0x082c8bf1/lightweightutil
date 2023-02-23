@@ -410,6 +410,9 @@ dashboard.registerModule({
 
 		//show confirmation before reloading/closing the tab when there are timers
 		window.onbeforeunload = function (event) {
+			if (!getSetting(_this.name, "promptOnClose"))
+				return;
+
 			if(_this.timerTickInterval != null){
 				event.preventDefault();
 				return "There are currently timers running, are you sure you would like to exit?";
@@ -482,6 +485,12 @@ dashboard.registerModule({
 				"description": "Default name when a timer is created",
 				"type": "text",
 				"default": "Timer",
+			},
+			{
+				"name": "promptOnClose",
+				"description": "Prompt for confirmation when closing the page",
+				"type": "bool",
+				"default": false
 			},
 		]
 	},

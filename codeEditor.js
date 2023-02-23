@@ -245,4 +245,16 @@ dashboard.registerModule({
 			},
 		]
 	},
+
+	registerDocumentation: function(){
+		return [
+			"The code editor is a textbox designed for code.",
+			"Hitting tab will type a tab instead of moving to the next element. If you hit tab or shift+tab with a selection, it will indent or deindent multiple lines respectively.",
+			"Hitting ctrl+d will duplicate the currently selected line(s).",
+			"If you hit ctrl+shift+up/down it will move the selected line(s) up or down.",
+			"The wrap in parenthesis button will put the entire input inside of parenthesis.",
+			"The Eval button, or hitting ctrl+r will evaluate the inputted code as if it was JavaScript.",
+			"The JSON beautify button will beautify JSON that is inside of the code editor.",
+		]
+	},
 });

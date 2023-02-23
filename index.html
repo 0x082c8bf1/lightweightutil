@@ -21,12 +21,9 @@
 	</head>
 	<body>
 		<noscript>JavaScript is required to create the modules, enable it to use this website. Everything is done locally.</noscript>
+		<!-- modules -->
 		<div id="layout">
 		</div>
-		<!-- color picker -->
-		<!-- <div class="module">
-			<canvas id="colorPickerCanvas" width="256" height="256"></canvas>
-		</div> -->
 
 		<!-- time calculator -->
 		<!--
@@ -38,11 +35,23 @@
 		</select>
 		<input id="time2" type="text"/>
 		-->
+
+		<!-- settings -->
 		<div id="settingsPane" hidden>
 			<div id="settings">
 			</div>
 			<input type="button" class="button" value="Save" id="saveSettings">
 		</div>
+
+		<!-- documentation -->
+		<div id="documentationPane" hidden>
+			<ol id="docIndex">
+			</ol>
+			<div id="docs">
+			</div>
+		</div>
+
+		<!-- footer -->
 		<footer>
 			<span>LightweightUtil is a collection of open source lightweight utility applications, with no external dependencies, no ads, and minimal assets which stores all data locally.</span>
 			<br/>
@@ -52,7 +61,7 @@
 						<input id="settingsToggle" type="button" class="button" value="Toggle settings">
 					</td>
 					<td>
-						<a href="documentation.html">[Documentation]</a>
+						<input id="documentationToggle" type="button" class="button" value="Toggle documentation">
 					</td>
 					<td>
 						<a href="https://github.com/0x082c8bf1/lightweightutil" target="_blank">[Source code]</a>

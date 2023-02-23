@@ -485,4 +485,14 @@ dashboard.registerModule({
 			},
 		]
 	},
+
+	registerDocumentation: function(){
+		return [
+			"You can hit the + button to create a new timer. Once a timer is created you can type a time limit into the hh:mm:ss fields to set how long the timer will ring in. Once the time is filed out, you can hit the Start button to start the timer.",
+			"Once the time is up, the timer will start ringing. If more than one timer is ringing at a time, you will only hear one alarm, all timers must be stopped for the ringing to stop.",
+			"While a timer is running, you can click the Pause button to put the timer on hold temporarily, and then hit the Resume button to begin it again.",
+			"Hitting the X button while a timer is running will reset the timer, hitting the timer from it's reset state will remove the timer.",
+			"If you type a \"d\" into the hh field, it will parse the number to the left of the \"d\" as days, and the number to the right as hours.",
+		]
+	},
 });

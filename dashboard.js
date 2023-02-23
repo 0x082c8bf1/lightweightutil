@@ -25,13 +25,36 @@ var dashboard = {
 			dashboard.layout.reload();
 		});
 		document.querySelector("#settingsToggle").addEventListener("click", function(){
-			let settingsShown = document.querySelector("#layout").hidden;
+			let settings = document.querySelector("#settingsPane");
+			let layout = document.querySelector("#layout");
+			let documentation = document.querySelector("#documentationPane");
 
-			if (!settingsShown)
-				dashboard.settings.createSettingsPane();
+			if (settings.hidden){
+				dashboard.settings.createPane();
+				settings.hidden = false;
+				layout.hidden = true;
+				documentation.hidden = true;
+			} else {
+				settings.hidden = true;
+				layout.hidden = false;
+				documentation.hidden = true;
+			}
+		});
+		document.querySelector("#documentationToggle").addEventListener("click", function(){
+			let settings = document.querySelector("#settingsPane");
+			let layout = document.querySelector("#layout");
+			let documentation = document.querySelector("#documentationPane");
 
-			document.querySelector("#settingsPane").hidden = settingsShown;
-			document.querySelector("#layout").hidden = !settingsShown;
+			if (documentation.hidden){
+				dashboard.documentation.createPane();
+				settings.hidden = true;
+				layout.hidden = true;
+				documentation.hidden = false;
+			} else {
+				settings.hidden = true;
+				layout.hidden = false;
+				documentation.hidden = true;
+			}
 		});
 		document.querySelector("#export").addEventListener("click",function(){
 			let obj = {"storage" : {},"jsonFields" : []};
@@ -77,7 +100,7 @@ var dashboard = {
 			//reset localStorage
 			localStorage.clear();
 
-			//load new daa
+			//load new data
 			let fileReader = new FileReader();
 			fileReader.readAsText(file);
 			fileReader.addEventListener("load", function(){
@@ -232,16 +255,63 @@ var dashboard = {
 			localStorage.setItem("lastVersion", version);
 		},
 	},
-	settings: {
-		createSettingsPane: function(){
-			document.querySelector("#settings").innerHTML = "";
+	documentation: {
+		createPane: function(){
+			document.querySelector("#docs").innerHTML = "";
+			document.querySelector("#docIndex").innerHTML = "";
 
 			for(let moduleName in dashboard.modules){
-				dashboard.settings.createSettingsModule(moduleName);
+				dashboard.documentation.createDocumentationModule(moduleName);
 			}
 		},
 
-		createSettingsModule: function(name){
+		createDocumentationModule: function(name){
+			let module = dashboard.modules[name];
+			let mDocsFunc = module.registerDocumentation;
+			if (!mDocsFunc)
+				return;
+
+			let mDocs = mDocsFunc();
+
+			//if the module has a docs function, we create a module for it
+			let container = dashboard.layout.appendNewContainer(document.querySelector("#docs"));
+			let element = dashboard.layout.appendModuleToContainer(container);
+
+			//add the element to the index
+			let entry = document.createElement("li");
+			let a = document.createElement("a");
+			a.href = "#" + module.name;
+			a.innerHTML = module.displayName;
+			entry.appendChild(a);
+			document.querySelector("#docIndex").appendChild(entry);
+
+			//add the header element
+			let title = document.createElement("div");
+			let displayName = module.displayName;
+			title.innerHTML = displayName ? displayName : name;
+			title.classList.add("fs30b");
+			title.id = module.name;
+			element.appendChild(title);
+
+			//create p elements for every mDoc[i]
+			for(let i=0; i<mDocs.length; i++){
+				let p = document.createElement("p");
+				p.innerHTML = mDocs[i];
+				element.appendChild(p);
+			}
+		},
+	},
+
+	settings: {
+		createPane: function(){
+			document.querySelector("#settings").innerHTML = "";
+
+			for(let moduleName in dashboard.modules){
+				dashboard.settings.createModule(moduleName);
+			}
+		},
+
+		createModule: function(name){
 			let module = dashboard.modules[name];
 			let mSettingsFunc = module.registerSettings;
 			if (!mSettingsFunc)

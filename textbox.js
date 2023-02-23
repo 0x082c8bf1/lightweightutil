@@ -204,4 +204,14 @@ dashboard.registerModule({
 			},
 		]
 	},
+
+	registerDocumentation: function(){
+		return [
+			"This is a basic text box. You can then use your browsers spell check without needing to make any network requests.",
+			"The characters tells you how many characters you have typed. The words tell you how many words you have typed, a word is defined as non-whitespace characters followed by whitespace.",
+			"The sort lines button will sort the lines alphabetically.",
+			"The Uppercase, Lowercase, Randomcase, and Invertcase buttons will all change the case of the entered text in various ways.",
+			"You can hit ctrl+f to open the find and replace menu. The find and replace menu follows JavaScript regex pattern matching.",
+		]
+	},
 });

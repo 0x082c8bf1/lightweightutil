@@ -164,4 +164,14 @@ dashboard.registerModule({
 			},
 		]
 	},
+
+	registerDocumentation: function(){
+		return [
+			"The progress bar will show you how far along you are from completing a task. You can hit the plus button to add a new progress bar.",
+			"The first number on a progress bar is how far along the task is. The second number is how many it takes to complete it.",
+			"If the first number is less than the second one, the progress bar will show a proportion for how far along the task is.",
+			"If the first number is bigger than the second one, the progress bar will show a full completion.",
+			"Once you are done with a progress bar, hitting the x button will delete it.",
+		]
+	},
 });

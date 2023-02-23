@@ -42,4 +42,11 @@ dashboard.registerModule({
 		document.querySelector("#keycodeReader").value = "";
 		document.querySelector("#resetKeyCodeOutput").hidden = true;
 	},
+
+	registerDocumentation: function(){
+		return [
+			"The keycode reader will tell you what keys to press while the textbox is focused.",
+			"It will give you various JavaScript measurements of the key that you have pressed so that you can use this information when you need key events in JavaScript.",
+		]
+	},
 });

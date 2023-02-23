@@ -48,7 +48,7 @@ dashboard.registerModule({
 			_this.updateBar(this);
 		});
 		created.querySelector(".pb_deleteButton").addEventListener("click", function(){
-			_this.deleteBar(this);
+			_this.deleteBar(this, _this);
 		});
 
 		//add element to dom
@@ -57,7 +57,7 @@ dashboard.registerModule({
 		return created;
 	},
 
-	deleteBar: function(element){
+	deleteBar: function(element, _this){
 		let bar = getParentOfClass(element, "pb_entry");
 
 		let shouldDelete = true;
@@ -65,7 +65,7 @@ dashboard.registerModule({
 		let completed = bar.querySelector(".pb_completedNumber").value;
 		let total = bar.querySelector(".pb_totalNumber").value;
 		let label = bar.querySelector(".pb_label").value;
-		if (completed < total){
+		if (completed < total && getSetting(_this.name,"AskOnDeleteUnfinished")){
 			shouldDelete = confirm("This progress bar (" + label + ") is not completed. Are you sure you would like to delete it?");
 		}
 
@@ -161,6 +161,12 @@ dashboard.registerModule({
 				"description": "Default name when a progress bar is created",
 				"type": "text",
 				"default": "Progress bar",
+			},
+			{
+				"name": "AskOnDeleteUnfinished",
+				"description": "Prompt for confirmation when deleting an unfinished progress bar",
+				"type": "bool",
+				"default": true
 			},
 		]
 	},

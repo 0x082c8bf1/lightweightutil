@@ -76,8 +76,8 @@ var dashboard = {
 
 			let date = new Date();
 			let dateStr = date.getFullYear();
-			dateStr += "-" + date.getMonth()+1;
-			dateStr += "-" + date.getDate();
+			dateStr += "-" + ((date.getMonth()+1) + "").padStart(2,0);
+			dateStr += "-" + ((date.getDate() + "").padStart(2,0));
 
 			downloadAnchor.setAttribute("download","lwutilExport-" + dateStr + ".json");
 			downloadAnchor.setAttribute("href", 'data:text/plain;charset=utf-8,' + encodeURIComponent(string));

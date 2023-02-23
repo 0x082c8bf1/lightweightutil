@@ -108,7 +108,11 @@ var dashboard = {
 			let storage = file["storage"];
 			let jsonFields = file["jsonFields"];
 
+			localStorage.setItem("lastVersion",storage["lastVersion"]);
 			for(let k in storage){
+				if (k=="lastVersion")
+					continue;
+
 				let data = storage[k];
 				if (jsonFields.includes(k))
 					data = JSON.stringify(data);

@@ -97,6 +97,8 @@ dashboard.registerModule({
 			this.duration = 1000*60;
 			this.ringing = false;
 
+			this.notifSent = false;//because this is not saved, it will alert you when you start the page.
+
 			//references to this object for eventlisteners
 			let _this = this;
 
@@ -260,9 +262,16 @@ dashboard.registerModule({
 
 				this.timeDisplay.innerHTML = this.module.getDurationAsString(timeRemaining);
 				if(timeRemaining <= 0){
+					if (!this.notifSent && getSetting(this.module.name, "notifyOnRing")){
+						new Notification("Multi Timer: " + this.nameInput.value + " is over.");
+						this.notifSent = true;
+					}
+
 					this.startButton.value = "Reset";
 					this.timeDisplay.style.color = "red";
 					this.updateRinger(this, true);
+				} else {
+					this.notifSent = false;
 				}
 			}
 		}
@@ -419,10 +428,25 @@ dashboard.registerModule({
 			}
 		}
 
+		document.querySelector(".mt_notifButton").addEventListener("click", function(){
+			Notification.requestPermission().then((permission) => {
+				if (permission != "granted") {
+					alert("Timer notifications will not displayed while notifications are not granted.");
+				} else {
+					this.hidden = true;
+				}
+			});
+		});
 		//event listerner for adding a timer
 		document.querySelector(".mt_insertButton").addEventListener("click", function(){
 			_this.addTimer();
 		});
+
+		//check if nofications are enabled
+		if (getSetting(_this.name, "notifyOnRing") && "Notification" in window &&
+			Notification.permission != "granted"){
+			document.querySelector(".mt_notifButton").hidden = false;
+		}
 
 		//load
 		this.loadAllTimers();
@@ -456,6 +480,7 @@ dashboard.registerModule({
 						</span>
 					</span>
 				</template>
+				<input type="button" class="button mt_notifButton" value="Enable notifications" hidden>
 				<input type="button" id="mt_insertButton" class="button mt_insertButton" value="+">
 			</div>
 		`
@@ -490,7 +515,13 @@ dashboard.registerModule({
 				"name": "promptOnClose",
 				"description": "Prompt for confirmation when closing the page",
 				"type": "bool",
-				"default": false
+				"default": false,
+			},
+			{
+				"name": "notifyOnRing",
+				"description": "Send a notification when an alarm starts ringing",
+				"type": "bool",
+				"default": false,
 			},
 		]
 	},

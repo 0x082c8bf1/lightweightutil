@@ -20,6 +20,7 @@ dashboard.registerModule({
 
 		//set the width of the bar
 		progressBarEntry.querySelector(".progressBar").style.width=percent+"%";
+		progressBarEntry.querySelector(".completionPercent").innerHTML = parseFloat(percent).toFixed(2) + "%"
 	},
 
 	//updates all of the progess bar widths
@@ -145,6 +146,7 @@ dashboard.registerModule({
 							<input type="text" class="pb_label">
 							<span class="progressBar"></span>
 						</span>
+						<span class="completionPercent"></span>
 						<input type="button" class="button pb_deleteButton" value="x">
 						<br/>
 					</span>

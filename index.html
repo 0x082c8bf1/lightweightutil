@@ -51,31 +51,37 @@
 		<footer>
 			<span>LightweightUtil is a collection of open source lightweight utility applications, with no external dependencies, no ads, and minimal assets which stores all data locally.</span>
 			<br/>
-			<table>
-				<tr>
-					<td>
-						<input id="settingsToggle" type="button" class="button" value="Toggle settings">
-					</td>
-					<td>
-						<input id="documentationToggle" type="button" class="button" value="Toggle documentation">
-					</td>
-					<td>
-						<a href="https://github.com/0x082c8bf1/lightweightutil" target="_blank">[Source code]</a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="button" class="button" id="reloadLayout" value="Reload layout">
-					</td>
-					<td>
-						<input type="button" class="button" id="export" value="Export">
-					</td>
-					<td>
-						<input type="button" class="button" id="import" value="Import">
-						<input type="file" class="file" id="importFile" accept=".json">
-					</td>
-				</tr>
-			</table>
+			<span class="grid">
+				<span class="grid-column">
+					<div>Information</div>
+					<ul class="footerList">
+						<li>
+							<input id="settingsToggle" type="button" class="button" value="Toggle settings">
+						</li>
+						<li>
+							<input id="documentationToggle" type="button" class="button" value="Toggle documentation">
+						</li>
+						<li>
+							<a href="https://github.com/0x082c8bf1/lightweightutil" target="_blank">[Source code]</a>
+						</li>
+					</ul>
+				</span>
+				<span class="grid-column">
+					<div>Utility</div>
+					<ul class="footerList">
+						<li>
+							<input type="button" class="button" id="reloadLayout" value="Reload layout">
+						</li>
+						<li>
+							<input type="button" class="button" id="export" value="Export">
+						</li>
+						<li>
+							<input type="button" class="button" id="import" value="Import"/>
+							<input type="file" class="file" id="importFile" accept=".json"/>
+						</li>
+					</ul>
+				</span>
+			</span>
 		</footer>
 	</body>
 </html>

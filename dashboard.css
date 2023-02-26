@@ -54,15 +54,30 @@ footer {
 	padding-top: 10px;
 }
 
-footer > span, footer > table {
+footer > span {
 	display: block;
 	padding-left: 3em;
 	padding-right: 3em;
 	padding-bottom: 1em;
 }
 
-footer > table > tbody > tr > td {
-	padding-right: 2em;
+.footerList {
+	list-style: none;
+	padding-left: 0px;
+}
+
+.footerList > li {
+	padding-bottom: 5px;
+	width: 300px;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 30ch);
+}
+
+.grid-column {
+	grid-column: auto;
 }
 
 .module {

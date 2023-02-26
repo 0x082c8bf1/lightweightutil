@@ -91,6 +91,8 @@ var dashboard = {
 			document.querySelector("#fileSelectDisplay").innerHTML = this.files[0].name;
 		});
 
+		document.querySelector("#importFile").value = "";
+
 		document.querySelector("#import").addEventListener("click",function(){
 			const [file] = document.querySelector("#importFile").files;
 

@@ -77,7 +77,9 @@
 						</li>
 						<li>
 							<input type="button" class="button" id="import" value="Import"/>
-							<input type="file" class="file" id="importFile" accept=".json"/>
+							<label for="importFile" class="button fileUpload">Browse...</label>
+							<span id="fileSelectDisplay">No file selected.</span>
+							<input type="file" class="file" id="importFile" accept=".json" hidden/>
 						</li>
 					</ul>
 				</span>

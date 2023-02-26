@@ -87,6 +87,10 @@ var dashboard = {
 			document.body.removeChild(downloadAnchor);
 		});
 
+		document.querySelector("#importFile").addEventListener("change", function(){
+			document.querySelector("#fileSelectDisplay").innerHTML = this.files[0].name;
+		});
+
 		document.querySelector("#import").addEventListener("click",function(){
 			const [file] = document.querySelector("#importFile").files;
 
@@ -121,7 +125,9 @@ var dashboard = {
 			}
 
 			dashboard.layout.reload();
+
 			document.querySelector("#importFile").value = "";
+			document.querySelector("#fileSelectDisplay").innerHTML = "No file selected.";
 		});
 
 		});

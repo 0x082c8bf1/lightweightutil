@@ -168,9 +168,6 @@ var dashboard = {
 	},
 
 	layout: {
-		config: null,
-		parsed: false,
-
 		reload: function(){
 			document.querySelector("#layout").innerHTML = "";
 			dashboard.startModules();
@@ -194,41 +191,34 @@ var dashboard = {
 
 		create: function(){
 			//if the config is not loaded, try to load it
-			if(this.config == null){
-				this.config = localStorage.getItem("db_config");
-			} else {
-				//if it's already loaded, assume it's parsed.
-				this.parsed = true;
-			}
+			let config = localStorage.getItem("db_config");
 
 			//if the config is still not loaded, default it
-			if (this.config == null){
+			if (config == null){
 				//default config if none exists
 				log("Using default config.");
-				this.config = [
-					[{name: "multitimer"}],
-					[{name: "textbox"}],
-					[{name: "codeEditor"}, {name: "keyCode", width: "250px"}],
-					[{name: "progressBar"}]
-				];
-				this.parsed = true;
+				config =
+				`[
+					[{"name": "multitimer"}],
+					[{"name": "textbox"}],
+					[{"name": "codeEditor"}, {"name": "keyCode", "width": "250px"}],
+					[{"name": "progressBar"}]
+				]`;
 
 				//TODO: Add a way to save this to localStorage optionally
-//				localStorage.setItem("db_config", JSON.stringify(this.config));
+//				localStorage.setItem("db_config", JSON.stringify(config));
 			}
 
-			if (!this.parsed){
-				this.config = JSON.parse(this.config);
-			}
+			config = JSON.parse(config);
 
 			//create containers
-			for(let cPos = 0; cPos<this.config.length; cPos++){
+			for(let cPos = 0; cPos<config.length; cPos++){
 				let container = this.appendNewContainer(document.querySelector("#layout"));
 
 				//create modules
-				for(let mPos = 0; mPos<this.config[cPos].length; mPos++){
+				for(let mPos = 0; mPos<config[cPos].length; mPos++){
 					let module = this.appendModuleToContainer(container);
-					let mConfig = this.config[cPos][mPos];
+					let mConfig = config[cPos][mPos];
 
 					//apply module settings
 					if (mConfig.width){

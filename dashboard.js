@@ -302,7 +302,6 @@ var dashboard = {
 		},
 
 		checkLeave: function(){
-			console.log("checking leave");
 			let discard = true;
 			if (!document.querySelector("#settingsPane").hidden){
 				let unsavedSettings = JSON.stringify(dashboard.settings.getNewSettings());

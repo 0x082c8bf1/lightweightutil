@@ -20,41 +20,48 @@ var dashboard = {
 		log("Registed module: " + module.name);
 	},
 
+	togglePane: function(toPane){
+		let panes = {
+			settings: {pane: document.querySelector("#settingsPane"), funcs: dashboard.settings},
+			layout: {pane: document.querySelector("#layout")},
+			documentation: {pane: document.querySelector("#documentationPane"), funcs: dashboard.documentation}
+		};
+
+		//get current pane
+		let currentPane;
+		for(p in panes){
+			if (!panes[p].pane.hidden)
+				currentPane = p;
+		}
+
+		if (panes[currentPane].funcs?.checkLeave && !panes[currentPane].funcs.checkLeave()){
+			return;
+		}
+
+		//handle toggle
+		if (!panes[toPane].pane.hidden){
+			toPane = "layout";
+		}
+
+		//hide all panes
+		for(p in panes){
+			panes[p].pane.hidden = true;
+		}
+
+		//unhide appropriate pane
+		panes[toPane].funcs?.createPane();
+		panes[toPane].pane.hidden = false;
+	},
+
 	pageLoad: function(){
 		document.querySelector("#reloadLayout").addEventListener("click", function(){
 			dashboard.layout.reload();
 		});
 		document.querySelector("#settingsToggle").addEventListener("click", function(){
-			let settings = document.querySelector("#settingsPane");
-			let layout = document.querySelector("#layout");
-			let documentation = document.querySelector("#documentationPane");
-
-			if (settings.hidden){
-				dashboard.settings.createPane();
-				settings.hidden = false;
-				layout.hidden = true;
-				documentation.hidden = true;
-			} else {
-				settings.hidden = true;
-				layout.hidden = false;
-				documentation.hidden = true;
-			}
+			dashboard.togglePane("settings");
 		});
 		document.querySelector("#documentationToggle").addEventListener("click", function(){
-			let settings = document.querySelector("#settingsPane");
-			let layout = document.querySelector("#layout");
-			let documentation = document.querySelector("#documentationPane");
-
-			if (documentation.hidden){
-				dashboard.documentation.createPane();
-				settings.hidden = true;
-				layout.hidden = true;
-				documentation.hidden = false;
-			} else {
-				settings.hidden = true;
-				layout.hidden = false;
-				documentation.hidden = true;
-			}
+			dashboard.togglePane("documentation");
 		});
 		document.querySelector("#export").addEventListener("click",function(){
 			let obj = {"storage" : {},"jsonFields" : []};
@@ -134,26 +141,7 @@ var dashboard = {
 
 		});
 		document.querySelector("#saveSettings").addEventListener("click", function(){
-			let settings = document.querySelectorAll(".settingInput");
-			let newSettings = {};
-			for(let i=0; i<settings.length; i++){
-				let value;
-				switch(settings[i].dataType){
-					case "bool":
-						value = settings[i].checked;
-						break;
-					case "text":
-						value = settings[i].value;
-						break;
-				}
-
-				if (newSettings[settings[i].module] == null)
-					newSettings[settings[i].module] = {};
-
-				newSettings[settings[i].module][settings[i].name] = value;
-			}
-
-			localStorage.setItem("settings", JSON.stringify(newSettings));
+			dashboard.settings.saveSettings();
 		});
 		dashboard.startModules();
 	},
@@ -311,6 +299,56 @@ var dashboard = {
 			for(let moduleName in dashboard.modules){
 				dashboard.settings.createModule(moduleName);
 			}
+		},
+
+		checkLeave: function(){
+			console.log("checking leave");
+			let discard = true;
+			if (!document.querySelector("#settingsPane").hidden){
+				let unsavedSettings = JSON.stringify(dashboard.settings.getNewSettings());
+				let savedSettings = localStorage.getItem("settings");
+				//if the user has never saved settings before
+				if (!savedSettings){
+					let save = confirm("You have no saved settings, would you like to save?")
+					if (save) {
+						dashboard.settings.saveSettings();
+					}
+				}
+
+				//if the user has unsaved settings
+				if (savedSettings && savedSettings != unsavedSettings){
+					discard = confirm("You have unsaved settings, would you like to discard them?");
+				}
+			}
+			return discard
+		},
+
+		getNewSettings: function(){
+			let settings = document.querySelectorAll(".settingInput");
+			let newSettings = {};
+			for(let i=0; i<settings.length; i++){
+				let value;
+				switch(settings[i].dataType){
+					case "bool":
+						value = settings[i].checked;
+						break;
+					case "text":
+						value = settings[i].value;
+						break;
+				}
+
+				if (newSettings[settings[i].module] == null)
+					newSettings[settings[i].module] = {};
+
+				newSettings[settings[i].module][settings[i].name] = value;
+			}
+
+			return newSettings;
+		},
+
+		saveSettings: function(){
+			let newSettings = dashboard.settings.getNewSettings();
+			localStorage.setItem("settings", JSON.stringify(newSettings));
 		},
 
 		createModule: function(name){

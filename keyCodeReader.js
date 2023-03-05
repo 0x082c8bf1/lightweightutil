@@ -5,24 +5,28 @@ dashboard.registerModule({
 	init: function(module){
 		//add the event listener
 		let input = module.q("#keycodeReader");
+		let _this = this;
+
 		input.addEventListener("keydown", function(event){
 			input.value = "";
 			event.preventDefault();
 
+			let pre = getSetting(_this.name, "eventPrefix");
+			let post = getSetting(_this.name, "eventSuffix");
+
 			let output = "";
-			output += "code == \"" + event.code + "\"<br/>";
-			output += "key == '" + event.key + "'<br/>";
-			output += "ctrlKey == " + event.ctrlKey + "<br/>";
-			output += "altKey == " + event.altKey + "<br/>";
-			output += "shiftKey == " + event.shiftKey + "<br/>";
-			output += "<s>keyCode == " + event.keyCode + "</s><br/>";
-			output += "<s>which == " + event.which + "</s><br/>";
+			output += pre + "code == \"" + event.code + "\"" + post + "<br/>";
+			output += pre + "key == '" + event.key + "'" + post + "<br/>";
+			output += pre + "ctrlKey == " + event.ctrlKey + post + "<br/>";
+			output += pre + "altKey == " + event.altKey + post + "<br/>";
+			output += pre + "shiftKey == " + event.shiftKey + post + "<br/>";
+			output += pre + "<s>keyCode == " + event.keyCode + post + "</s><br/>";
+			output += pre + "<s>which == " + event.which + post + "</s><br/>";
 
 			module.q("#keycodeOutput").innerHTML = output;
 			module.q("#resetKeyCodeOutput").hidden = false;
 		});
 
-		let _this = this;
 		module.q("#resetKeyCodeOutput").addEventListener("click", function(){
 			_this.resetKeyCodeOutput(module);
 		});
@@ -41,6 +45,23 @@ dashboard.registerModule({
 		module.q("#keycodeOutput").innerHTML = "";
 		module.q("#keycodeReader").value = "";
 		module.q("#resetKeyCodeOutput").hidden = true;
+	},
+
+	registerSettings: function(){
+		return [
+			{
+				"name": "eventPrefix",
+				"description": "Prefix when displaying output.",
+				"type": "text",
+				"default": "",
+			},
+			{
+				"name": "eventSuffix",
+				"description": "Suffix when displaying output.",
+				"type": "text",
+				"default": "",
+			},
+		]
 	},
 
 	registerDocumentation: function(){

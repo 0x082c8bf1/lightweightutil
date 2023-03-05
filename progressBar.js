@@ -24,8 +24,8 @@ dashboard.registerModule({
 	},
 
 	//updates all of the progess bar widths
-	processAllBars: function(){
-		let entries = document.querySelectorAll(".pb_entry");
+	processAllBars: function(module){
+		let entries = module.qAll(".pb_entry");
 		for(let i=0; i<entries.length; i++){
 			this.updateBar(entries[i]);
 		}
@@ -93,7 +93,7 @@ dashboard.registerModule({
 		localStorage.setItem("pb_bars", JSON.stringify(saveObj));
 	},
 
-	loadBars: function(obj){
+	loadBars: function(module, obj){
 		let loadedObj = JSON.parse(localStorage.getItem("pb_bars"));
 
 		if (loadedObj == null)
@@ -107,14 +107,15 @@ dashboard.registerModule({
 			newBar.querySelector(".pb_label").value = loadedObj[i].name;
 		}
 
-		this.processAllBars();
+		this.processAllBars(module);
 	},
 
 	//init the progress bars
-	init: function(){
+	init: function(module){
 		let _this = this;
 
-		let barContainer = document.querySelector("#pb_bars");
+
+		let barContainer = module.q("#pb_bars");
 
 		//create module event listeners
 		barContainer.addEventListener("click", function(){
@@ -125,12 +126,12 @@ dashboard.registerModule({
 			_this.saveBars(this);
 		})
 
-		document.querySelector("#pb_insertButton").addEventListener("click",function(){
+		module.q("#pb_insertButton").addEventListener("click",function(){
 			_this.addBar(this);
 		});
 
 		//load from localStorage
-		this.loadBars(document.querySelector("#pb_bars"));
+		this.loadBars(module, module.q("#pb_bars"));
 	},
 
 	instantiate: function(where){

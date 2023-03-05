@@ -2,7 +2,7 @@ dashboard.registerModule({
 	name: "codeEditor",
 	displayName: "Code Editor",
 
-	evalTextBox: function(){
+	evalTextBox: function(module){
 		let shouldContinue = true;
 
 		if (getSetting(this.name, "evalWarn"))
@@ -10,13 +10,13 @@ dashboard.registerModule({
 
 		if(shouldContinue){
 			//define functions
-			let outputDiv = document.querySelector("#codeEditorOutput");
+			let outputDiv = module.q("#codeEditorOutput");
 			//output(str) - prints str below the textbox
 			var output = function(value){
 				outputDiv.innerHTML += value + "<br/>";
 			}
 
-			let input = document.querySelector("#codeEditorTextarea").value;
+			let input = module.q("#codeEditorTextarea").value;
 			//reset output span
 			outputDiv.innerHTML = "";
 			outputDiv.style.color = "white";
@@ -31,7 +31,7 @@ dashboard.registerModule({
 			}
 
 			//display the return value
-			let retValueSpan = document.querySelector("#codeEditorReturnValue");
+			let retValueSpan = module.q("#codeEditorReturnValue");
 			if(returnVal != undefined)
 				retValueSpan.innerHTML = "Return value: " + returnVal;
 			else
@@ -39,14 +39,14 @@ dashboard.registerModule({
 		}
 	},
 
-	parenWrap: function (){
-		let codeEditor = document.querySelector("#codeEditorTextarea");
+	parenWrap: function(module){
+		let codeEditor = module.q("#codeEditorTextarea");
 		codeEditor.value = "(" + codeEditor.value + ")";
 	},
 
-	jsonBeautify: function(){
-		let codeEditor = document.querySelector("#codeEditorTextarea");
-		let outputDiv = document.querySelector("#codeEditorOutput");
+	jsonBeautify: function(module){
+		let codeEditor = module.q("#codeEditorTextarea");
+		let outputDiv = module.q("#codeEditorOutput");
 		try{
 			let obj = JSON.parse(codeEditor.value);
 			codeEditor.value = JSON.stringify(obj, null, "\t");
@@ -79,8 +79,8 @@ dashboard.registerModule({
 		object.value += lines[lines.length-1];
 	},
 
-	init: function (){
-		let codeEditor = document.querySelector("#codeEditorTextarea");
+	init: function (module){
+		let codeEditor = module.q("#codeEditorTextarea");
 
 		//add event listeners
 		let _this = this;
@@ -164,7 +164,7 @@ dashboard.registerModule({
 				codeEditor.selectionEnd = newCursorPos;
 			}else if(e.code == "KeyR" && e.ctrlKey){
 				e.preventDefault();
-				_this.evalTextBox();
+				_this.evalTextBox(module);
 			}else if(e.ctrlKey && e.shiftKey && (e.code == "ArrowUp" || e.code == "ArrowDown")){
 				e.preventDefault();
 
@@ -207,14 +207,14 @@ dashboard.registerModule({
 			}
 		});
 
-		document.querySelector(".ce_eval").addEventListener("click", function(){
-			_this.evalTextBox();
+		module.q(".ce_eval").addEventListener("click", function(){
+			_this.evalTextBox(module);
 		});
-		document.querySelector(".ce_pwrap").addEventListener("click", function(){
-			_this.parenWrap();
+		module.q(".ce_pwrap").addEventListener("click", function(){
+			_this.parenWrap(module);
 		});
-		document.querySelector(".ce_json").addEventListener("click",function(){
-			_this.jsonBeautify();
+		module.q(".ce_json").addEventListener("click",function(){
+			_this.jsonBeautify(module);
 		});
 	},
 

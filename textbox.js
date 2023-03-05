@@ -6,11 +6,11 @@ dashboard.registerModule({
 
 	//updates the character and word counts of the text area
 	//words are considered any string of non-whitespace seperated by whitespace on either side
-	updateCharacterCounts: function(){
-		let input = document.querySelector("#textarea").value;
+	updateCharacterCounts: function(module){
+		let input = module.q("#textarea").value;
 
 		//character count
-		document.querySelector("#characterCount").innerHTML = input.length;
+		module.q("#characterCount").innerHTML = input.length;
 
 		//word count
 		let truncatedInput = input.trim();
@@ -20,12 +20,12 @@ dashboard.registerModule({
 		if(truncatedInput!="")
 			wordCount = words.length;
 
-		document.querySelector("#wordCount").innerHTML = wordCount;
+			module.q("#wordCount").innerHTML = wordCount;
 	},
 
 	//sorts all of the lines in the textbox alphabetically (does not ignore case)
-	alphabetizeLines: function(){
-		let input = document.querySelector("#textarea");
+	alphabetizeLines: function(module){
+		let input = module.q("#textarea");
 		let lines = input.value.split("\n");
 		lines.sort();
 
@@ -40,19 +40,19 @@ dashboard.registerModule({
 		input.value = output;
 	},
 
-	toUpper: function(){
-		let input = document.querySelector("#textarea");
+	toUpper: function(module){
+		let input = module.q("#textarea");
 		input.value = input.value.toUpperCase();
 	},
 
-	toLower: function(){
-		let input = document.querySelector("#textarea");
+	toLower: function(module){
+		let input = module.q("#textarea");
 		input.value = input.value.toLowerCase();
 	},
 
-	toRandom: function(){
+	toRandom: function(module){
 		let output = "";
-		let input = document.querySelector("#textarea");
+		let input = module.q("#textarea");
 		let text = input.value;
 		for(let i=0; i<text.length; i++){
 			let number = Math.floor(Math.random() * 2);
@@ -61,9 +61,9 @@ dashboard.registerModule({
 		input.value = output;
 	},
 
-	toInvert: function(){
+	toInvert: function(module){
 		let output = "";
-		let input = document.querySelector("#textarea");
+		let input = module.q("#textarea");
 		let text = input.value;
 		for(let i=0; i<text.length; i++){
 			output += ((text[i] >= 'A' && text[i] <= 'Z') ? text[i].toLowerCase() : text[i].toUpperCase());
@@ -71,45 +71,41 @@ dashboard.registerModule({
 		input.value = output;
 	},
 
-	regexEscapeString: function(input){
-		return input.replace
-	},
-
-	replace: function(){
+	replace: function(module){
 		let inputPattern;
-		if (document.querySelector("#regexSearch").value)
-			inputPattern = new RegExp(document.querySelector("#replaceInputPattern").value, 'g');
+		if (module.q("#regexSearch").value)
+			inputPattern = new RegExp(module.q("#replaceInputPattern").value, 'g');
 		else
-			inputPattern = document.querySelector("#replaceInputPattern").value;
+			inputPattern = module.q("#replaceInputPattern").value;
 
-		let outputPattern = document.querySelector("#replaceOutputPattern").value;
+		let outputPattern = module.q("#replaceOutputPattern").value;
 
-		let input = document.querySelector("#textarea");
+		let input = module.q("#textarea");
 		input.value = input.value.replaceAll(inputPattern, outputPattern);
-		//todo allow for captures to be used in the output
+		//TODO: allow for captures to be used in the output
 	},
 
-	handleFind: function(e){
+	handleFind: function(module, e){
 		if(e.key == 'f' && e.ctrlKey) {
 			e.preventDefault();
-			let fs = document.querySelector(".findSpan");
+			let fs = module.q(".findSpan");
 			fs.hidden = !fs.hidden;
 			if (!fs.hidden)
-				document.querySelector("#replaceInputPattern").focus();
+				module.q("#replaceInputPattern").focus();
 			else
-				document.querySelector("#textarea").focus();
+				module.q("#textarea").focus();
 		}
 	},
 
-	init: function(){
+	init: function(module){
 		let _this = this;
-		document.querySelector(".tb_sort").addEventListener("click",function(){
-			_this.alphabetizeLines();
+		module.q(".tb_sort").addEventListener("click",function(){
+			_this.alphabetizeLines(module);
 		});
-		let uc_button = document.querySelector(".tb_toupper");
-		let lc_button = document.querySelector(".tb_tolower");
-		let rc_button = document.querySelector(".tb_torand");
-		let ic_button = document.querySelector(".tb_toinvert");
+		let uc_button = module.q(".tb_toupper");
+		let lc_button = module.q(".tb_tolower");
+		let rc_button = module.q(".tb_torand");
+		let ic_button = module.q(".tb_toinvert");
 
 		//apply hide settings
 		if (!getSetting(_this.name, "showUpperButton")){
@@ -127,25 +123,25 @@ dashboard.registerModule({
 
 		//add event listeners
 		uc_button.addEventListener("click",function(){
-			_this.toUpper();
+			_this.toUpper(module);
 		});
 		lc_button.addEventListener("click",function(){
-			_this.toLower();
+			_this.toLower(module);
 		});
 		rc_button.addEventListener("click",function(){
-			_this.toRandom();
+			_this.toRandom(module);
 		});
 		ic_button.addEventListener("click",function(){
-			_this.toInvert();
+			_this.toInvert(module);
 		});
-		document.querySelector(".tb_repace").addEventListener("click",function(){
-			_this.replace();
+		module.q(".tb_repace").addEventListener("click",function(){
+			_this.replace(module);
 		});
-		document.querySelector("#textarea").addEventListener("keyup",function(){
-			_this.updateCharacterCounts();
+		module.q("#textarea").addEventListener("keyup",function(){
+			_this.updateCharacterCounts(module);
 		});
 		_self.addEventListener("keydown",function(e){
-			_this.handleFind(e);
+			_this.handleFind(module, e);
 		});
 	},
 

@@ -61,6 +61,8 @@ dashboard.registerModule({
 		return output;
 	},
 
+	//TODO: these need to not be stored here, and instead need to be on the instance module for multi moduling
+	//			right now it will only use the object for the last timer module that was created
 	timers: [],//list of all the timers
 	timerTickInterval: null, //the interval set if any timers exist
 
@@ -69,7 +71,8 @@ dashboard.registerModule({
 	loadedAudio: new Audio("pixbay-alarm-clock-short.mp3"), //the audio that is played when ringing
 
 	Timer: class {
-		constructor(module){
+		constructor(moduleElement, module){
+			//TODO: rename module to something else, rename module element to module for consistency with other modules
 			this.module = module;
 
 			//init element fragment
@@ -79,7 +82,7 @@ dashboard.registerModule({
 			this.timer = element.querySelector(".timer");//the element that this timer object corresponds to
 
 			//add element to dom
-			document.getElementById("timers").insertBefore(element, document.getElementById("mt_insertButton"));
+			moduleElement.q("#timers").insertBefore(element, moduleElement.q("#mt_insertButton"));
 
 			//element references
 			this.xButton = this.timer.querySelector(".x-button");
@@ -162,8 +165,8 @@ dashboard.registerModule({
 
 		//function that updates the ringer when a timer is reset or deleted while ringing
 		//turnOn is weather the timer is starting ringing or stopping ringing
-		//TODO add options to change sound via url
-		//TODO add option to change how much the sound loops
+		//TODO add option to change sound via url
+		//TODO add options to change how much the sound loops
 		updateRinger(_this, turnOn, auto){
 			//don't do anything if _this.ringing is already what it should be set to
 			if(turnOn==_this.ringing){
@@ -340,10 +343,10 @@ dashboard.registerModule({
 	},
 
 	//adds a timer
-	addTimer: function(){
+	addTimer: function(module){
 		let _this = this;
 		//create timer object
-		this.timers.push(new this.Timer(this));
+		this.timers.push(new this.Timer(module, this));
 
 		//set timertick interval if its not set already
 		if(this.timerTickInterval == null){
@@ -381,7 +384,7 @@ dashboard.registerModule({
 	},
 
 	//load all of the timers from localStorage
-	loadAllTimers: function(){
+	loadAllTimers: function(module){
 		//reset timers, this fixes an issue with timers being duplicated when a layout reload is called.
 		this.timers = [];
 
@@ -391,11 +394,12 @@ dashboard.registerModule({
 			return;
 
 		for(let i=0; i<obj.length; i++){
-			this.addTimer();
+			this.addTimer(module);
 			this.timers[this.timers.length-1].createFromObject(obj[i]);
 		}
 	},
 
+	//TODO: This no longer works
 	//create a timer with initlized values, intended to be used with the JS eval Code Editor option
 	createWith: function(hours, minutes, seconds, name, started){
 		//create timer
@@ -414,7 +418,7 @@ dashboard.registerModule({
 		}
 	},
 
-	init: function(){
+	init: function(module){
 		let _this = this;
 
 		//show confirmation before reloading/closing the tab when there are timers
@@ -428,7 +432,7 @@ dashboard.registerModule({
 			}
 		}
 
-		document.querySelector(".mt_notifButton").addEventListener("click", function(){
+		module.q(".mt_notifButton").addEventListener("click", function(){
 			Notification.requestPermission().then((permission) => {
 				if (permission != "granted") {
 					alert("Timer notifications will not displayed while notifications are not granted.");
@@ -438,24 +442,24 @@ dashboard.registerModule({
 			});
 		});
 		//event listerner for adding a timer
-		document.querySelector(".mt_insertButton").addEventListener("click", function(){
-			_this.addTimer();
+		module.q(".mt_insertButton").addEventListener("click", function(){
+			_this.addTimer(module);
 		});
 
 		//check if nofications are enabled
 		if (getSetting(_this.name, "notifyOnRing") && "Notification" in window &&
 			Notification.permission != "granted"){
-			document.querySelector(".mt_notifButton").hidden = false;
+			module.q(".mt_notifButton").hidden = false;
 		}
 
 		//load
-		this.loadAllTimers();
+		this.loadAllTimers(module);
 
 		//event listeners for saving the timers
-		document.querySelector("#timers").addEventListener("click", function(){
+		module.q("#timers").addEventListener("click", function(){
 			_this.saveAllTimers();
 		});
-		document.querySelector("#timers").addEventListener("keyup", function(){
+		module.q("#timers").addEventListener("keyup", function(){
 			_this.saveAllTimers();
 		});
 	},

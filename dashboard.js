@@ -236,9 +236,24 @@ var dashboard = {
 					}
 
 					//init the modules
+					let instance = {
+						"module": module,
+						q: function(selector){
+							if (selector.includes("#")){
+								log(module.name + " is using an id q, this is not recommended.");
+							}
+							return this.module.querySelector(selector);
+						},
+						qAll: function(selector){
+							if (selector.includes("#")){
+								log(module.name + " is using an id qAll, this is really not recommended.");
+							}
+							return this.module.querySelectorAll(selector);
+						}
+					};
 					let imodule = dashboard.modules[mConfig.name];
 					if (imodule.init){
-						imodule.init();
+						imodule.init(instance);
 					}
 				}
 			}

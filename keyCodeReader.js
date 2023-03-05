@@ -2,9 +2,9 @@ dashboard.registerModule({
 	name: "keyCode",
 	displayName: "KeyCode Reader",
 
-	init: function(){
-		//add the event listner
-		let input = document.querySelector("#keycodeReader");
+	init: function(module){
+		//add the event listener
+		let input = module.q("#keycodeReader");
 		input.addEventListener("keydown", function(event){
 			input.value = "";
 			event.preventDefault();
@@ -18,13 +18,13 @@ dashboard.registerModule({
 			output += "<s>keyCode == " + event.keyCode + "</s><br/>";
 			output += "<s>which == " + event.which + "</s><br/>";
 
-			document.querySelector("#keycodeOutput").innerHTML = output;
-			document.querySelector("#resetKeyCodeOutput").hidden = false;
+			module.q("#keycodeOutput").innerHTML = output;
+			module.q("#resetKeyCodeOutput").hidden = false;
 		});
 
 		let _this = this;
-		document.querySelector("#resetKeyCodeOutput").addEventListener("click", function(){
-			_this.resetKeyCodeOutput();
+		module.q("#resetKeyCodeOutput").addEventListener("click", function(){
+			_this.resetKeyCodeOutput(module);
 		});
 	},
 
@@ -37,10 +37,10 @@ dashboard.registerModule({
 		`
 	},
 
-	resetKeyCodeOutput: function(){
-		document.querySelector("#keycodeOutput").innerHTML = "";
-		document.querySelector("#keycodeReader").value = "";
-		document.querySelector("#resetKeyCodeOutput").hidden = true;
+	resetKeyCodeOutput: function(module){
+		module.q("#keycodeOutput").innerHTML = "";
+		module.q("#keycodeReader").value = "";
+		module.q("#resetKeyCodeOutput").hidden = true;
 	},
 
 	registerDocumentation: function(){

@@ -82,7 +82,6 @@ dashboard.registerModule({
 
 		let input = module.q("#textarea");
 		input.value = input.value.replaceAll(inputPattern, outputPattern);
-		//TODO: allow for captures to be used in the output
 	},
 
 	handleFind: function(module, e){
@@ -208,6 +207,7 @@ dashboard.registerModule({
 			"The sort lines button will sort the lines alphabetically.",
 			"The Uppercase, Lowercase, Randomcase, and Invertcase buttons will all change the case of the entered text in various ways.",
 			"You can hit ctrl+f to open the find and replace menu. The find and replace menu follows JavaScript regex pattern matching.",
+			"In the find and replace, you can use regex. Any groups made in the replace field can be accessed by using `$1` for the first reference and so on.",
 		]
 	},
 });

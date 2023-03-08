@@ -73,7 +73,8 @@ dashboard.registerModule({
 
 	replace: function(module){
 		let inputPattern;
-		if (module.q("#regexSearch").value)
+
+		if (module.q("#regexSearch").checked)
 			inputPattern = new RegExp(module.q("#replaceInputPattern").value, 'g');
 		else
 			inputPattern = module.q("#replaceInputPattern").value;
@@ -81,7 +82,7 @@ dashboard.registerModule({
 		let outputPattern = module.q("#replaceOutputPattern").value;
 
 		let input = module.q("#textarea");
-		input.value = input.value.replaceAll(inputPattern, outputPattern);
+		input.value = input.value.replace(inputPattern, outputPattern);
 	},
 
 	handleFind: function(module, e){
@@ -165,8 +166,8 @@ dashboard.registerModule({
 				<span> with </span>
 				<input type="text" id="replaceOutputPattern">
 				<input type="button" class="button tb_repace" value="go">
-				<input type="checkbox" id="regexSearch" hidden>
-				<span hidden>Regex<span>
+				<input type="checkbox" id="regexSearch" checked=true>
+				<label for="regexSearch">Regex</label>
 			</span>
 		`
 	},

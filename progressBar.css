@@ -25,7 +25,7 @@
 	position: absolute;
 }
 
-#pb_insertButton {
+.pb_insertButton {
 	width: 40px;
 	height: 40px;
 	font-size: 30px;

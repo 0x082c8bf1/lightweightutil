@@ -36,7 +36,7 @@ dashboard.registerModule({
 		let mod = getModule(obj);
 
 		//create from template
-		let element = mod.querySelector("#pb_tmplt").content.cloneNode(true);
+		let element = mod.querySelector(".pb_tmplt").content.cloneNode(true);
 		let created = element.querySelector(".pb_entry");
 
 		element.querySelector(".pb_label").value = getSetting(this.name, "defaultName");
@@ -53,7 +53,7 @@ dashboard.registerModule({
 		});
 
 		//add element to dom
-		mod.querySelector("#pb_bars").insertBefore(element, mod.querySelector("#pb_insertButton"));
+		mod.querySelector(".pb_bars").insertBefore(element, mod.querySelector(".pb_insertButton"));
 
 		return created;
 	},
@@ -115,7 +115,7 @@ dashboard.registerModule({
 		let _this = this;
 
 
-		let barContainer = module.q("#pb_bars");
+		let barContainer = module.q(".pb_bars");
 
 		//create module event listeners
 		barContainer.addEventListener("click", function(){
@@ -126,19 +126,19 @@ dashboard.registerModule({
 			_this.saveBars(this);
 		})
 
-		module.q("#pb_insertButton").addEventListener("click",function(){
+		module.q(".pb_insertButton").addEventListener("click",function(){
 			_this.addBar(this);
 		});
 
 		//load from localStorage
-		this.loadBars(module, module.q("#pb_bars"));
+		this.loadBars(module, module.q(".pb_bars"));
 	},
 
 	instantiate: function(where){
 		where.innerHTML = /*html*/`
-			<div class="fs30b" id="progressTracker">Progress Tracker</div>
-			<div id="pb_bars">
-				<template id="pb_tmplt">
+			<div class="fs30b progressTracker">Progress Tracker</div>
+			<div class="pb_bars">
+				<template class="pb_tmplt">
 					<span class="pb_entry">
 						<input type="number" min=0 class="width6 pb_completedNumber" value=0>
 						<span>/</span>
@@ -152,7 +152,7 @@ dashboard.registerModule({
 						<br/>
 					</span>
 				</template>
-				<input type="button" id="pb_insertButton" class="button" value="+">
+				<input type="button" class="button pb_insertButton" value="+">
 			</div>
 		`
 	},

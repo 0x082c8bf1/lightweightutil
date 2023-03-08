@@ -76,13 +76,13 @@ dashboard.registerModule({
 			this.module = module;
 
 			//init element fragment
-			let element = timer_tmplt.content.cloneNode(true);
+			let element = moduleElement.q(".timer_tmplt").content.cloneNode(true);
 			element.querySelector(".name").value = getSetting(module.name, "defaultName")
 
 			this.timer = element.querySelector(".timer");//the element that this timer object corresponds to
 
 			//add element to dom
-			moduleElement.q("#timers").insertBefore(element, moduleElement.q("#mt_insertButton"));
+			moduleElement.q(".timers").insertBefore(element, moduleElement.q(".mt_insertButton"));
 
 			//element references
 			this.xButton = this.timer.querySelector(".x-button");
@@ -450,19 +450,19 @@ dashboard.registerModule({
 		this.loadAllTimers(module);
 
 		//event listeners for saving the timers
-		module.q("#timers").addEventListener("click", function(){
+		module.q(".timers").addEventListener("click", function(){
 			_this.saveAllTimers();
 		});
-		module.q("#timers").addEventListener("keyup", function(){
+		module.q(".timers").addEventListener("keyup", function(){
 			_this.saveAllTimers();
 		});
 	},
 
 	instantiate: function(where){
 		where.innerHTML = /*html*/`
-			<div class="fs30b" id="multitimer">Multi timer</div>
-			<div id="timers" class="flex-container">
-				<template id="timer_tmplt">
+			<div class="fs30b">Multi timer</div>
+			<div class="flex-container timers">
+				<template class="timer_tmplt">
 					<span class="timer">
 						<input type="text" class="name"/>
 						<input class="x-button button" type="button" value="x">
@@ -479,7 +479,7 @@ dashboard.registerModule({
 					</span>
 				</template>
 				<input type="button" class="button mt_notifButton" value="Enable notifications" hidden>
-				<input type="button" id="mt_insertButton" class="button mt_insertButton" value="+">
+				<input type="button" class="button mt_insertButton" value="+">
 			</div>
 		`
 	},

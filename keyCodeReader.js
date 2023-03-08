@@ -4,7 +4,7 @@ dashboard.registerModule({
 
 	init: function(module){
 		//add the event listener
-		let input = module.q("#keycodeReader");
+		let input = module.q(".focusBox");
 		let _this = this;
 
 		input.addEventListener("keydown", function(event){
@@ -23,11 +23,11 @@ dashboard.registerModule({
 			output += pre + "<s>keyCode == " + event.keyCode + post + "</s><br/>";
 			output += pre + "<s>which == " + event.which + post + "</s><br/>";
 
-			module.q("#keycodeOutput").innerHTML = output;
-			module.q("#resetKeyCodeOutput").hidden = false;
+			module.q(".keycodeOutput").innerHTML = output;
+			module.q(".resetKeyCodeOutput").hidden = false;
 		});
 
-		module.q("#resetKeyCodeOutput").addEventListener("click", function(){
+		module.q(".resetKeyCodeOutput").addEventListener("click", function(){
 			_this.resetKeyCodeOutput(module);
 		});
 	},
@@ -35,16 +35,16 @@ dashboard.registerModule({
 	instantiate: function(where){
 		where.innerHTML = /*html*/`
 			<div class="fs30b">KeyCode Reader</div>
-			<input type="text" id="keycodeReader" placeholder="Click here" tabindex="-1"/>
-			<div id="keycodeOutput"></div>
-			<input type="button" id="resetKeyCodeOutput" hidden class="button" value="Reset"/>
+			<input type="text" class="focusBox" placeholder="Click here" tabindex="-1"/>
+			<div class="keycodeOutput"></div>
+			<input type="button" class="button resetKeyCodeOutput" value="Reset" hidden/>
 		`
 	},
 
 	resetKeyCodeOutput: function(module){
-		module.q("#keycodeOutput").innerHTML = "";
-		module.q("#keycodeReader").value = "";
-		module.q("#resetKeyCodeOutput").hidden = true;
+		module.q(".keycodeOutput").innerHTML = "";
+		module.q(".focusBox").value = "";
+		module.q(".resetKeyCodeOutput").hidden = true;
 	},
 
 	registerSettings: function(){

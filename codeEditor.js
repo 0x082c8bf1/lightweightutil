@@ -10,13 +10,13 @@ dashboard.registerModule({
 
 		if(shouldContinue){
 			//define functions
-			let outputDiv = module.q("#codeEditorOutput");
+			let outputDiv = module.q(".codeEditorOutput");
 			//output(str) - prints str below the textbox
 			var output = function(value){
 				outputDiv.innerHTML += value + "<br/>";
 			}
 
-			let input = module.q("#codeEditorTextarea").value;
+			let input = module.q(".codeEditorTextarea").value;
 			//reset output span
 			outputDiv.innerHTML = "";
 			outputDiv.style.color = "white";
@@ -31,7 +31,7 @@ dashboard.registerModule({
 			}
 
 			//display the return value
-			let retValueSpan = module.q("#codeEditorReturnValue");
+			let retValueSpan = module.q(".codeEditorReturnValue");
 			if(returnVal != undefined)
 				retValueSpan.innerHTML = "Return value: " + returnVal;
 			else
@@ -40,13 +40,13 @@ dashboard.registerModule({
 	},
 
 	parenWrap: function(module){
-		let codeEditor = module.q("#codeEditorTextarea");
+		let codeEditor = module.q(".codeEditorTextarea");
 		codeEditor.value = "(" + codeEditor.value + ")";
 	},
 
 	jsonBeautify: function(module){
-		let codeEditor = module.q("#codeEditorTextarea");
-		let outputDiv = module.q("#codeEditorOutput");
+		let codeEditor = module.q(".codeEditorTextarea");
+		let outputDiv = module.q(".codeEditorOutput");
 		try{
 			let obj = JSON.parse(codeEditor.value);
 			codeEditor.value = JSON.stringify(obj, null, "\t");
@@ -80,7 +80,7 @@ dashboard.registerModule({
 	},
 
 	init: function (module){
-		let codeEditor = module.q("#codeEditorTextarea");
+		let codeEditor = module.q(".codeEditorTextarea");
 
 		//add event listeners
 		let _this = this;
@@ -220,8 +220,8 @@ dashboard.registerModule({
 
 	instantiate: function(where){
 		where.innerHTML = /*html*/`
-			<div class="fs30b" id="codeEditor">Code Editor</div>
-			<textarea id="codeEditorTextarea" tabIndex="-1" placeholder="Your code here."></textarea>
+			<div class="fs30b codeEditor">Code Editor</div>
+			<textarea class="codeEditorTextarea" tabIndex="-1" placeholder="Your code here."></textarea>
 			<br/>
 			<abbr title="Use output('value') to write to the output. The return value is the return value of the last executed statement.">
 				<input type="button" class="button ce_eval" value="JS eval"/>
@@ -229,9 +229,9 @@ dashboard.registerModule({
 			<input type="button" class="button ce_pwrap" value="Wrap in ()"/>
 			<input type="button" class="button ce_json" value="JSON beautify"/>
 			<br/>
-			<span id="codeEditorOutput"></span>
+			<span class="codeEditorOutput"></span>
 			<br/>
-			<span id="codeEditorReturnValue"></span>
+			<span class="codeEditorReturnValue"></span>
 		`
 	},
 

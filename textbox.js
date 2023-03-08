@@ -7,10 +7,10 @@ dashboard.registerModule({
 	//updates the character and word counts of the text area
 	//words are considered any string of non-whitespace seperated by whitespace on either side
 	updateCharacterCounts: function(module){
-		let input = module.q("#textarea").value;
+		let input = module.q(".textarea").value;
 
 		//character count
-		module.q("#characterCount").innerHTML = input.length;
+		module.q(".characterCount").innerHTML = input.length;
 
 		//word count
 		let truncatedInput = input.trim();
@@ -20,12 +20,12 @@ dashboard.registerModule({
 		if(truncatedInput!="")
 			wordCount = words.length;
 
-			module.q("#wordCount").innerHTML = wordCount;
+			module.q(".wordCount").innerHTML = wordCount;
 	},
 
 	//sorts all of the lines in the textbox alphabetically (does not ignore case)
 	alphabetizeLines: function(module){
-		let input = module.q("#textarea");
+		let input = module.q(".textarea");
 		let lines = input.value.split("\n");
 		lines.sort();
 
@@ -41,18 +41,18 @@ dashboard.registerModule({
 	},
 
 	toUpper: function(module){
-		let input = module.q("#textarea");
+		let input = module.q(".textarea");
 		input.value = input.value.toUpperCase();
 	},
 
 	toLower: function(module){
-		let input = module.q("#textarea");
+		let input = module.q(".textarea");
 		input.value = input.value.toLowerCase();
 	},
 
 	toRandom: function(module){
 		let output = "";
-		let input = module.q("#textarea");
+		let input = module.q(".textarea");
 		let text = input.value;
 		for(let i=0; i<text.length; i++){
 			let number = Math.floor(Math.random() * 2);
@@ -63,7 +63,7 @@ dashboard.registerModule({
 
 	toInvert: function(module){
 		let output = "";
-		let input = module.q("#textarea");
+		let input = module.q(".textarea");
 		let text = input.value;
 		for(let i=0; i<text.length; i++){
 			output += ((text[i] >= 'A' && text[i] <= 'Z') ? text[i].toLowerCase() : text[i].toUpperCase());
@@ -74,14 +74,14 @@ dashboard.registerModule({
 	replace: function(module){
 		let inputPattern;
 
-		if (module.q("#regexSearch").checked)
-			inputPattern = new RegExp(module.q("#replaceInputPattern").value, 'g');
+		if (module.q(".regexSearch").checked)
+			inputPattern = new RegExp(module.q(".replaceInputPattern").value, 'g');
 		else
-			inputPattern = module.q("#replaceInputPattern").value;
+			inputPattern = module.q(".replaceInputPattern").value;
 
-		let outputPattern = module.q("#replaceOutputPattern").value;
+		let outputPattern = module.q(".replaceOutputPattern").value;
 
-		let input = module.q("#textarea");
+		let input = module.q(".textarea");
 		input.value = input.value.replace(inputPattern, outputPattern);
 	},
 
@@ -91,9 +91,9 @@ dashboard.registerModule({
 			let fs = module.q(".findSpan");
 			fs.hidden = !fs.hidden;
 			if (!fs.hidden)
-				module.q("#replaceInputPattern").focus();
+				module.q(".replaceInputPattern").focus();
 			else
-				module.q("#textarea").focus();
+				module.q(".textarea").focus();
 		}
 	},
 
@@ -137,7 +137,7 @@ dashboard.registerModule({
 		module.q(".tb_repace").addEventListener("click",function(){
 			_this.replace(module);
 		});
-		module.q("#textarea").addEventListener("keyup",function(){
+		module.q(".textarea").addEventListener("keyup",function(){
 			_this.updateCharacterCounts(module);
 		});
 		_self.addEventListener("keydown",function(e){
@@ -149,10 +149,10 @@ dashboard.registerModule({
 		_self = where;
 
 		where.innerHTML = /*html*/`
-			<div class="fs30b" id="textbox">TextBox</div>
-			<textarea id="textarea" placeholder="Your text here."></textarea>
+			<div class="fs30b textbox">TextBox</div>
+			<textarea class="textarea" placeholder="Your text here."></textarea>
 			<br/>
-			<span id="characterCount">0</span> characters, <span id="wordCount">0</span> words.
+			<span class="characterCount">0</span> characters, <span class="wordCount">0</span> words.
 			<br/>
 			<input type="button" class="button tb_sort" value="Sort lines">
 			<input type="button" class="button tb_toupper" value="Uppercase">
@@ -162,11 +162,11 @@ dashboard.registerModule({
 			<br/>
 			<span class="findSpan" hidden>
 				<span>Replace </span>
-				<input type="text" id="replaceInputPattern">
+				<input type="text" class="replaceInputPattern">
 				<span> with </span>
-				<input type="text" id="replaceOutputPattern">
-				<input type="button" class="button tb_repace" value="go">
-				<input type="checkbox" id="regexSearch" checked=true>
+				<input type="text" class="replaceOutputPattern">
+				<input type="button" class="button tb_repace" value="Go">
+				<input type="checkbox" class="regexSearch" checked=true>
 				<label for="regexSearch">Regex</label>
 			</span>
 		`

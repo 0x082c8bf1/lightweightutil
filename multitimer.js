@@ -247,13 +247,7 @@ dashboard.registerModule({
 				_this.startButton.value = "Resume";
 				_this.startDate = null;
 			}else if(_this.startButton.value == "Reset"){//if timer needs to reset
-				//TODO should this be using resetEvent(_this)?
-				_this.updateRinger(_this, false);
-				_this.startButton.value = "Start";
-				_this.msOffset = 0;
-				_this.startDate = null;
-				this.timeDisplay.style.color = "white";
-				_this.toggleEditMode(_this);
+				this.resetEvent(_this);
 			}
 		}
 

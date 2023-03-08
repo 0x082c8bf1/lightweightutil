@@ -385,28 +385,27 @@ var dashboard = {
 
 			//go through the settings and create the entries for them
 			for(let i=0; i<mSettings.length; i++){
-				let desc = document.createElement("span");
-
 				//append input
 				let input;
+				let value = getSetting(name, mSettings[i]["name"]);
+
 				switch(mSettings[i]["type"]){
 					case "bool":
 						input = document.createElement("input");
 						input.type = "checkbox";
-						input.id = name + "_" + mSettings[i]["name"];
-						let checked = getSetting(name, mSettings[i]["name"]);
-						if (checked)
-							input.checked = true;
-						else
-							input.checked = false;
+						input.checked = value ? true : false;
 						break;
 					case "text":
 						input = document.createElement("input");
 						input.type = "text";
-						input.id = name + "_" + mSettings[i]["name"];
-						input.value = getSetting(name, mSettings[i]["name"])
+						input.value = value;
 						break;
 				}
+
+				//setup label and input ID
+				input.id = name + "_" + mSettings[i]["name"];
+				let desc = document.createElement("label");
+				desc.setAttribute("for", input.id);
 
 				//tell the element what it is
 				input.dataType = mSettings[i]["type"];

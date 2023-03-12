@@ -11,7 +11,7 @@ dashboard.registerModule({
 		if(shouldContinue){
 			//define functions
 			let outputDiv = module.q(".codeEditorOutput");
-			//output(str) - prints str below the textbox
+			//output(str) - prints value below the textbox
 			var output = function(value){
 				outputDiv.innerHTML += value + "<br/>";
 			}
@@ -42,6 +42,79 @@ dashboard.registerModule({
 	parenWrap: function(module){
 		let codeEditor = module.q(".codeEditorTextarea");
 		codeEditor.value = "(" + codeEditor.value + ")";
+	},
+
+	refreshSaves: function(module, selectNew){
+		//create the option elements
+		let selector = module.q(".ce_selector");
+		let newSelValue;
+		if (selectNew){
+			newSelValue = "New Script";
+		} else {
+			newSelValue = module.q(".codeEditorSaveName").value;
+		}
+
+		//delete any existing selection
+		selector.innerHTML = "";
+
+		//create the "new script" element
+		let option = document.createElement("option");
+		option.innerHTML = "New Script";
+		option.value = "New Script";
+		selector.appendChild(option);
+
+		//create all the other elements
+		let saves = JSON.parse(localStorage.getItem("CESaves"));
+		for (let save in saves){
+			option = document.createElement("option");
+			option.innerHTML = save;
+			option.value = save;
+			selector.appendChild(option);
+		}
+
+		//restore the selection
+		selector.value = newSelValue;
+	},
+
+	//saves the currently selected code to local storage
+	saveCode: function(module){
+		//create the object
+		let name = module.q(".codeEditorSaveName").value;
+		if (name == "New Script"){
+			alert("\"New Script\" is not an allowed save name.");
+			return;
+		}
+		let output = {};
+		output[name] = module.q(".codeEditorTextarea").value;
+
+		//append output object to the existing one or create one
+		let saves = localStorage.getItem("CESaves");
+		if (!saves){
+			saves = {};
+		} else {
+			saves = JSON.parse(saves);
+		}
+
+		//save the output
+		saves = JSON.stringify(Object.assign(saves, output));
+		localStorage.setItem("CESaves", saves);
+
+		//refresh the selection box
+		this.refreshSaves(module);
+	},
+
+	//loads the selected code from localStorage
+	loadCode: function(module, name){
+		let obj;
+		if (name == "New Script"){
+			obj = "";
+		} else {
+			let save = localStorage.getItem("CESaves");
+			obj = JSON.parse(save)[name];
+		}
+
+		module.q(".codeEditorSaveName").value = name;
+		module.q(".codeEditorTextarea").value = obj;
 	},
 
 	jsonBeautify: function(module){
@@ -81,6 +154,8 @@ dashboard.registerModule({
 
 	init: function (module){
 		let codeEditor = module.q(".codeEditorTextarea");
+
+		this.refreshSaves(module, true);
 
 		//add event listeners
 		let _this = this;
@@ -213,8 +288,32 @@ dashboard.registerModule({
 		module.q(".ce_pwrap").addEventListener("click", function(){
 			_this.parenWrap(module);
 		});
-		module.q(".ce_json").addEventListener("click",function(){
+		module.q(".ce_json").addEventListener("click", function(){
 			_this.jsonBeautify(module);
+		});
+
+		module.q(".saveCode").addEventListener("click", function(){
+			_this.saveCode(module);
+		});
+		module.q(".ce_selector").addEventListener("change", function(){
+			let name = module.q(".ce_selector").value
+			_this.loadCode(module, name);
+		});
+		module.q(".deleteSelection").addEventListener("click", function(){
+			//confirm deletion
+			let name = module.q(".ce_selector").value;
+			if (name == "New Script")
+				return;
+			let del = confirm("Would you like to delete \"" + name + "\"?");
+			if (!del)
+				return;
+
+			//delete the save
+			let save = JSON.parse(localStorage.getItem("CESaves"));
+			delete save[name];
+			localStorage.setItem("CESaves", JSON.stringify(save));
+
+			_this.refreshSaves(module, true);
 		});
 	},
 
@@ -230,6 +329,10 @@ dashboard.registerModule({
 			<input type="button" class="button ce_json" value="JSON beautify"/>
 			<br/>
 			<span class="codeEditorOutput"></span>
+			<input type="button" class="button saveCode" value="Save"/>
+			<input type="text" class="codeEditorSaveName"/>
+			<select class="ce_selector"></select>
+			<input type="button" class="button deleteSelection" value="Delete selected">
 			<br/>
 			<span class="codeEditorReturnValue"></span>
 		`
@@ -257,6 +360,9 @@ dashboard.registerModule({
 			"You can use output(string) to print output below the code editor.",
 			"The return value of the last statement executed will be shown in the return value section.",
 			"The JSON beautify button will beautify JSON that is inside of the code editor.",
+			"You can save and load code editor scripts using the save options.",
+			"Hitting save will save the current script with the name in the textbox, overwriting any script with that name already.",
+			"Hitting \"Delete selected\" will delete the script selected in the drop down menu.",
 		]
 	},
 });

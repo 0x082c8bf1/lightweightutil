@@ -384,12 +384,11 @@ dashboard.registerModule({
 		}
 	},
 
-	//TODO: This no longer works as you need the module to be passed in, which is not normally exposed.
-	//create a timer with initlized values, intended to be used with the JS eval Code Editor option
+	//API for creating a timer in the specific module instance
 	createWith: function(module, hours, minutes, seconds, name, started){
 		//create timer
-		this.addTimer();
-		let newTimer = timers[timers.length-1];
+		this.addTimer(module);
+		let newTimer = module.timers[module.timers.length-1];
 
 		//setup passed values
 		newTimer.hInput.value = hours;
@@ -529,6 +528,7 @@ dashboard.registerModule({
 			"While a timer is running, you can click the Pause button to put the timer on hold temporarily, and then hit the Resume button to begin it again.",
 			"Hitting the X button while a timer is running will reset the timer, hitting the timer from it's reset state will remove the timer.",
 			"If you type a \"d\" into the hh field, it will parse the number to the left of the \"d\" as days, and the number to the right as hours.",
+			"The createWith(module, hours, minutes, seconds, name, started) API function can be used to create a module in an automated way.",
 		]
 	},
 });

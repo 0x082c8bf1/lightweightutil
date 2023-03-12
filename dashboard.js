@@ -235,7 +235,7 @@ var dashboard = {
 						instFunc(module);
 					}
 
-					//init the modules
+					//create the module instance
 					let instance = {
 						"module": module,
 						q: function(selector){
@@ -251,7 +251,14 @@ var dashboard = {
 							return this.module.querySelectorAll(selector);
 						}
 					};
+
 					let imodule = dashboard.modules[mConfig.name];
+					//save the module instance on the module template
+					if (!imodule.instances)
+						imodule.instances = [];
+					imodule.instances.push(instance);
+
+					//call the init function on the module
 					if (imodule.init){
 						imodule.init(instance);
 					}

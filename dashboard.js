@@ -201,6 +201,14 @@ var dashboard = {
 
 			config = JSON.parse(config);
 
+			//search for override modules
+			for (let m in dashboard.modules){
+				if (!dashboard.modules[m].overrideLayout)
+					continue;
+
+					dashboard.modules[m].init();
+			}
+
 			//create containers
 			for(let cPos = 0; cPos<config.length; cPos++){
 				let container = this.appendNewContainer(document.querySelector("#layout"));
@@ -436,6 +444,29 @@ var dashboard = {
 
 	}
 }
+
+//register the dashboard as a hidden module to allow for settings to be created.
+dashboard.registerModule({
+	name: "dashboard",
+	displayName: "Dashboard",
+	overrideLayout: true,
+
+	registerSettings: function(){
+		return [
+			{
+				"name": "displayFooterText",
+				"description": "Display footer text",
+				"type": "bool",
+				"default": true,
+			},
+		]
+	},
+
+	init: function(){
+		let display = !getSetting(this.name, "displayFooterText") ? "none" : "block";
+		document.querySelector("#footerText").style.display = display;
+	}
+});
 
 //start loading the modules when the page is done loading
 if (document.readyState === 'complete') {

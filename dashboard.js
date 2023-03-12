@@ -76,7 +76,9 @@ var dashboard = {
 
 				obj["storage"][key] = value;
 			}
-			let string = JSON.stringify(obj, null, "\t") + "\n";
+
+			let seperator = getSetting("dashboard", "exportPrettified") ? "\t" : "";
+			let string = JSON.stringify(obj, null, seperator) + "\n";
 
 			//download the file
 			let downloadAnchor = document.createElement("a");
@@ -456,6 +458,12 @@ dashboard.registerModule({
 			{
 				"name": "displayFooterText",
 				"description": "Display footer text",
+				"type": "bool",
+				"default": true,
+			},
+			{
+				"name": "exportPrettified",
+				"description": "Export prettified file",
 				"type": "bool",
 				"default": true,
 			},

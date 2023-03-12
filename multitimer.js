@@ -61,28 +61,19 @@ dashboard.registerModule({
 		return output;
 	},
 
-	//TODO: these need to not be stored here, and instead need to be on the instance module for multi moduling
-	//			right now it will only use the object for the last timer module that was created
-	timers: [],//list of all the timers
-	timerTickInterval: null, //the interval set if any timers exist
-
-	timerRingInterval: null, //the interval to check if any alarms are ringing
-	numberOfRingingTimers: 0, //the count of currently ringing timers
-	loadedAudio: new Audio("pixbay-alarm-clock-short.mp3"), //the audio that is played when ringing
-
 	Timer: class {
-		constructor(moduleElement, module){
-			//TODO: rename module to something else, rename module element to module for consistency with other modules
+		constructor(instance, module){
+			//NOTE: For this module, the instance is the object passed in from init() and module is the module template.
 			this.module = module;
 
 			//init element fragment
-			let element = moduleElement.q(".timer_tmplt").content.cloneNode(true);
+			let element = instance.q(".timer_tmplt").content.cloneNode(true);
 			element.querySelector(".name").value = getSetting(module.name, "defaultName")
 
 			this.timer = element.querySelector(".timer");//the element that this timer object corresponds to
 
 			//add element to dom
-			moduleElement.q(".timers").insertBefore(element, moduleElement.q(".mt_insertButton"));
+			instance.q(".timers").insertBefore(element, instance.q(".mt_insertButton"));
 
 			//element references
 			this.xButton = this.timer.querySelector(".x-button");
@@ -107,11 +98,11 @@ dashboard.registerModule({
 
 			//event listeners
 			this.xButton.addEventListener("click", function(){
-				_this.resetEvent(_this);
+				_this.resetEvent(instance, _this);
 			});
 
 			this.startButton.addEventListener("click", function(){
-				_this.startButtonEvent(_this);
+				_this.startButtonEvent(instance, _this);
 			});
 
 			this.hInput.addEventListener("keydown", function(e){
@@ -130,10 +121,10 @@ dashboard.registerModule({
 
 			this.timer.addEventListener("keydown", function(e){
 				if(e.code == "Enter" || e.code == "NumpadEnter"){
-					_this.startButtonEvent(_this);
+					_this.startButtonEvent(instance, _this);
 					//we have to explicitly call saveAllTimers because might hide the element that we hit enter on, and
 					//the event won't bubble if that's the case
-					_this.module.saveAllTimers();
+					_this.module.saveAllTimers(instance);
 				}
 			});
 		}
@@ -145,19 +136,19 @@ dashboard.registerModule({
 		}
 
 		//function that is called when the x button is clicked
-		resetEvent(_this){
+		resetEvent(module, _this){
 			if(_this.startButton.value == "Start"){
-				_this.module.deleteTimer(_this);
+				_this.module.deleteTimer(module, _this);
 			}else{
 				//remove from ringing timers if ringing
 				if(_this.startButton.value == "Reset"){
-					_this.updateRinger(_this, false);
+					_this.updateRinger(module, _this, false);
 					this.timeDisplay.style.color = "white";
 				}
 
 				//go to edit mode
 				_this.startButton.value = "Start";
-				_this.msOffset = 0;
+				module.msOffset = 0;
 				_this.startDate = null;
 				_this.toggleEditMode(_this);
 			}
@@ -167,34 +158,34 @@ dashboard.registerModule({
 		//turnOn is weather the timer is starting ringing or stopping ringing
 		//TODO add option to change sound via url
 		//TODO add options to change how much the sound loops
-		updateRinger(_this, turnOn, auto){
+		updateRinger(module, _this, turnOn){
 			//don't do anything if _this.ringing is already what it should be set to
-			if(turnOn==_this.ringing){
+			if(turnOn==module.ringing){
 				return;
 			}
 
 			if(turnOn){
-				_this.module.numberOfRingingTimers++;
+				module.numberOfRingingTimers++;
 			}else{
-				_this.module.numberOfRingingTimers--;
+				module.numberOfRingingTimers--;
 			}
 
 			//start ringing
-			if(_this.module.numberOfRingingTimers>0){
-				if(_this.module.timerRingInterval == null){
-					_this.module.loadedAudio.play();//ring immediately
+			if(module.numberOfRingingTimers>0){
+				if(module.timerRingInterval == null){
+					module.loadedAudio.play();//ring immediately
 					//schedule rings every 1000ms until reset
-					_this.module.timerRingInterval = setInterval(function(){
-						_this.module.loadedAudio.play();
+					module.timerRingInterval = setInterval(function(){
+						module.loadedAudio.play();
 					}, 1000);
 				}
 			}else{
-				clearInterval(_this.module.timerRingInterval);
-				_this.module.timerRingInterval = null;
-				_this.module.loadedAudio.pause();
-				_this.module.loadedAudio.currentTime = 0;
+				clearInterval(module.timerRingInterval);
+				module.timerRingInterval = null;
+				module.loadedAudio.pause();
+				module.loadedAudio.currentTime = 0;
 			}
-			_this.ringing = turnOn;
+			module.ringing = turnOn;
 
 		}
 
@@ -206,7 +197,7 @@ dashboard.registerModule({
 		}
 
 		//function that is called when the start button is clicked
-		startButtonEvent(_this){
+		startButtonEvent(module, _this){
 			let hours, mins, secs;
 
 			if (_this.hInput.value.includes("d")){
@@ -247,12 +238,12 @@ dashboard.registerModule({
 				_this.startButton.value = "Resume";
 				_this.startDate = null;
 			}else if(_this.startButton.value == "Reset"){//if timer needs to reset
-				this.resetEvent(_this);
+				this.resetEvent(module, _this);
 			}
 		}
 
 		//function that is called periodically to update the timer
-		tick(){
+		tick(module){
 			if(this.startDate != null){
 				let difference = new Date()-this.startDate;
 				let timeRemaining = this.duration-(difference+this.msOffset);
@@ -266,14 +257,14 @@ dashboard.registerModule({
 
 					this.startButton.value = "Reset";
 					this.timeDisplay.style.color = "red";
-					this.updateRinger(this, true);
+					this.updateRinger(module, this, true);
 				} else {
 					this.notifSent = false;
 				}
 			}
 		}
 
-		createFromObject(obj){
+		createFromObject(module, obj){
 			if(obj.startDate != null)
 				obj.startDate = new Date(obj.startDate);
 
@@ -281,13 +272,13 @@ dashboard.registerModule({
 			//NOTE: this has to be done before msOffset is loaded to not overwrite it's value
 			switch (obj.state){
 				case "Reset":
-					this.startButtonEvent(this); //start
+					this.startButtonEvent(module, this); //start
 				case "Pause":
-					this.startButtonEvent(this); //start
+					this.startButtonEvent(module, this); //start
 					break;
 				case "Resume":
-					this.startButtonEvent(this); //start
-					this.startButtonEvent(this); //pause
+					this.startButtonEvent(module, this); //start
+					this.startButtonEvent(module, this); //pause
 					break;
 				case "Start":
 					//default state
@@ -312,7 +303,7 @@ dashboard.registerModule({
 					this.timeDisplay.innerHTML = this.module.getDurationAsString(timeRemaining);
 					break;
 				case "Reset":
-					this.updateRinger(this, true); //make it ring
+					this.updateRinger(module, this, true); //make it ring
 					break;
 			}
 		}
@@ -340,39 +331,39 @@ dashboard.registerModule({
 	addTimer: function(module){
 		let _this = this;
 		//create timer object
-		this.timers.push(new this.Timer(module, this));
+		module.timers.push(new this.Timer(module, this));
 
 		//set timertick interval if its not set already
-		if(this.timerTickInterval == null){
-			this.timerTickInterval = setInterval(function(){
-				for(let i=0;i<_this.timers.length; i++){
-					_this.timers[i].tick();
+		if(module.timerTickInterval == null){
+			module.timerTickInterval = setInterval(function(){
+				for(let i=0;i<module.timers.length; i++){
+					module.timers[i].tick(module);
 				}
 			}, 100);
 		}
 	},
 
 	//removes the element passed to it, called by the delete button on the timer
-	deleteTimer: function(element){
+	deleteTimer: function(module, element){
 		//remove element from the timers array
-		let pos = this.timers.indexOf(element);
-		this.timers.splice(pos, 1);
+		let pos = module.timers.indexOf(element);
+		module.timers.splice(pos, 1);
 
 		//delete from DOM
 		element.timer.parentNode.removeChild(element.timer);
 
 		//clear timer interval if there are no more timers
-		if(this.timers.length == 0){
-			clearInterval(this.timerTickInterval);
-			this.timerTickInterval = null;
+		if(module.timers.length == 0){
+			clearInterval(module.timerTickInterval);
+			module.timerTickInterval = null;
 		}
 	},
 
 	//save all of the timers to localStorage
-	saveAllTimers: function(){
+	saveAllTimers: function(module){
 		let obj = [];
-		for(let i=0; i<this.timers.length; i++){
-			obj.push(this.timers[i].convertToSaveObject());
+		for(let i=0; i<module.timers.length; i++){
+			obj.push(module.timers[i].convertToSaveObject());
 		}
 		localStorage.setItem("mt_timers", JSON.stringify(obj));
 	},
@@ -380,7 +371,7 @@ dashboard.registerModule({
 	//load all of the timers from localStorage
 	loadAllTimers: function(module){
 		//reset timers, this fixes an issue with timers being duplicated when a layout reload is called.
-		this.timers = [];
+		module.timers = [];
 
 		let obj = JSON.parse(localStorage.getItem("mt_timers"));
 
@@ -389,13 +380,13 @@ dashboard.registerModule({
 
 		for(let i=0; i<obj.length; i++){
 			this.addTimer(module);
-			this.timers[this.timers.length-1].createFromObject(obj[i]);
+			module.timers[module.timers.length-1].createFromObject(module, obj[i]);
 		}
 	},
 
-	//TODO: This no longer works
+	//TODO: This no longer works as you need the module to be passed in, which is not normally exposed.
 	//create a timer with initlized values, intended to be used with the JS eval Code Editor option
-	createWith: function(hours, minutes, seconds, name, started){
+	createWith: function(module, hours, minutes, seconds, name, started){
 		//create timer
 		this.addTimer();
 		let newTimer = timers[timers.length-1];
@@ -408,19 +399,26 @@ dashboard.registerModule({
 
 		//start if applicable
 		if (started){
-			newTimer.startButtonEvent(newTimer);
+			newTimer.startButtonEvent(module, newTimer);
 		}
 	},
 
 	init: function(module){
 		let _this = this;
 
+		module.timers = []; //list of all the timers
+		module.timerTickInterval = null; //the interval set if any timers exist
+
+		module.timerRingInterval = null; //the interval to check if any alarms are ringing
+		module.numberOfRingingTimers = 0; //the count of currently ringing timers
+		module.loadedAudio = new Audio("pixbay-alarm-clock-short.mp3"); //the audio that is played when ringing
+
 		//show confirmation before reloading/closing the tab when there are timers
 		window.onbeforeunload = function (event) {
 			if (!getSetting(_this.name, "promptOnClose"))
 				return;
 
-			if(_this.timerTickInterval != null){
+			if(module.timerTickInterval != null){
 				event.preventDefault();
 				return "There are currently timers running, are you sure you would like to exit?";
 			}
@@ -451,10 +449,10 @@ dashboard.registerModule({
 
 		//event listeners for saving the timers
 		module.q(".timers").addEventListener("click", function(){
-			_this.saveAllTimers();
+			_this.saveAllTimers(module);
 		});
 		module.q(".timers").addEventListener("keyup", function(){
-			_this.saveAllTimers();
+			_this.saveAllTimers(module);
 		});
 	},
 

@@ -392,7 +392,7 @@ dashboard.registerModule({
 
 		//tick all the timers once, this prevents a delay to show the timewhen reloading
 		for (let i=0; i<module.timers.length; i++){
-			module.timers[i].tick();
+			module.timers[i].tick(module);
 		}
 	},
 

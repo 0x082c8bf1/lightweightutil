@@ -68,7 +68,7 @@ dashboard.registerModule({
 
 			//init element fragment
 			let element = instance.q(".timer_tmplt").content.cloneNode(true);
-			element.querySelector(".name").value = getSetting(module.name, "defaultName")
+			element.querySelector(".mt_name").value = getSetting(module.name, "defaultName")
 
 			this.timer = element.querySelector(".timer");//the element that this timer object corresponds to
 
@@ -83,7 +83,7 @@ dashboard.registerModule({
 			this.hInput = this.timer.querySelector(".h-input");
 			this.mInput = this.timer.querySelector(".m-input");
 			this.sInput = this.timer.querySelector(".s-input");
-			this.nameInput = this.timer.querySelector(".name");
+			this.nameInput = this.timer.querySelector(".mt_name");
 
 			//default variable values
 			this.msOffset = 0;
@@ -461,7 +461,7 @@ dashboard.registerModule({
 			<div class="flex-container timers">
 				<template class="timer_tmplt">
 					<span class="timer">
-						<input type="text" class="name"/>
+						<input type="text" class="mt_name"/>
 						<input class="x-button button" type="button" value="x">
 						<br/>
 						<input type="button" class="start-button button" value="Start"/>

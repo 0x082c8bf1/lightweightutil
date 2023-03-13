@@ -1,3 +1,12 @@
+input, label, div, span, select {
+	font-size: 14px;
+	font-family: monospace;
+}
+
+br {
+	margin-top: 4px;
+}
+
 .fs30b{
 	font-size: 30px;
 	font-weight: bold;
@@ -29,6 +38,8 @@ textarea {
 	border: 1px solid rgb(87, 87, 87);
 	cursor: pointer;
 	background-color: rgb(59, 59, 59);
+	padding-block: 0;
+	padding-inline: 2px;
 }
 
 .button:active {

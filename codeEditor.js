@@ -193,7 +193,7 @@ dashboard.registerModule({
 								endOffset--;
 								if (i==sLine) startOffset--;
 							}
-						}else{
+						} else {
 							lines[i] = "\t" + lines[i];
 							endOffset++;
 							if (i==sLine) startOffset++;

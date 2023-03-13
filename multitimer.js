@@ -139,7 +139,7 @@ dashboard.registerModule({
 		resetEvent(module, _this){
 			if(_this.startButton.value == "Start"){
 				_this.module.deleteTimer(module, _this);
-			}else{
+			} else {
 				//remove from ringing timers if ringing
 				if(_this.startButton.value == "Reset"){
 					_this.updateRinger(module, _this, false);
@@ -166,7 +166,7 @@ dashboard.registerModule({
 
 			if(turnOn){
 				module.numberOfRingingTimers++;
-			}else{
+			} else {
 				module.numberOfRingingTimers--;
 			}
 
@@ -179,7 +179,7 @@ dashboard.registerModule({
 						module.loadedAudio.play();
 					}, 1000);
 				}
-			}else{
+			} else {
 				clearInterval(module.timerRingInterval);
 				module.timerRingInterval = null;
 				module.loadedAudio.pause();
@@ -217,7 +217,7 @@ dashboard.registerModule({
 
 				hours = dys*24 + hrs;
 
-			}else{
+			} else {
 				hours = _this.makeValidNumber(_this.hInput.value);
 			}
 

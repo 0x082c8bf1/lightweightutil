@@ -382,6 +382,11 @@ dashboard.registerModule({
 			this.addTimer(module);
 			module.timers[module.timers.length-1].createFromObject(module, obj[i]);
 		}
+
+		//tick all the timers once, this prevents a delay to show the timewhen reloading
+		for (let i=0; i<module.timers.length; i++){
+			module.timers[i].tick();
+		}
 	},
 
 	//API for creating a timer in the specific module instance

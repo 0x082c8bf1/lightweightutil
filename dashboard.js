@@ -366,6 +366,9 @@ var dashboard = {
 					case "text":
 						value = settings[i].value;
 						break;
+					case "number":
+						value = parseInt(settings[i].value);
+						if (!value) value = 0;
 				}
 
 				if (newSettings[settings[i].module] == null)
@@ -417,6 +420,10 @@ var dashboard = {
 						input.type = "text";
 						input.value = value;
 						break;
+					case "number":
+						input = document.createElement("input");
+						input.type = "number";
+						input.value = value;
 				}
 
 				//setup label and input ID

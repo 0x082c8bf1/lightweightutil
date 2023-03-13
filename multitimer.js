@@ -93,6 +93,13 @@ dashboard.registerModule({
 
 			this.notifSent = false;//because this is not saved, it will alert you when you start the page.
 
+			//load default timer values
+			let defaultSeconds = getSetting(module.name, "defaultTime");
+			let defaultDuration = module.getDurationFromMS(defaultSeconds*1000);
+			this.hInput.value = defaultDuration.hours != 0 ? defaultDuration.hours : "";
+			this.mInput.value = defaultDuration.minutes !=0 ? defaultDuration.minutes : "";
+			this.sInput.value = defaultDuration.seconds !=0 ? defaultDuration.seconds : "";
+
 			//references to this object for eventlisteners
 			let _this = this;
 
@@ -474,7 +481,7 @@ dashboard.registerModule({
 						<span class="time-input">
 							<input class="h-input width2" type="text" placeholder = "HH">
 							<span>:</span>
-							<input class="m-input width2" type="text" value=1 placeholder = "MM">
+							<input class="m-input width2" type="text" placeholder = "MM">
 							<span>:</span>
 							<input class="s-input width2" type="text" placeholder = "SS">
 						</span>
@@ -522,6 +529,12 @@ dashboard.registerModule({
 				"description": "Send a notification when an alarm starts ringing",
 				"type": "bool",
 				"default": false,
+			},
+			{
+				"name": "defaultTime",
+				"description": "The default time when creating a timer in seconds",
+				"type": "number",
+				"default": 60,
 			},
 		]
 	},

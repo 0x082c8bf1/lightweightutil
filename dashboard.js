@@ -161,8 +161,24 @@ var dashboard = {
 
 	layout: {
 		reload: function(){
-			document.querySelector("#layout").innerHTML = "";
+			dashboard.layout.delete();
 			dashboard.startModules();
+		},
+
+		delete: function(){
+			for (let m in dashboard.modules){
+				if (!dashboard.modules[m].instances)
+					continue;
+
+				if (!dashboard.modules[m].deconstructInstance)
+					continue;
+
+				for(let i=0; i<dashboard.modules[m]?.instances.length; i++){
+					dashboard.modules[m].deconstructInstance(dashboard.modules[m].instances[i]);
+				}
+				dashboard.modules[m].instances = null;
+			}
+			document.querySelector("#layout").innerHTML = "";
 		},
 
 		//create a new module on the document body

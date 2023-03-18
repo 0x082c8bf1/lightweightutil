@@ -493,6 +493,11 @@ dashboard.registerModule({
 		`
 	},
 
+	deconstructInstance: function(instance){;
+		clearInterval(instance.timerRingInterval);
+		clearInterval(instance.timerTickInterval);
+	},
+
 	//returns an array containing a list of functions and an update version to run at
 	updates: function(){
 		return [

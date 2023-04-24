@@ -323,16 +323,16 @@ dashboard.registerModule({
 			<textarea class="codeEditorTextarea" tabIndex="-1" placeholder="Your code here."></textarea>
 			<br/>
 			<abbr title="Use output('value') to write to the output. The return value is the return value of the last executed statement.">
-				<input type="button" class="button ce_eval" value="JS eval"/>
+				<input type="button" class="ce_eval" value="JS eval"/>
 			</abbr>
-			<input type="button" class="button ce_pwrap" value="Wrap in ()"/>
-			<input type="button" class="button ce_json" value="JSON beautify"/>
+			<input type="button" class="ce_pwrap" value="Wrap in ()"/>
+			<input type="button" class="ce_json" value="JSON beautify"/>
 			<br/>
 			<span class="codeEditorOutput"></span>
-			<input type="button" class="button saveCode" value="Save"/>
+			<input type="button" class="saveCode" value="Save"/>
 			<input type="text" class="codeEditorSaveName"/>
 			<select class="ce_selector"></select>
-			<input type="button" class="button deleteSelection" value="Delete selected">
+			<input type="button" class="deleteSelection" value="Delete selected">
 			<br/>
 			<span class="codeEditorReturnValue"></span>
 		`

@@ -33,7 +33,7 @@ textarea {
 	height: 15em;
 }
 
-.button {
+input[type=button] {
 	color: white;
 	border: 1px solid rgb(87, 87, 87);
 	cursor: pointer;
@@ -42,9 +42,13 @@ textarea {
 	padding-inline: 2px;
 }
 
-.button:active {
+input[type=button]:active {
 	background-color: black;
 	transform: translateY(2px);
+}
+
+input[type=checkbox] {
+	cursor: pointer;
 }
 
 .file {

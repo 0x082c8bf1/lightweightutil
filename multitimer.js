@@ -474,9 +474,9 @@ dashboard.registerModule({
 				<template class="timer_tmplt">
 					<span class="timer">
 						<input type="text" class="mt_name"/>
-						<input class="x-button button" type="button" value="x">
+						<input class="x-button" type="button" value="x">
 						<br/>
-						<input type="button" class="start-button button" value="Start"/>
+						<input type="button" class="start-button" value="Start"/>
 						<span hidden class="time-display"></span>
 						<span class="time-input">
 							<input class="h-input width2" type="text" placeholder = "HH">
@@ -487,8 +487,8 @@ dashboard.registerModule({
 						</span>
 					</span>
 				</template>
-				<input type="button" class="button mt_notifButton" value="Enable notifications" hidden>
-				<input type="button" class="button mt_insertButton" value="+">
+				<input type="button" class="mt_notifButton" value="Enable notifications" hidden>
+				<input type="button" class="mt_insertButton" value="+">
 			</div>
 		`
 	},

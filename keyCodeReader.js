@@ -37,7 +37,7 @@ dashboard.registerModule({
 			<div class="fs30b">KeyCode Reader</div>
 			<input type="text" class="focusBox" placeholder="Click here" tabindex="-1"/>
 			<div class="keycodeOutput"></div>
-			<input type="button" class="button resetKeyCodeOutput" value="Reset" hidden/>
+			<input type="button" class="resetKeyCodeOutput" value="Reset" hidden/>
 		`
 	},
 

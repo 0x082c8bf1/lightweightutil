@@ -148,11 +148,11 @@ dashboard.registerModule({
 							<span class="progressBar"></span>
 						</span>
 						<span class="completionPercent"></span>
-						<input type="button" class="button pb_deleteButton" value="x">
+						<input type="button" class="pb_deleteButton" value="x">
 						<br/>
 					</span>
 				</template>
-				<input type="button" class="button pb_insertButton" value="+">
+				<input type="button" class="pb_insertButton" value="+">
 			</div>
 		`
 	},

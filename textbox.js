@@ -154,18 +154,18 @@ dashboard.registerModule({
 			<br/>
 			<span class="characterCount">0</span> characters, <span class="wordCount">0</span> words.
 			<br/>
-			<input type="button" class="button tb_sort" value="Sort lines">
-			<input type="button" class="button tb_toupper" value="Uppercase">
-			<input type="button" class="button tb_tolower" value="Lowercase">
-			<input type="button" class="button tb_torand" value="Randomcase">
-			<input type="button" class="button tb_toinvert" value="Invertcase">
+			<input type="button" class="tb_sort" value="Sort lines">
+			<input type="button" class="tb_toupper" value="Uppercase">
+			<input type="button" class="tb_tolower" value="Lowercase">
+			<input type="button" class="tb_torand" value="Randomcase">
+			<input type="button" class="tb_toinvert" value="Invertcase">
 			<br/>
 			<span class="findSpan" hidden>
 				<span>Replace </span>
 				<input type="text" class="replaceInputPattern">
 				<span> with </span>
 				<input type="text" class="replaceOutputPattern">
-				<input type="button" class="button tb_repace" value="Go">
+				<input type="button" class="tb_repace" value="Go">
 				<input type="checkbox" class="regexSearch" checked=true>
 				<label for="regexSearch">Regex</label>
 			</span>

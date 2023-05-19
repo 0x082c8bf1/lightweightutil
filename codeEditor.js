@@ -264,7 +264,7 @@ dashboard.registerModule({
 						selOffset -= moved[0].length+1;
 
 					lines = [].concat(prefix, selected, moved, suffix);
-				}else{
+				} else {
 					let prefix = lines.slice(0, sLine);
 					let selected = lines.slice(sLine, eLine+1);
 					let moved = lines.slice(eLine+1, eLine+2);

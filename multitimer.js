@@ -234,6 +234,7 @@ dashboard.registerModule({
 			if(_this.startButton.value == "Start" || _this.startButton.value == "Resume"){//if timer should resume
 				if(_this.startButton.value == "Start"){//if timer needs to read duration
 					_this.duration=_this.module.createDuration(hours, mins, secs).totalMS;
+					_this.msOffset = 0;
 					_this.timeDisplay.innerHTML = _this.module.getDurationAsString(_this.duration);
 					_this.toggleEditMode(_this);
 				}

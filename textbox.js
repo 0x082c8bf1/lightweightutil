@@ -20,7 +20,10 @@ dashboard.registerModule({
 		if(truncatedInput!="")
 			wordCount = words.length;
 
-			module.q(".wordCount").innerHTML = wordCount;
+		module.q(".wordCount").innerHTML = wordCount;
+
+		let lines = input.split("\n").length;
+		module.q(".lineCount").innerHTML = lines;
 	},
 
 	//sorts all of the lines in the textbox alphabetically (does not ignore case)
@@ -71,6 +74,29 @@ dashboard.registerModule({
 		input.value = output;
 	},
 
+	removeDuplicateLines: function(module){
+		let textbox = module.q(".textarea");
+		let lines = textbox.value.split("\n");
+		let outputArr = [];
+
+		//create de-duplicated array
+		for(let i=0; i<lines.length; i++) {
+			if (!outputArr.includes(lines[i])) {
+				outputArr.push(lines[i]);
+			}
+		}
+
+		//convert new array back to a string
+		let output = "";
+		for(let i=0; i<outputArr.length; i++) {
+			output += outputArr[i];
+			if (i != outputArr.length-1) {
+				output += "\n";
+			}
+		}
+		textbox.value = output;
+	},
+
 	replace: function(module){
 		let inputPattern;
 
@@ -106,6 +132,7 @@ dashboard.registerModule({
 		let lc_button = module.q(".tb_tolower");
 		let rc_button = module.q(".tb_torand");
 		let ic_button = module.q(".tb_toinvert");
+		let rd_button = module.q(".tb_removeDupes");
 
 		//apply hide settings
 		if (!getSetting(_this.name, "showUpperButton")){
@@ -120,6 +147,9 @@ dashboard.registerModule({
 		if (!getSetting(_this.name, "showInvertButton")){
 			ic_button.hidden = true;
 		}
+		if (!getSetting(_this.name, "showRemoveDuplicatesButton")){
+			rd_button.hidden = true;
+		}
 
 		//add event listeners
 		uc_button.addEventListener("click",function(){
@@ -133,6 +163,9 @@ dashboard.registerModule({
 		});
 		ic_button.addEventListener("click",function(){
 			_this.toInvert(module);
+		});
+		rd_button.addEventListener("click",function(){
+			_this.removeDuplicateLines(module);
 		});
 		module.q(".tb_repace").addEventListener("click",function(){
 			_this.replace(module);
@@ -152,9 +185,10 @@ dashboard.registerModule({
 			<div class="fs30b textbox">TextBox</div>
 			<textarea class="textarea" placeholder="Your text here."></textarea>
 			<br/>
-			<span class="characterCount">0</span> characters, <span class="wordCount">0</span> words.
+			<span class="characterCount">0</span> characters, <span class="wordCount">0</span> words, <span class="lineCount">1</span> lines.
 			<br/>
 			<input type="button" class="tb_sort" value="Sort lines">
+			<input type="button" class="tb_removeDupes" value="Remove duplicate lines">
 			<input type="button" class="tb_toupper" value="Uppercase">
 			<input type="button" class="tb_tolower" value="Lowercase">
 			<input type="button" class="tb_torand" value="Randomcase">
@@ -197,6 +231,12 @@ dashboard.registerModule({
 				"description": "Display invertcase button",
 				"type": "bool",
 				"default": false,
+			},
+			{
+				"name": "showRemoveDuplicatesButton",
+				"description": "Display remove duplicates button",
+				"type": "bool",
+				"default": true,
 			},
 		]
 	},

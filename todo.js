@@ -368,7 +368,7 @@ dashboard.registerModule({
 		//setup settings trigger
 		element.addEventListener("click", function(e){
 			let classList = e.target.classList;
-			if (classList.contains("todo_entry") || classList.contains("listEntry") || classList.contains("td_description"))
+			if (!classList.contains("td_checkbox"))
 				_this.editTodo(module, element);
 		});
 

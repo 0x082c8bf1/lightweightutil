@@ -207,7 +207,7 @@ var dashboard = {
 				log("Using default config.");
 				config =
 				`[
-					[{"name": "multitimer"}],
+					[{"name": "todo", "width": "300px", "maxHeight": "350px"},{"name": "multitimer"}],
 					[{"name": "textbox"}],
 					[{"name": "codeEditor"}, {"name": "keyCode", "width": "250px"}],
 					[{"name": "progressBar"}]
@@ -239,6 +239,10 @@ var dashboard = {
 					//apply module settings
 					if (mConfig.width){
 						module.style.maxWidth = mConfig.width;
+					}
+					if (mConfig.maxHeight){
+						module.style.overflow = "scroll";
+						module.style.maxHeight = mConfig.maxHeight;
 					}
 
 					//handle updates

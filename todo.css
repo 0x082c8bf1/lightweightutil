@@ -1,0 +1,48 @@
+.td_settings {
+	z-index: 9;
+	background-color: black;
+
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	padding: 10px;
+}
+
+.td_backgroundFade {
+	z-index: 8;
+	left: 0;
+	top: 0;
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	background-color: black;
+	opacity: 80%;
+}
+
+.td_insertButton {
+	width: 40px;
+	height: 40px;
+	font-size: 30px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+:not(.listEntryContainer) > .listEntry{
+	margin-left: 10px;
+}
+
+.todo_entry {
+	margin-bottom: 3px;
+	background-color: rgb(32,32,32);
+	cursor: pointer;
+}
+
+.td_descriptionSetting {
+	height: 4ch;
+}
+
+.td_description {
+	font-weight: 700;
+}

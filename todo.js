@@ -127,11 +127,7 @@ dashboard.registerModule({
 		let description = module.q(".td_descriptionSetting").value;
 		editing.querySelector(".td_description").innerHTML = description;
 
-		if (selectedDate == "") {
-			editing.querySelector(".td_relativeDate").innerHTML = "";
-		} else {
-			editing.querySelector(".td_relativeDate").innerHTML = this.getRelativeDate(new Date(selectedDate));
-		}
+		this.setDateDisplay(editing.querySelector(".td_relativeDate"), selectedDate, editing.querySelector(".td_date"));
 
 		//check if the todo was completed in editing mode
 		this.updateCompleted(editing);
@@ -143,11 +139,29 @@ dashboard.registerModule({
 		this.saveTodos(module);
 	},
 
+	//set the relative days amount and add sets "due" class on colorElement
+	setDateDisplay: function(element, date, colorElement) {
+		let text = "";
+		let days = 0;
+		if (date !== "") {
+			days = this.getRelativeDate(new Date(date));
+			text = ", " + days + " days";
+		}
+
+		element.innerHTML = text;
+
+		if (days < 0) {
+			colorElement.classList.add("due");
+		} else {
+			colorElement.classList.remove("due");
+		}
+	},
+
 	getRelativeDate: function(date){
 		let msPerDay = 1000*60*60*24;
 		let currentDay = new Date(this.getFormattedDate(new Date()));
 		let days = (date/msPerDay - Math.floor(currentDay/msPerDay));
-		return (", " + days + " days");
+		return days;
 	},
 
 	//warning: this function does not account for timezones
@@ -345,7 +359,8 @@ dashboard.registerModule({
 			todoDate = new Date();
 		}
 		element.querySelector(".td_dueDate").innerHTML = _this.getFormattedDate(todoDate);
-		element.querySelector(".td_relativeDate").innerHTML = _this.getRelativeDate(new Date(_this.getFormattedDate(todoDate)));
+
+		this.setDateDisplay(element.querySelector(".td_relativeDate"), new Date(_this.getFormattedDate(todoDate)), element.querySelector(".td_date"));
 
 		//set the description
 		if (description)
@@ -432,9 +447,10 @@ dashboard.registerModule({
 				<template class="todo_tmplt">
 					<div class="todo_entry">
 						<div class="listEntryContainer"></div>
-						<span class="td_dueDate"></span><span class="td_relativeDate"></span>
-						<br/>
 						<div class="td_description"></div>
+						<div class="td_date">
+							<span class="td_dueDate colorOverride"></span><span class="td_relativeDate colorOverride"></span>
+						</div>
 						<input type="hidden" class="td_completedDate" value="0">
 					</div>
 				</template>

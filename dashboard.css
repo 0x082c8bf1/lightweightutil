@@ -1,4 +1,4 @@
-input, label, div, span, select {
+input, label, div, span, select{
 	font-size: 14px;
 	font-family: monospace;
 }
@@ -18,7 +18,7 @@ body {
 	display: block;
 }
 
-span {
+span:not(.colorOverride) {
 	color: white;
 }
 

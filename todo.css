@@ -46,3 +46,11 @@
 .td_description {
 	font-weight: 700;
 }
+
+.td_date {
+	color: rgb(120, 120, 120);
+}
+
+.due {
+	color: red;
+}

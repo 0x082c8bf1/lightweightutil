@@ -106,10 +106,12 @@ dashboard.registerModule({
 			//event listeners
 			this.xButton.addEventListener("click", function(){
 				_this.resetEvent(instance, _this);
+				_this.module.saveAllTimers(instance);
 			});
 
 			this.startButton.addEventListener("click", function(){
 				_this.startButtonEvent(instance, _this);
+				_this.module.saveAllTimers(instance);
 			});
 
 			this.hInput.addEventListener("keydown", function(e){
@@ -129,8 +131,6 @@ dashboard.registerModule({
 			this.timer.addEventListener("keydown", function(e){
 				if(e.code == "Enter" || e.code == "NumpadEnter"){
 					_this.startButtonEvent(instance, _this);
-					//we have to explicitly call saveAllTimers because might hide the element that we hit enter on, and
-					//the event won't bubble if that's the case
 					_this.module.saveAllTimers(instance);
 				}
 			});
@@ -448,6 +448,7 @@ dashboard.registerModule({
 		//event listerner for adding a timer
 		module.q(".mt_insertButton").addEventListener("click", function(){
 			_this.addTimer(module);
+			_this.saveAllTimers(module);
 		});
 
 		//check if nofications are enabled
@@ -459,11 +460,8 @@ dashboard.registerModule({
 		//load
 		this.loadAllTimers(module);
 
-		//event listeners for saving the timers
-		module.q(".timers").addEventListener("click", function(){
-			_this.saveAllTimers(module);
-		});
-		module.q(".timers").addEventListener("keyup", function(){
+		//event listener for saving the timers
+		module.q(".timers").addEventListener("change", function(){
 			_this.saveAllTimers(module);
 		});
 	},

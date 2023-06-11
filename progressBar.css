@@ -5,6 +5,7 @@
 	display: inline-block;
 	vertical-align: bottom;
 	margin-top: 5px;
+	position: relative;
 }
 
 .progressBar {
@@ -18,11 +19,13 @@
 }
 
 .pb_label {
+	height: 20px;
 	background: transparent;
 	border: none;
 	color: black;
-	width: calc(50% - 25px);
+	width: 100%;
 	position: absolute;
+	padding: 0px;
 }
 
 .pb_insertButton {

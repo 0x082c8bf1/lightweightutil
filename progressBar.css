@@ -1,5 +1,6 @@
 .bar {
-	width: 50%;
+	width: calc(100% - 16rem);
+	max-width: 45rem;
 	height: 20px;
 	background-color: white;
 	display: inline-block;

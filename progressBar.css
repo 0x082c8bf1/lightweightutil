@@ -24,9 +24,12 @@
 	background: transparent;
 	border: none;
 	color: black;
-	width: 100%;
+	width: calc(100% - 0.25rem);
 	position: absolute;
-	padding: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0.25rem;
 }
 
 .pb_insertButton {

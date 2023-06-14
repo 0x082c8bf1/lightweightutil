@@ -13,6 +13,10 @@ dashboard.registerModule({
 			module.q(".td_dueSetting").value = now;
 		});
 
+		module.q(".td_clearDate").addEventListener("click", function(){
+			module.q(".td_dueSetting").value = "";
+		});
+
 		//cancel button
 		module.q(".td_cancelSetting").addEventListener("click", function(){
 			_this.setSettingsHidden(module, true);
@@ -254,8 +258,12 @@ dashboard.registerModule({
 				continue;
 			}
 
+			let date = saved[i].date;
+			if (date && date != "") {
+				date = new Date(saved[i].date+"T00:00:00.000");
+			}
 			//the time needs to be appended to the date here to account for timezones
-			this.newTodo(module, saved[i].tasks, new Date(saved[i].date+"T00:00:00.000"), saved[i].completed, saved[i].description);
+			this.newTodo(module, saved[i].tasks, date, saved[i].completed, saved[i].description);
 		}
 	},
 
@@ -358,9 +366,11 @@ dashboard.registerModule({
 		} else {
 			todoDate = new Date();
 		}
-		element.querySelector(".td_dueDate").innerHTML = _this.getFormattedDate(todoDate);
 
-		this.setDateDisplay(element.querySelector(".td_relativeDate"), new Date(_this.getFormattedDate(todoDate)), element.querySelector(".td_date"));
+		if (date != ""){
+			element.querySelector(".td_dueDate").innerHTML = _this.getFormattedDate(todoDate);
+			this.setDateDisplay(element.querySelector(".td_relativeDate"), new Date(_this.getFormattedDate(todoDate)), element.querySelector(".td_date"));
+		}
 
 		//set the description
 		if (description)
@@ -437,6 +447,7 @@ dashboard.registerModule({
 					<br/><br/>
 					<input type="date" class="td_dueSetting">
 					<input type="button" class="td_dueNow" value="Today">
+					<input type="button" class="td_clearDate" value="Clear">
 				</div>
 				<div class="td_backgroundFade"></div>
 			</div>

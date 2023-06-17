@@ -122,7 +122,7 @@ dashboard.registerModule({
 			_this.saveBars(this);
 		});
 
-		barContainer.addEventListener("keyup", function(){
+		barContainer.addEventListener("change", function(){
 			_this.saveBars(this);
 		})
 

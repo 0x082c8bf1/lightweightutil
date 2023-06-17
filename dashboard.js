@@ -207,7 +207,7 @@ var dashboard = {
 				log("Using default config.");
 				config =
 				`[
-					[{"name": "todo", "width": "300px", "maxHeight": "350px"},{"name": "multitimer"}],
+					[{"maxHeight": "350px"},{"name": "todo", "width": "300px"},{"name": "multitimer"}],
 					[{"name": "textbox"}],
 					[{"name": "codeEditor"}, {"name": "keyCode", "width": "250px"}],
 					[{"name": "progressBar"}]
@@ -233,16 +233,23 @@ var dashboard = {
 
 				//create modules
 				for(let mPos = 0; mPos<config[cPos].length; mPos++){
-					let module = this.appendModuleToContainer(container);
+
+					//container settings
 					let mConfig = config[cPos][mPos];
+					if (!mConfig.name) {
+						if (mConfig.maxHeight){
+							container.style.maxHeight = mConfig.maxHeight;
+						}
+
+						//don't parse the setting as a module
+						continue;
+					}
+
+					let module = this.appendModuleToContainer(container);
 
 					//apply module settings
 					if (mConfig.width){
 						module.style.maxWidth = mConfig.width;
-					}
-					if (mConfig.maxHeight){
-						module.style.overflow = "scroll";
-						module.style.maxHeight = mConfig.maxHeight;
 					}
 
 					//handle updates

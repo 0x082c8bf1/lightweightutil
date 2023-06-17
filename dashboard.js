@@ -365,16 +365,9 @@ var dashboard = {
 			if (!document.querySelector("#settingsPane").hidden){
 				let unsavedSettings = JSON.stringify(dashboard.settings.getNewSettings());
 				let savedSettings = localStorage.getItem("settings");
-				//if the user has never saved settings before
-				if (!savedSettings){
-					let save = confirm("You have no saved settings, would you like to save?")
-					if (save) {
-						dashboard.settings.saveSettings();
-					}
-				}
 
 				//if the user has unsaved settings
-				if (savedSettings && savedSettings != unsavedSettings){
+				if (savedSettings != unsavedSettings){
 					discard = confirm("You have unsaved settings, would you like to discard them?");
 				}
 			}
@@ -385,6 +378,10 @@ var dashboard = {
 			let settings = document.querySelectorAll(".settingInput");
 			let newSettings = {};
 			for(let i=0; i<settings.length; i++){
+				//skip if defaulting
+				if(document.querySelector("#default_" + settings[i].id).checked)
+					continue;
+
 				let value;
 				switch(settings[i].dataType){
 					case "bool":
@@ -432,6 +429,19 @@ var dashboard = {
 
 			//go through the settings and create the entries for them
 			for(let i=0; i<mSettings.length; i++){
+				let tempId = name + "_" + mSettings[i]["name"];
+
+				//default checkbox
+				defaultInput = document.createElement("input");
+				defaultInput.type = "checkbox";
+				defaultInput.checked = getSettingFromStorage(name, mSettings[i]["name"]) == null;
+				defaultInput.id = "default_" + name + "_" + mSettings[i]["name"];
+				defaultInput.managing = tempId;
+				element.appendChild(defaultInput);
+				defaultInput.addEventListener("change", function(){
+					document.querySelector("#" + this.managing).disabled = this.checked;
+				});
+
 				//append input
 				let input;
 				let value = getSetting(name, mSettings[i]["name"]);
@@ -453,8 +463,13 @@ var dashboard = {
 						input.value = value;
 				}
 
+				//disable if defaulted
+				if (document.querySelector("#default_"+tempId).checked) {
+					input.disabled = true;
+				}
+
 				//setup label and input ID
-				input.id = name + "_" + mSettings[i]["name"];
+				input.id = tempId;
 				let desc = document.createElement("label");
 				desc.setAttribute("for", input.id);
 

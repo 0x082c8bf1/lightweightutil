@@ -20,17 +20,8 @@ function log(m){
 }
 
 function getSetting(module, setting){
-	let settings = localStorage.getItem("settings");
-
 	//check if the setting is saved
-	let retrievedValue = null
-	if (settings != null) {
-		settings = JSON.parse(settings);
-
-		let retrievedModule = settings[module];
-		if (retrievedModule != null)
-			retrievedValue = retrievedModule[setting];
-	}
+	let retrievedValue = getSettingFromStorage(module, setting);
 
 	//if the setting is not saved, get the default value
 	if (retrievedValue == null) {
@@ -43,5 +34,21 @@ function getSetting(module, setting){
 		console.error("Invalid setting being read.");
 	}
 
-	return settings[module][setting];
+	return retrievedValue;
+}
+
+//check if a setting was manually set by the user or is being defaulted
+function getSettingFromStorage(module, setting) {
+	let settings = localStorage.getItem("settings");
+
+	let retrievedValue = null
+	if (settings != null) {
+		settings = JSON.parse(settings);
+
+		let retrievedModule = settings[module];
+		if (retrievedModule != null)
+			retrievedValue = retrievedModule[setting];
+	}
+
+	return retrievedValue;
 }

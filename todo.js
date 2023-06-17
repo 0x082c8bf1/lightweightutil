@@ -91,25 +91,14 @@ dashboard.registerModule({
 
 		//load todos
 		this.loadTodos(module);
-		if (getSetting(_this.name, "hideFinished")) {
-			this.hideFinishedTodos(module, true);
-		} else {
-			module.q(".td_completed").checked = true;
-		}
+		this.hideFinishedTodos(module, true);
 	},
 
 	hideFinishedTodos: function(module, hide){
 		let list = module.q(".td_list");
 		let todos = list.querySelectorAll(":scope > .todo_entry");
 		for(let i=0; i<todos.length; i++) {
-			if (hide) {
-				let taskChecks = todos[i].querySelector(".td_checkbox:not(:checked)");
-				if (!taskChecks) {
-					todos[i].hidden = true;
-				}
-			} else {
-				todos[i].hidden = false;
-			}
+			todos[i].hidden = (hide == (todos[i].querySelector(".td_checkbox:not(:checked)") == null));
 		}
 	},
 
@@ -452,7 +441,7 @@ dashboard.registerModule({
 				<div class="td_backgroundFade"></div>
 			</div>
 			<input type="checkbox" class="td_completed" id="td_completed">
-			<label for="td_completed">Show all</label>
+			<label for="td_completed">Complete</label>
 			<br/><br/>
 			<div class="td_list">
 				<template class="todo_tmplt">
@@ -477,12 +466,6 @@ dashboard.registerModule({
 				"description": "Default name when a todo is created",
 				"type": "text",
 				"default": "New todo",
-			},
-			{
-				"name": "hideFinished",
-				"description": "Default hide completed todos",
-				"type": "bool",
-				"default": false,
 			},
 			{
 				"name": "purgeCompleted",

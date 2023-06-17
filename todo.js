@@ -35,7 +35,7 @@ dashboard.registerModule({
 
 		//insert button
 		module.q(".td_insertButton").addEventListener("click", function(){
-			_this.newTodo(module);
+			_this.newTodo(module, false);
 			_this.saveTodos(module);
 		});
 
@@ -252,7 +252,7 @@ dashboard.registerModule({
 				date = new Date(saved[i].date+"T00:00:00.000");
 			}
 			//the time needs to be appended to the date here to account for timezones
-			this.newTodo(module, saved[i].tasks, date, saved[i].completed, saved[i].description);
+			this.newTodo(module, true, saved[i].tasks, date, saved[i].completed, saved[i].description);
 		}
 	},
 
@@ -342,7 +342,7 @@ dashboard.registerModule({
 		}
 	},
 
-	newTodo: function(module, JSONTasks, date, completionDate, description){
+	newTodo: function(module, append, JSONTasks, date, completionDate, description){
 		let _this = this;
 
 		let fragment = module.q(".todo_tmplt").content.cloneNode(true);
@@ -386,7 +386,12 @@ dashboard.registerModule({
 				_this.editTodo(module, element);
 		});
 
-		module.q(".td_list").insertBefore(fragment, module.q(".td_insertButton"));
+		//put at the top or bottom of the list depending on append
+		if (append) {
+			module.q(".td_list").insertBefore(fragment, module.q(".td_insertButton"));
+		} else {
+			module.q(".td_list").insertBefore(fragment, module.q(".todo_entry"));
+		}
 	},
 
 	editTodo: function(module, todo){

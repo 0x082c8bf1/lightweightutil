@@ -95,6 +95,7 @@ dashboard.registerModule({
 			}
 		}
 		textbox.value = output;
+		this.updateCharacterCounts(module);
 	},
 
 	replace: function(module){

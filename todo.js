@@ -35,6 +35,8 @@ dashboard.registerModule({
 
 		//insert button
 		module.q(".td_insertButton").addEventListener("click", function(){
+			document.querySelector(".td_completed").checked = false;
+			_this.hideFinishedTodos(module, true);
 			_this.newTodo(module, false);
 			_this.saveTodos(module);
 		});

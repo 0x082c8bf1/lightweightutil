@@ -7,11 +7,10 @@ dashboard.registerModule({
 		let string = "" + num;
 
 		let output = "";
-		for(let i=string.length;i<width;i++){
+		for(let i=string.length;i<width;i++)
 			output += "0";
-		}
-		output += string;
 
+		output += string;
 		return output;
 	},
 
@@ -45,13 +44,11 @@ dashboard.registerModule({
 		//handle negative durations
 		if(duration<0){
 			duration = Math.abs(duration);
-			if(duration >= 1000){
+			if(duration >= 1000)
 				output += "-";
-			}
 		}
 
 		let dur = this.getDurationFromMS(duration);
-
 		output += this.leftZeroFillNumber(dur.hours, 2);
 		output += ":";
 		output += this.leftZeroFillNumber(dur.minutes, 2);
@@ -142,7 +139,7 @@ dashboard.registerModule({
 			_this.timeDisplay.hidden = !_this.timeInput.hidden;
 		}
 
-		//function that is called when the x button is clicked
+		//function that is called when the x button or reset is clicked
 		resetEvent(module, _this){
 			if(_this.startButton.value == "Start"){
 				_this.module.deleteTimer(module, _this);
@@ -163,11 +160,9 @@ dashboard.registerModule({
 
 		//function that updates the ringer when a timer is reset or deleted while ringing
 		//turnOn is weather the timer is starting ringing or stopping ringing
-		//TODO add option to change sound via url
-		//TODO add options to change how much the sound loops
 		updateRinger(module, _this, turnOn){
 			//don't do anything if _this.ringing is already what it should be set to
-			if(turnOn==module.ringing){
+			if(turnOn!=module.loadedAudio.paused){
 				return;
 			}
 
@@ -178,22 +173,12 @@ dashboard.registerModule({
 			}
 
 			//start ringing
-			if(module.numberOfRingingTimers>0){
-				if(module.timerRingInterval == null){
-					module.loadedAudio.play();//ring immediately
-					//schedule rings every 1000ms until reset
-					module.timerRingInterval = setInterval(function(){
-						module.loadedAudio.play();
-					}, 1000);
-				}
+			if(module.numberOfRingingTimers > 0){
+				module.loadedAudio.play();
 			} else {
-				clearInterval(module.timerRingInterval);
-				module.timerRingInterval = null;
 				module.loadedAudio.pause();
 				module.loadedAudio.currentTime = 0;
 			}
-			module.ringing = turnOn;
-
 		}
 
 		//takes a string and tries it's best to assume what was supposed to be typed in as a number
@@ -223,7 +208,6 @@ dashboard.registerModule({
 				hrs = (isNaN(hrs)) ? 0 : hrs;
 
 				hours = dys*24 + hrs;
-
 			} else {
 				hours = _this.makeValidNumber(_this.hInput.value);
 			}
@@ -421,9 +405,9 @@ dashboard.registerModule({
 		module.timers = []; //list of all the timers
 		module.timerTickInterval = null; //the interval set if any timers exist
 
-		module.timerRingInterval = null; //the interval to check if any alarms are ringing
 		module.numberOfRingingTimers = 0; //the count of currently ringing timers
 		module.loadedAudio = new Audio("pixbay-alarm-clock-short.mp3"); //the audio that is played when ringing
+		module.loadedAudio.loop = true;
 
 		//show confirmation before reloading/closing the tab when there are timers
 		window.onbeforeunload = function (event) {
@@ -492,8 +476,9 @@ dashboard.registerModule({
 		`
 	},
 
-	deconstructInstance: function(instance){;
-		clearInterval(instance.timerRingInterval);
+	deconstructInstance: function(instance){
+		instance.loadedAudio.pause();
+		instance.loadedaudio.currentTime = 0;
 		clearInterval(instance.timerTickInterval);
 	},
 

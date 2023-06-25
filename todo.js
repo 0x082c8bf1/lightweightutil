@@ -43,7 +43,7 @@ dashboard.registerModule({
 
 		//show all button
 		module.q(".td_completed").addEventListener("change", function(){
-			_this.hideFinishedTodos(module, !this.checked);
+			_this.hideFinishedTodos(module);
 		});
 
 		//cancel edit when clicking on the background
@@ -96,7 +96,13 @@ dashboard.registerModule({
 		this.hideFinishedTodos(module, true);
 	},
 
+	//hides todos where none of the tasks are unchecked.
+	// The hide argument is whether to hide them or unhide then, leaving it blank checks the complete checkbox
 	hideFinishedTodos: function(module, hide){
+		if (hide == undefined) {
+			hide = !module.q(".td_completed").checked;
+		}
+
 		let list = module.q(".td_list");
 		let todos = list.querySelectorAll(":scope > .todo_entry");
 		for(let i=0; i<todos.length; i++) {
@@ -126,6 +132,7 @@ dashboard.registerModule({
 
 		//check if the todo was completed in editing mode
 		this.updateCompleted(editing);
+		this.hideFinishedTodos(module);
 
 		//hide settings
 		this.setSettingsHidden(module, true);
@@ -274,8 +281,7 @@ dashboard.registerModule({
 			if (!editing) {
 				checkbox.addEventListener("change", function(){
 					//rehide all the completed tasks
-					let hide = module.q(".td_completed").checked;
-					_this.hideFinishedTodos(module, !hide);
+					_this.hideFinishedTodos(module);
 
 					_this.updateCompleted(checkbox);
 

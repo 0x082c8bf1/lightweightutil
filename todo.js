@@ -73,7 +73,7 @@ dashboard.registerModule({
 
 			//make sure that we don't move it past the bottom
 			if (sibling == null || !sibling.classList.contains("todo_entry")) {
-				sibling = module.q(".td_insertButton");
+				sibling = module.q(".td_bottomAnchor");
 			}
 			editing.parentNode.insertBefore(editing, sibling);
 			_this.saveTodos(module);
@@ -397,7 +397,7 @@ dashboard.registerModule({
 		//put at the top or bottom of the list depending on append
 		let firstTodo = module.q(".todo_entry");
 		if (append || firstTodo == null) {
-			module.q(".td_list").insertBefore(fragment, module.q(".td_insertButton"));
+			module.q(".td_list").insertBefore(fragment, module.q(".td_bottomAnchor"));
 		} else {
 			module.q(".td_list").insertBefore(fragment, firstTodo);
 		}
@@ -454,6 +454,7 @@ dashboard.registerModule({
 				</div>
 				<div class="td_backgroundFade"></div>
 			</div>
+			<input type="button" class="td_insertButton" value="+">
 			<input type="checkbox" class="td_completed" id="td_completed">
 			<label for="td_completed">Complete</label>
 			<br/><br/>
@@ -468,7 +469,7 @@ dashboard.registerModule({
 						<input type="hidden" class="td_completedDate" value="0">
 					</div>
 				</template>
-				<input type="button" class="td_insertButton" value="+">
+				<input type="hidden" class="td_bottomAnchor">
 			</div>
 		`
 	},

@@ -478,7 +478,7 @@ dashboard.registerModule({
 
 	deconstructInstance: function(instance){
 		instance.loadedAudio.pause();
-		instance.loadedaudio.currentTime = 0;
+		instance.loadedAudio.currentTime = 0;
 		clearInterval(instance.timerTickInterval);
 	},
 

@@ -38,6 +38,9 @@ var dashboard = {
 			return;
 		}
 
+		//scroll to top of new pane
+		scrollTo(0,0);
+
 		//handle toggle
 		if (!panes[toPane].pane.hidden){
 			toPane = "layout";
@@ -325,7 +328,11 @@ var dashboard = {
 			//add the element to the index
 			let entry = document.createElement("li");
 			let a = document.createElement("a");
-			a.href = "#" + module.name;
+			a.href = "";
+			a.addEventListener("click", function(e){
+				e.preventDefault();
+				document.querySelector("#" + module.name).scrollIntoView();
+			})
 			a.innerHTML = module.displayName;
 			entry.appendChild(a);
 			document.querySelector("#docIndex").appendChild(entry);

@@ -148,6 +148,7 @@ dashboard.registerModule({
 				if(_this.startButton.value == "Reset"){
 					_this.updateRinger(module, _this, false);
 					this.timeDisplay.style.color = "white";
+					this.ringing = false;
 				}
 
 				//go to edit mode
@@ -161,11 +162,7 @@ dashboard.registerModule({
 		//function that updates the ringer when a timer is reset or deleted while ringing
 		//turnOn is weather the timer is starting ringing or stopping ringing
 		updateRinger(module, _this, turnOn){
-			//don't do anything if _this.ringing is already what it should be set to
-			if(turnOn!=module.loadedAudio.paused){
-				return;
-			}
-
+			//update number of ringing timers
 			if(turnOn){
 				module.numberOfRingingTimers++;
 			} else {
@@ -247,9 +244,12 @@ dashboard.registerModule({
 						this.notifSent = true;
 					}
 
-					this.startButton.value = "Reset";
-					this.timeDisplay.style.color = "red";
-					this.updateRinger(module, this, true);
+					if (!this.ringing) {
+						this.startButton.value = "Reset";
+						this.timeDisplay.style.color = "red";
+						this.updateRinger(module, this, true);
+						this.ringing = true;
+					}
 				} else {
 					this.notifSent = false;
 				}

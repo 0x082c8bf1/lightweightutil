@@ -389,10 +389,11 @@ dashboard.registerModule({
 		});
 
 		//put at the top or bottom of the list depending on append
-		if (append) {
+		let firstTodo = module.q(".todo_entry");
+		if (append || firstTodo == null) {
 			module.q(".td_list").insertBefore(fragment, module.q(".td_insertButton"));
 		} else {
-			module.q(".td_list").insertBefore(fragment, module.q(".todo_entry"));
+			module.q(".td_list").insertBefore(fragment, firstTodo);
 		}
 	},
 

@@ -57,24 +57,40 @@ dashboard.registerModule({
 		// everything else in the settings pane doing so.
 		module.q(".td_moveup").addEventListener("click", function(){
 			let editing = module.q(".td_settings").editing;
-			let sibling = editing.previousElementSibling;
 
-			//make sure that we don't move it past the top
-			if (sibling == null || !sibling.classList.contains("todo_entry")) {
-				return;
-			}
+			//find the next non-hidden sibling
+			let sibling = editing;
+			do {
+				sibling = sibling.previousElementSibling;
+
+				//make sure that we don't move it past the top
+				if (sibling == null || !sibling.classList.contains("todo_entry"))
+					return;
+			} while (sibling.hidden);
+
 			editing.parentNode.insertBefore(editing, sibling);
 			_this.saveTodos(module);
 		});
 
 		module.q(".td_movedown").addEventListener("click", function(){
 			let editing = module.q(".td_settings").editing;
-			let sibling = editing.nextElementSibling?.nextElementSibling;
 
-			//make sure that we don't move it past the bottom
-			if (sibling == null || !sibling.classList.contains("todo_entry")) {
+			//find the next non-hidden sibling
+			let sibling = editing;
+			do {
+				sibling = sibling.nextElementSibling;
+
+				//make sure that we don't move it past the bottom
+				if (sibling == null || !sibling.classList.contains("todo_entry")) {
+					sibling = module.q(".td_bottomAnchor");
+				}
+			} while (sibling.hidden);
+
+			//make sure we go after the last element, we don't to use after() here because of the bottomAnchor
+			sibling = sibling.nextElementSibling;
+			if (sibling == null || !sibling.classList.contains("todo_entry"))
 				sibling = module.q(".td_bottomAnchor");
-			}
+
 			editing.parentNode.insertBefore(editing, sibling);
 			_this.saveTodos(module);
 		});

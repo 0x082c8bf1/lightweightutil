@@ -127,7 +127,8 @@ dashboard.registerModule({
 		})
 
 		module.q(".pb_insertButton").addEventListener("click",function(){
-			_this.addBar(this);
+			let newBar = _this.addBar(this);
+			_this.updateBar(newBar);
 		});
 
 		//load from localStorage

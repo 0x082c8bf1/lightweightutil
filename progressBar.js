@@ -51,6 +51,17 @@ dashboard.registerModule({
 		created.querySelector(".pb_deleteButton").addEventListener("click", function(){
 			_this.deleteBar(this, _this);
 		});
+		created.querySelector(".pb_label").addEventListener("keydown", function(e){
+			if(e.key == "ArrowUp") {
+				e.preventDefault();
+				let input = getParentOfClass(this, "pb_entry").querySelector(".pb_completedNumber");
+				input.value = +input.value + 1;
+			} else if(e.key == "ArrowDown") {
+				e.preventDefault();
+				let input = getParentOfClass(this, "pb_entry").querySelector(".pb_completedNumber");
+				input.value = +input.value - 1;
+			}
+		});
 
 		//add element to dom
 		mod.querySelector(".pb_bars").insertBefore(element, mod.querySelector(".pb_insertButton"));

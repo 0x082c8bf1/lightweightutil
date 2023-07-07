@@ -473,7 +473,7 @@ dashboard.registerModule({
 			<input type="button" class="td_insertButton" value="+">
 			<input type="checkbox" class="td_completed" id="td_completed">
 			<label for="td_completed">Complete</label>
-			<br/><br/>
+			<br/>
 			<div class="td_list">
 				<template class="todo_tmplt">
 					<div class="todo_entry">

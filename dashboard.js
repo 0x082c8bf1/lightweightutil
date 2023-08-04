@@ -169,11 +169,10 @@ var dashboard = {
 				if (!dashboard.modules[m].instances)
 					continue;
 
-				if (!dashboard.modules[m].deconstructInstance)
-					continue;
-
-				for(let i=0; i<dashboard.modules[m]?.instances.length; i++){
-					dashboard.modules[m].deconstructInstance(dashboard.modules[m].instances[i]);
+				if (dashboard.modules[m].deconstructInstance) {
+					for(let i=0; i<dashboard.modules[m]?.instances.length; i++){
+						dashboard.modules[m].deconstructInstance(dashboard.modules[m].instances[i]);
+					}
 				}
 				dashboard.modules[m].instances = null;
 			}

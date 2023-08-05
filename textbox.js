@@ -106,7 +106,13 @@ dashboard.registerModule({
 		else
 			inputPattern = module.q(".replaceInputPattern").value;
 
-		let outputPattern = module.q(".replaceOutputPattern").value;
+		let outputPattern;
+		try {
+			let data ="[\"" + module.q(".replaceOutputPattern").value + "\"]";
+			outputPattern = JSON.parse(data)[0];
+		} catch (e) {
+			return;
+		}
 
 		let input = module.q(".textarea");
 		input.value = input.value.replace(inputPattern, outputPattern);

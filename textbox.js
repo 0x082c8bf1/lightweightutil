@@ -115,8 +115,13 @@ dashboard.registerModule({
 	handleFind: function(module, e){
 		if(e.key == 'f' && e.ctrlKey) {
 			e.preventDefault();
+
 			let fs = module.q(".findSpan");
-			fs.hidden = !fs.hidden;
+			let searching = getParentOfClass(document.activeElement, "findSpan");
+
+			if (fs.hidden || searching)
+				fs.hidden = !fs.hidden;
+
 			if (!fs.hidden)
 				module.q(".replaceInputPattern").focus();
 			else

@@ -196,25 +196,8 @@ var dashboard = {
 		},
 
 		create: function(){
-			//if the config is not loaded, try to load it
-			let config = localStorage.getItem("db_config");
-
-			//if the config is still not loaded, default it
-			if (config == null){
-				//default config if none exists
-				log("Using default config.");
-				config =
-				`[
-					[{"maxHeight": "350px"},{"name": "todo", "width": "300px"},{"name": "multitimer"}],
-					[{"name": "textbox"}],
-					[{"name": "codeEditor"}, {"name": "keyCode", "width": "250px"}],
-					[{"name": "progressBar"}]
-				]`;
-
-				//TODO: Add a way to save this to localStorage optionally
-//				localStorage.setItem("db_config", JSON.stringify(config));
-			}
-
+			//load the config
+			let config = getSetting("dashboard", "config");
 			config = JSON.parse(config);
 
 			//search for override modules
@@ -518,6 +501,12 @@ dashboard.registerModule({
 				"type": "bool",
 				"default": true,
 			},
+			{
+				"name": "config",
+				"description": "Config JSON object",
+				"type": "text",
+				"default": '[[{"maxHeight": "350px"},{"name": "todo", "width": "300px"},{"name": "multitimer"}],[{"name": "textbox"}],[{"name": "codeEditor"}, {"name": "keyCode", "width": "250px"}],[{"name": "progressBar"}]]',
+			}
 		]
 	},
 

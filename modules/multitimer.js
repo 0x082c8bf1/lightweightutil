@@ -409,6 +409,12 @@ dashboard.registerModule({
 		module.loadedAudio = new Audio("pixbay-alarm-clock-short.mp3"); //the audio that is played when ringing
 		module.loadedAudio.loop = true;
 
+		//process volume
+		let volume = getSetting(this.name, "volume");
+		if (volume > 100) volume = 100;
+		if (volume < 0) volume = 0;
+		module.loadedAudio.volume = volume/100
+
 		//show confirmation before reloading/closing the tab when there are timers
 		window.onbeforeunload = function (event) {
 			if (!getSetting(_this.name, "promptOnClose"))
@@ -524,6 +530,12 @@ dashboard.registerModule({
 				"description": "The default time when creating a timer in seconds",
 				"type": "number",
 				"default": 60,
+			},
+			{
+				"name": "volume",
+				"description": "Ringer volume percent",
+				"type": "number",
+				"default": 50,
 			},
 		]
 	},

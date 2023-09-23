@@ -60,9 +60,6 @@ var dashboard = {
 
 	//dashboard.pageLoad()
 	pageLoad: function(){
-		document.querySelector("#reloadLayout").addEventListener("click", function(){
-			dashboard.layout.reload();
-		});
 		document.querySelector("#settingsToggle").addEventListener("click", function(){
 			dashboard.togglePane("settings");
 		});
@@ -148,12 +145,35 @@ var dashboard = {
 		document.querySelector("#importFile").value = "";
 
 		dashboard.startModules();
+
+		//init layout dropdown
+		let layouts = document.querySelector("#layoutDropdown");
+		layouts.addEventListener("input", function(){
+			let layout;
+			//don't set layout if we want to load from settings
+			if (this.value != "default") {
+				layout = "[[{\"name\": \"" + this.value + "\"}]]";
+			}
+			dashboard.layout.reload(layout);
+		});
+
+		for(let moduleName in dashboard.modules){
+			if (moduleName == "dashboard") continue;
+
+			let module = dashboard.modules[moduleName];
+
+			//add to layout dropdown
+			let e = document.createElement("option");
+			e.value = module.name;
+			e.innerHTML = module.displayName;
+			layouts.appendChild(e);
+		}
 	},
 
-	//dashboard.startModules()
-	startModules: function(){
+	//dashboard.startModules(overrideConfig)
+	startModules: function(overrideConfig){
 		log("creating layout");
-		dashboard.layout.create();
+		dashboard.layout.create(overrideConfig);
 
 		for(let moduleName in dashboard.modules){
 			let module = dashboard.modules[moduleName];
@@ -164,10 +184,10 @@ var dashboard = {
 
 	//dashboard.layout
 	layout: {
-		//dashboard.layout.reload()
-		reload: function(){
+		//dashboard.layout.reload(overrideConfig)
+		reload: function(overrideConfig){
 			dashboard.layout.delete();
-			dashboard.startModules();
+			dashboard.startModules(overrideConfig);
 		},
 
 		//dashboard.layout.delete()
@@ -204,10 +224,15 @@ var dashboard = {
 			return m;
 		},
 
-		//dashboard.layout.create()
-		create: function(){
+		//dashboard.layout.create(overrideConfig)
+		create: function(overrideConfig){
 			//load the config
-			let config = getSetting("dashboard", "config");
+			let config;
+			if (!overrideConfig) {
+				config = getSetting("dashboard", "config");
+			} else {
+				config = overrideConfig;
+			}
 			config = JSON.parse(config);
 
 			//search for override modules

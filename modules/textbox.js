@@ -99,23 +99,25 @@ dashboard.registerModule({
 	},
 
 	replace: function(module){
-		let inputPattern;
-
-		if (module.q(".regexSearch").checked)
-			inputPattern = new RegExp(module.q(".replaceInputPattern").value, 'g');
-		else
-			inputPattern = module.q(".replaceInputPattern").value;
-
-		let outputPattern;
-		try {
-			let data ="[\"" + module.q(".replaceOutputPattern").value + "\"]";
-			outputPattern = JSON.parse(data)[0];
-		} catch (e) {
-			return;
-		}
-
+		let inputPattern, outputPattern;
 		let input = module.q(".textarea");
-		input.value = input.value.replace(inputPattern, outputPattern);
+
+		//regex matching
+		if (module.q(".regexSearch").checked) {
+			inputPattern = new RegExp(module.q(".replaceInputPattern").value, 'g');
+			try {
+				let data ="[\"" + module.q(".replaceOutputPattern").value + "\"]";
+				outputPattern = JSON.parse(data)[0];
+			} catch (e) {
+				return;
+			}
+			input.value = input.value.replace(inputPattern, outputPattern);
+		} else {
+			//plaintext matching
+			inputPattern = module.q(".replaceInputPattern").value;
+			outputPattern = module.q(".replaceOutputPattern").value;
+			input.value = input.value.replaceAll(inputPattern, outputPattern);
+		}
 	},
 
 	handleFind: function(module, e){

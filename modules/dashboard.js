@@ -2,6 +2,7 @@ var dashboard = {
 	modules: [],
 
 	//registers a module object
+	//dashboard.registerModule(module)
 	registerModule: function(module){
 		//error checking
 		if (!module.name){
@@ -20,6 +21,7 @@ var dashboard = {
 		log("Registed module: " + module.name);
 	},
 
+	//dashboard.togglePane(toPane)
 	togglePane: function(toPane){
 		let panes = {
 			settings: {pane: document.querySelector("#settingsPane"), funcs: dashboard.settings},
@@ -56,6 +58,7 @@ var dashboard = {
 		panes[toPane].pane.hidden = false;
 	},
 
+	//dashboard.pageLoad()
 	pageLoad: function(){
 		document.querySelector("#reloadLayout").addEventListener("click", function(){
 			dashboard.layout.reload();
@@ -147,6 +150,7 @@ var dashboard = {
 		dashboard.startModules();
 	},
 
+	//dashboard.startModules()
 	startModules: function(){
 		log("creating layout");
 		dashboard.layout.create();
@@ -158,12 +162,15 @@ var dashboard = {
 		}
 	},
 
+	//dashboard.layout
 	layout: {
+		//dashboard.layout.reload()
 		reload: function(){
 			dashboard.layout.delete();
 			dashboard.startModules();
 		},
 
+		//dashboard.layout.delete()
 		delete: function(){
 			for (let m in dashboard.modules){
 				if (!dashboard.modules[m].instances)
@@ -179,6 +186,7 @@ var dashboard = {
 			document.querySelector("#layout").innerHTML = "";
 		},
 
+		//dashboard.layout.appendNewContainer(location)
 		//create a new module on the document body
 		appendNewContainer: function(location){
 			let c = document.createElement("div");
@@ -187,6 +195,7 @@ var dashboard = {
 			return c;
 		},
 
+		//dashboard.layout.appendModuleToContainer(container)
 		//add a module to a container
 		appendModuleToContainer: function(container){
 			let m = document.createElement("div");
@@ -195,6 +204,7 @@ var dashboard = {
 			return m;
 		},
 
+		//dashboard.layout.create()
 		create: function(){
 			//load the config
 			let config = getSetting("dashboard", "config");
@@ -285,7 +295,9 @@ var dashboard = {
 			localStorage.setItem("lastVersion", version);
 		},
 	},
+	//dashboard.documentation
 	documentation: {
+		//dashboard.documentation.createPane()
 		createPane: function(){
 			document.querySelector("#docs").innerHTML = "";
 			document.querySelector("#docIndex").innerHTML = "";
@@ -295,6 +307,7 @@ var dashboard = {
 			}
 		},
 
+		//dashboard.documentation.createDocumentationModule(name)
 		createDocumentationModule: function(name){
 			let module = dashboard.modules[name];
 			let mDocsFunc = module.registerDocumentation;
@@ -336,7 +349,9 @@ var dashboard = {
 		},
 	},
 
+	//dashboard.settings
 	settings: {
+		//dashboard.settings.createPane()
 		createPane: function(){
 			document.querySelector("#settings").innerHTML = "";
 
@@ -345,6 +360,7 @@ var dashboard = {
 			}
 		},
 
+		//dashboard.settings.checkLeave()
 		checkLeave: function(){
 			let discard = true;
 			if (!document.querySelector("#settingsPane").hidden){
@@ -359,6 +375,7 @@ var dashboard = {
 			return discard
 		},
 
+		//dashboard.settings.getNewSettings()
 		getNewSettings: function(){
 			let settings = document.querySelectorAll(".settingInput");
 			let newSettings = {};
@@ -389,11 +406,13 @@ var dashboard = {
 			return newSettings;
 		},
 
+		//dashboard.settings.saveSettings()
 		saveSettings: function(){
 			let newSettings = dashboard.settings.getNewSettings();
 			localStorage.setItem("settings", JSON.stringify(newSettings));
 		},
 
+		//dashboard.settings.createModule(name)
 		createModule: function(name){
 			let module = dashboard.modules[name];
 			let mSettingsFunc = module.registerSettings;

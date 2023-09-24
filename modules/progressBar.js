@@ -58,12 +58,14 @@ dashboard.registerModule({
 				let input = bar.querySelector(".pb_completedNumber");
 				input.value = +input.value + 1;
 				_this.updateBar(bar);
+				_this.saveBars(this);
 			} else if(e.key == "ArrowDown") {
 				e.preventDefault();
 				let bar = getParentOfClass(this, "pb_entry");
 				let input = bar.querySelector(".pb_completedNumber");
 				input.value = +input.value - 1;
 				_this.updateBar(bar);
+				_this.saveBars(this);
 			}
 		});
 

@@ -447,6 +447,57 @@ dashboard.registerModule({
 			module.q(".mt_notifButton").hidden = false;
 		}
 
+		//event listener for sorting the timers
+		module.q(".mt_sort").addEventListener("click", function(){
+			function getSortVal1(timer){
+				let val;
+
+				switch(timer.startButton.value) {
+					case "Reset":
+						return 1;
+					case "Start":
+						return 2;
+					case "Pause": //fallthrough
+					case "Resume":
+						return 3;
+				}
+
+				return val;
+			}
+			module.timers = module.timers.sort(function(a,b){
+				//sort in order of ringing; lowest number first, unstarted, active/paused; lowest number first
+				let s1a = getSortVal1(a);
+				let s1b = getSortVal1(b);
+
+				if (s1a != s1b) return s1a > s1b;
+
+				let differenceA = new Date()-a.startDate;
+				let timeA = a.duration-(differenceA+a.msOffset);
+				let differenceB = new Date()-b.startDate;
+				let timeB = b.duration-(differenceB+b.msOffset);
+				return timeA > timeB;
+			});
+			//The timers rely on it not saving when a timer starts ringing... so just psuedo-revert the ringing
+			//temporarily so that it saves wrong. This should not need to be here.
+			let ringingTimers = module.qAll(".start-button[value=\"Reset\"");
+			for(let i=0; i<ringingTimers.length; i++) {
+				ringingTimers[i].value="Pause";
+			}
+
+			_this.saveAllTimers(module);
+
+			//reload existing timers
+			module.loadedAudio.pause();
+			module.numberOfRingingTimers = 0;
+			clearInterval(module.timerTickInterval);
+			module.timerTickInterval = null;
+			let tmrs = module.qAll(".timer");
+			for(let i=0; i<tmrs.length; i++) {
+				tmrs[i].remove();
+			}
+			_this.loadAllTimers(module);
+		});
+
 		//load
 		this.loadAllTimers(module);
 
@@ -479,6 +530,8 @@ dashboard.registerModule({
 				<input type="button" class="mt_notifButton" value="Enable notifications" hidden>
 				<input type="button" class="mt_insertButton" value="+">
 			</div>
+			<input type="button" class="mt_sort" value="Sort">
+
 		`
 	},
 
@@ -486,6 +539,7 @@ dashboard.registerModule({
 		instance.loadedAudio.pause();
 		instance.loadedAudio.currentTime = 0;
 		clearInterval(instance.timerTickInterval);
+		instance.timerTickInterval = null;
 	},
 
 	//returns an array containing a list of functions and an update version to run at

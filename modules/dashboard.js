@@ -270,12 +270,14 @@ var dashboard = {
 
 					//handle updates
 					let lver = localStorage.getItem("lastVersion");
+					//if the version has increased (or loading save from before update functions existed)
 					if (version > lver || (!lver && localStorage.length > 0)){
 						let updateFunc = dashboard.modules[mConfig.name].updates;
 						if (updateFunc){
 							let updates = updateFunc();
 							for(let i=0; i<updates.length; i++){
-								if (updates[i].ver < version){
+								//if the update function is needed for this update
+								if (lver <= updates[i].ver && updates[i].ver < version){
 									updates[i].func();
 								}
 							}

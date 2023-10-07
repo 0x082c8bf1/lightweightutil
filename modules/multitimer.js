@@ -299,20 +299,7 @@ dashboard.registerModule({
 		for(let i=0; i<timers.length; i++) {
 			let oneTimer = {};
 			//save internal values
-			switch(timers[i].status) {
-				case module.status.INACTIVE:
-					oneTimer.state = "Start";
-					break;
-				case module.status.ACTIVE:
-					oneTimer.state = "Pause";
-					break;
-				case module.status.PAUSED:
-					oneTimer.state = "Resume";
-					break;
-				case module.status.RINGING:
-					oneTimer.state = "Reset";
-					break;
-			}
+			oneTimer.status = timers[i].status;
 			oneTimer.msOffset = timers[i].msOffset;
 			oneTimer.startDate = timers[i].startDate;
 			oneTimer.duration = timers[i].duration;
@@ -340,27 +327,13 @@ dashboard.registerModule({
 
 		for(let i=0; i<obj.length; i++) {
 			//load ringing timers as active, since they're basically the same thing
-			let tempStatus;
-			switch(obj[i].state) {
-				case "Start":
-					tempStatus = module.status.INACTIVE;
-					break;
-				case "Pause":
-					tempStatus = module.status.ACTIVE;
-					break;
-				case "Resume":
-					tempStatus = module.status.PAUSED;
-					break;
-				case "Reset":
-					tempStatus = module.status.RINGING;
-					break;
-			}
+			let tempStatus = obj[i].status;
 			if (tempStatus == module.status.RINGING) {
 				tempStatus = module.status.ACTIVE;
 			}
 
 			let timer = this.createTimer(module, obj[i].duration, obj[i].name, tempStatus, obj[i].startDate, obj[i].msOffset);
-			if (obj[i].state = "Resume") {
+			if (obj[i].status == module.status.PAUSED) {
 				this.tick(module, timer);
 			}
 			timer.querySelector(".h-input").value = obj[i].hh;
@@ -515,12 +488,37 @@ dashboard.registerModule({
 			{ver: "0.9.0", func: function(){
 				log("Converting mt_timers to less excessive escaping.");
 				let oldSave = localStorage.getItem("mt_timers");
-				localStorage.setItem("mt_timers.0.9.0", oldSave);
 				let firstParse = JSON.parse(oldSave);
 				let obj = [];
 				for(let i=0; i<firstParse.length; i++){
 					obj[i] = JSON.parse(firstParse[i]);
 				}
+				localStorage.setItem("mt_timers", JSON.stringify(obj));
+			}},
+			{ver: "1.0.0", func: function(){
+				log("Converting status to new save format.");
+				let oldSave = localStorage.getItem("mt_timers");
+				if (!oldSave) return;
+				let obj = JSON.parse(oldSave);
+
+				for(let i=0; i<obj.length; i++) {
+					switch(obj[i].state) {
+						case "Start":
+							obj[i].status = 1;
+							break;
+						case "Pause":
+							obj[i].status = 2;
+							break;
+						case "Resume":
+							obj[i].status = 3;
+							break;
+						case "Reset":
+							obj[i].status = 4;
+							break;
+					}
+					delete obj[i].state;
+				}
+
 				localStorage.setItem("mt_timers", JSON.stringify(obj));
 			}},
 		];

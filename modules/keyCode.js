@@ -1,6 +1,7 @@
 dashboard.registerModule({
 	name: "keyCode",
 	displayName: "KeyCode Reader",
+	version: "1.0.1",
 
 	init: function(module){
 		//add the event listener

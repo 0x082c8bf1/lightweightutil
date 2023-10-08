@@ -1,6 +1,7 @@
 dashboard.registerModule({
 	name: "multitimer",
 	displayName: "Multi timer",
+	version: "1.0.1",
 
 	createDuration: function(h,m,s){
 		let ms = s * 1000 + m * 1000*60 + h*1000*60*60;

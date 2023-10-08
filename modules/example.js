@@ -2,6 +2,7 @@
 dashboard.registerModule({
 	name: "example",
 	displayName: "Example Module",
+	version: "1.0.1",
 
 	//this is the code that is run after the module is added to the dom
 	init: function(module){
@@ -44,6 +45,21 @@ dashboard.registerModule({
 				"default": 1,
 			},
 		]
+	},
+
+	//Update function are called when the module has updated, and the data needs to be
+	//	updated before being used. The modules version number will need to be bumped every
+	//	time an entry is added here.
+	// ver - The last version that the data worked on
+	// func - the function to call to update the data
+	updates: function(){
+		return [
+			{ver: "1.0.1", func: function(){
+				log("Updating data.");
+				let oldSave = localStorage.getItem("exampleData");
+				localStorage.setItem("mt_timers", oldSave+"newData");
+			}},
+		];
 	},
 
 	registerDocumentation: function(){

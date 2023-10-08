@@ -1,6 +1,7 @@
 dashboard.registerModule({
 	name: "todo",
 	displayName: "Todo List",
+	version: "1.0.1",
 
 	init: function(module){
 		let _this = this;

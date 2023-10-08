@@ -2,6 +2,7 @@
 dashboard.registerModule({
 	name: "progressBar",
 	displayName: "Progress Tracker",
+	version: "1.0.1",
 
 	updateBar: function(obj){
 		//get the progressbar entry

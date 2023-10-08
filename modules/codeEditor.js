@@ -1,6 +1,7 @@
 dashboard.registerModule({
 	name: "codeEditor",
 	displayName: "Code Editor",
+	version: "1.0.1",
 
 	evalTextBox: function(module){
 		let shouldContinue = true;

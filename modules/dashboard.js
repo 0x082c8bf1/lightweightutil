@@ -1,5 +1,6 @@
 var dashboard = {
 	modules: [],
+	firstLoad: false,
 
 	//registers a module object
 	//dashboard.registerModule(module)
@@ -120,11 +121,7 @@ var dashboard = {
 			let storage = file["storage"];
 			let jsonFields = file["jsonFields"];
 
-			localStorage.setItem("lastVersion",storage["lastVersion"]);
 			for(let k in storage){
-				if (k=="lastVersion")
-					continue;
-
 				let data = storage[k];
 				if (jsonFields.includes(k))
 					data = JSON.stringify(data);
@@ -224,6 +221,82 @@ var dashboard = {
 			return m;
 		},
 
+		//dashboard.layout.updateSaveCurrentVersion(name)
+		//saves a modules current version to the lastVersion database if applicable
+		updateSaveCurrentVersion(name, versions){
+			if (!dashboard.modules[name].updates)
+				return;
+
+			//create the versions object if it doesn't exist
+			if (!versions) {
+				versions = {};
+			}
+			versions[name] = dashboard.modules[name].version;
+			localStorage.setItem("db_versions", JSON.stringify(versions));
+		},
+
+		//dashboard.layout.updateModule(name)
+		//apply any applicable update functions for a given module
+		//There's a few cases that this function needs to handle
+		//	0. No save data yet
+		//		This case should not run any update functions
+		//	1. Pre-version numbers, detected by checking if lastVersion and db_versions don't exist with saved data
+		//		This should run all of the update functions for every module
+		//	2. Global version number, detected by checking if lastVersion exists
+		//		This should run all update functions newer than lastVersion
+		//	3. Local version numbers, detected by checking if db_versions
+		//		This should run all update functions for modules whose db_version number is < it's current version
+		//		It should also run update functions if the module does not have any saved version number and they exist
+		updateModule: function(name){
+			let versionsStr = localStorage.getItem("db_versions");
+			let versions = null;
+			if (versionsStr) {
+				versions = JSON.parse(versionsStr);
+			}
+
+			//don't run update functions the first time loading the page.
+			if (localStorage.length == 0 || dashboard.firstLoad) {
+				//save this result for later modules
+				dashboard.firstLoad = true;
+
+				dashboard.layout.updateSaveCurrentVersion(name, versions);
+				return;
+			}
+
+			let lastVersion;
+			if (versions) {
+				lastVersion = versions[name];
+			} else {
+				//the only way to get here is to be updating from a version before individual module versions.
+				// So use the old version, this will cause the dashboard update function to run and update the versions.
+				lastVersion = localStorage.getItem("lastVersion");
+			}
+
+			//if lastVersion is undefined, that means a module previously didn't have an update function
+			let currentVersion = dashboard.modules[name].version;
+			//if the version has increased, or loading save from before update functions existed/had a saved version
+			if (currentVersion > lastVersion || (!lastVersion && localStorage.length > 0)){
+				let updateFunc = dashboard.modules[name].updates;
+				if (updateFunc){
+					let updates = updateFunc();
+					for(let i=0; i<updates.length; i++){
+						//if the update function is needed for this update
+						if (!lastVersion || (lastVersion <= updates[i].ver && updates[i].ver < currentVersion)){
+							updates[i].func();
+						}
+					}
+				}
+			}
+
+			//need to reload versions incase an update function changed it
+			versionsStr = localStorage.getItem("db_versions");
+			versions = null;
+			if (versionsStr) {
+				versions = JSON.parse(versionsStr);
+			}
+			dashboard.layout.updateSaveCurrentVersion(name, versions);
+		},
+
 		//dashboard.layout.create(overrideConfig)
 		create: function(overrideConfig){
 			//load the config
@@ -240,7 +313,8 @@ var dashboard = {
 				if (!dashboard.modules[m].overrideLayout)
 					continue;
 
-					dashboard.modules[m].init();
+				dashboard.modules[m].init();
+				dashboard.layout.updateModule(dashboard.modules[m].name);
 			}
 
 			//create containers
@@ -269,20 +343,7 @@ var dashboard = {
 					}
 
 					//handle updates
-					let lver = localStorage.getItem("lastVersion");
-					//if the version has increased (or loading save from before update functions existed)
-					if (version > lver || (!lver && localStorage.length > 0)){
-						let updateFunc = dashboard.modules[mConfig.name].updates;
-						if (updateFunc){
-							let updates = updateFunc();
-							for(let i=0; i<updates.length; i++){
-								//if the update function is needed for this update
-								if (lver <= updates[i].ver && updates[i].ver < version){
-									updates[i].func();
-								}
-							}
-						}
-					}
+					dashboard.layout.updateModule(mConfig.name);
 
 					//instantiate the module
 					let instFunc = dashboard.modules[mConfig.name].instantiate;
@@ -319,7 +380,6 @@ var dashboard = {
 					}
 				}
 			}
-			localStorage.setItem("lastVersion", version);
 		},
 	},
 	//dashboard.documentation
@@ -527,10 +587,11 @@ var dashboard = {
 	}
 }
 
-//register the dashboard as a hidden module to allow for settings to be created.
+//register the dashboard as a hidden module to allow for utility functions to be called.
 dashboard.registerModule({
 	name: "dashboard",
 	displayName: "Dashboard",
+	version: "1.1.0",
 	overrideLayout: true,
 
 	registerSettings: function(){
@@ -559,6 +620,25 @@ dashboard.registerModule({
 	init: function(){
 		let display = !getSetting(this.name, "displayFooterText") ? "none" : "block";
 		document.querySelector("#footerText").style.display = display;
+	},
+
+	updates: function(){
+		return[
+			{ver: "1.0.0", func: function(){
+				//This function relies on overrideLayouts running their update functions before other modules
+				log("Splitting version numbers into a per module basis");
+				let version = localStorage.getItem("lastVersion");
+				let moduleVersions = {};
+				for(let moduleName in dashboard.modules) {
+					if(dashboard.modules[moduleName].updates) {
+						moduleVersions[moduleName] = version;
+					}
+				}
+
+				localStorage.setItem("db_versions", JSON.stringify(moduleVersions));
+				localStorage.removeItem("lastVersion");
+			}},
+		];
 	}
 });
 

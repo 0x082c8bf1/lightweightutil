@@ -16,6 +16,11 @@ var dashboard = {
 			return;
 		}
 
+		if (!module.version){
+			console.error("Module " + module.name + " must have a version.");
+			return;
+		}
+
 		//save the module
 		this.modules[module.name] = module;
 
@@ -313,7 +318,11 @@ var dashboard = {
 				if (!dashboard.modules[m].overrideLayout)
 					continue;
 
-				dashboard.modules[m].init();
+				try {
+					dashboard.modules[m].init();
+				} catch (e) {
+					console.error("Error running init for " + m + "\n", e);
+				}
 				dashboard.layout.updateModule(dashboard.modules[m].name);
 			}
 
@@ -348,7 +357,11 @@ var dashboard = {
 					//instantiate the module
 					let instFunc = dashboard.modules[mConfig.name].instantiate;
 					if (instFunc){
-						instFunc(module);
+						try {
+							instFunc(module);
+						} catch (e) {
+							console.error("Error running instantiate for " + mConfig.name + "\n", e);
+						}
 					}
 
 					//create the module instance
@@ -376,7 +389,11 @@ var dashboard = {
 
 					//call the init function on the module
 					if (imodule.init){
-						imodule.init(instance);
+						try {
+							imodule.init(instance);
+						} catch (e) {
+							console.error("Error running init for " + mConfig.name + "\n", e);
+						}
 					}
 				}
 			}
@@ -401,7 +418,13 @@ var dashboard = {
 			if (!mDocsFunc)
 				return;
 
-			let mDocs = mDocsFunc();
+			let mDocs;
+			try {
+				mDocs = mDocsFunc();
+			} catch (e) {
+				console.error("Error running registerDocumentation for " + name + "\n", e);
+				return;
+			}
 
 			//if the module has a docs function, we create a module for it
 			let container = dashboard.layout.appendNewContainer(document.querySelector("#docs"));
@@ -506,7 +529,13 @@ var dashboard = {
 			if (!mSettingsFunc)
 				return;
 
-			let mSettings = mSettingsFunc();
+			let mSettings;
+			try {
+				mSettings = mSettingsFunc();
+			} catch (e) {
+				console.error("Error running registerSettings for " + name + "\n", e);
+				return;
+			}
 
 			//if the module has a settings function, we create a module for it
 			let container = dashboard.layout.appendNewContainer(document.querySelector("#settingsPane"));

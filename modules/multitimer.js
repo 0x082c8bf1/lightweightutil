@@ -420,6 +420,8 @@ dashboard.registerModule({
 			for(let i=0; i<timers.length; i++) {
 				timerList.insertBefore(timers[i], addButton);
 			}
+
+			_this.saveAllTimers(module);
 		});
 
 		//save if any field on a timer changes

@@ -154,8 +154,8 @@ dashboard.registerModule({
 						let hNum = parseFloat(this.makeValidNumber(rStr));
 
 						//handle not putting a number before or after "d"
-						dNum = (isNaN(dys)) ? 0 : dNum;
-						hNum = (isNaN(hrs)) ? 0 : hNum;
+						dNum = (isNaN(dNum)) ? 0 : dNum;
+						hNum = (isNaN(hNum)) ? 0 : hNum;
 
 						//convert to hours
 						h = dNum*24 + hNum;

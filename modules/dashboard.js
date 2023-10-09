@@ -1,6 +1,5 @@
 var dashboard = {
 	modules: [],
-	firstLoad: false,
 
 	//registers a module object
 	//dashboard.registerModule(module)
@@ -186,6 +185,8 @@ var dashboard = {
 
 	//dashboard.layout
 	layout: {
+		firstLoad: false,
+
 		//dashboard.layout.reload(overrideConfig)
 		reload: function(overrideConfig){
 			dashboard.layout.delete();
@@ -260,9 +261,9 @@ var dashboard = {
 			}
 
 			//don't run update functions the first time loading the page.
-			if (localStorage.length == 0 || dashboard.firstLoad) {
+			if (localStorage.length == 0 || dashboard.layout.firstLoad) {
 				//save this result for later modules
-				dashboard.firstLoad = true;
+				dashboard.layout.firstLoad = true;
 
 				dashboard.layout.updateSaveCurrentVersion(name, versions);
 				return;
@@ -397,6 +398,7 @@ var dashboard = {
 					}
 				}
 			}
+			dashboard.layout.firstLoad = false;
 		},
 	},
 	//dashboard.documentation

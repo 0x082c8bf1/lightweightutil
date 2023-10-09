@@ -169,7 +169,7 @@ dashboard.registerModule({
 
 		element.innerHTML = text;
 
-		if (days < 0) {
+		if (days <= 0) {
 			colorElement.classList.add("due");
 		} else {
 			colorElement.classList.remove("due");

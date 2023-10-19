@@ -103,7 +103,10 @@ dashboard.registerModule({
 			if (module.numberOfRingingTimers == 0) {
 				if (module.usingAudio) {
 					module.loadedAudio.currentTime = 0;
-					module.loadedAudio.play();
+					let p = module.loadedAudio.play();
+					p.catch(function(){
+						alert("Multitimer audio failed to play. This is likely because autoplay is disabled in your browser, please enable it or set the volume to 0 to disable audio.");
+					});
 				}
 			}
 			module.numberOfRingingTimers++;

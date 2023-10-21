@@ -345,6 +345,11 @@ var dashboard = {
 						continue;
 					}
 
+					if (!dashboard.modules[mConfig.name]) {
+						console.error("Failed to load module from config: " + mConfig.name);
+						continue;
+					}
+
 					let module = this.appendModuleToContainer(container);
 
 					//apply module settings

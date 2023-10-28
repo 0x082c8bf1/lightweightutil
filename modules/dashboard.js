@@ -63,6 +63,40 @@ var dashboard = {
 		panes[toPane].pane.hidden = false;
 	},
 
+	//dashboard.makeExport()
+	makeExport: function(){
+		let obj = {"storage" : {},"jsonFields" : []};
+		for(let i = 0, key = localStorage.key(i); i < localStorage.length; i++, key=localStorage.key(i)){
+			let value = localStorage.getItem(key);
+
+			try {
+				value = JSON.parse(value);
+				//save that it's a json object
+				obj.jsonFields.push(key);
+			} catch (e){}
+
+			obj["storage"][key] = value;
+		}
+
+		let seperator = getSetting("dashboard", "exportPrettified") ? "\t" : "";
+		let string = JSON.stringify(obj, null, seperator) + "\n";
+
+		//download the file
+		let downloadAnchor = document.createElement("a");
+
+		let date = new Date();
+		let dateStr = date.getFullYear();
+		dateStr += "-" + ((date.getMonth()+1) + "").padStart(2,0);
+		dateStr += "-" + ((date.getDate() + "").padStart(2,0));
+
+		downloadAnchor.setAttribute("download","lwutilExport-" + dateStr + ".json");
+		downloadAnchor.setAttribute("href", 'data:text/plain;charset=utf-8,' + encodeURIComponent(string));
+		downloadAnchor.style.display = "none";
+		document.body.appendChild(downloadAnchor);
+		downloadAnchor.click();
+		document.body.removeChild(downloadAnchor);
+	},
+
 	//dashboard.pageLoad()
 	pageLoad: function(){
 		document.querySelector("#settingsToggle").addEventListener("click", function(){
@@ -72,36 +106,7 @@ var dashboard = {
 			dashboard.togglePane("documentation");
 		});
 		document.querySelector("#export").addEventListener("click",function(){
-			let obj = {"storage" : {},"jsonFields" : []};
-			for(let i = 0, key = localStorage.key(i); i < localStorage.length; i++, key=localStorage.key(i)){
-				let value = localStorage.getItem(key);
-
-				try {
-					value = JSON.parse(value);
-					//save that it's a json object
-					obj.jsonFields.push(key);
-				} catch (e){}
-
-				obj["storage"][key] = value;
-			}
-
-			let seperator = getSetting("dashboard", "exportPrettified") ? "\t" : "";
-			let string = JSON.stringify(obj, null, seperator) + "\n";
-
-			//download the file
-			let downloadAnchor = document.createElement("a");
-
-			let date = new Date();
-			let dateStr = date.getFullYear();
-			dateStr += "-" + ((date.getMonth()+1) + "").padStart(2,0);
-			dateStr += "-" + ((date.getDate() + "").padStart(2,0));
-
-			downloadAnchor.setAttribute("download","lwutilExport-" + dateStr + ".json");
-			downloadAnchor.setAttribute("href", 'data:text/plain;charset=utf-8,' + encodeURIComponent(string));
-			downloadAnchor.style.display = "none";
-			document.body.appendChild(downloadAnchor);
-			downloadAnchor.click();
-			document.body.removeChild(downloadAnchor);
+			dashboard.makeExport();
 		});
 
 		document.querySelector("#importFile").addEventListener("change", function(){
@@ -186,6 +191,7 @@ var dashboard = {
 	//dashboard.layout
 	layout: {
 		firstLoad: false,
+		exportWarning: false,
 
 		//dashboard.layout.reload(overrideConfig)
 		reload: function(overrideConfig){
@@ -288,6 +294,13 @@ var dashboard = {
 					for(let i=0; i<updates.length; i++){
 						//if the update function is needed for this update
 						if (!lastVersion || (lastVersion <= updates[i].ver && updates[i].ver < currentVersion)){
+							if (!dashboard.layout.exportWarning) {
+								dashboard.layout.exportWarning = true;
+								let shouldExprt = confirm("The save data of some module has been changed and is about to be updated, would you like to make an export of your data first? (highly recommended)");
+								if (shouldExprt) {
+									dashboard.makeExport();
+								}
+							}
 							updates[i].func();
 						}
 					}

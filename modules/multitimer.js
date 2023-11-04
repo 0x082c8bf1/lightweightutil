@@ -118,13 +118,19 @@ dashboard.registerModule({
 	},
 
 	resetTimer: function(module, timer){
-		module.numberOfRingingTimers--;
-		if (module.numberOfRingingTimers <= 0) {
-			if (module.usingAudio) {
-				module.loadedAudio.currentTime = 0;
-				module.loadedAudio.pause();
+		if (timer.status == module.status.RINGING) {
+			module.numberOfRingingTimers--;
+			if (module.numberOfRingingTimers < 0) {
+				console.error("Invalid number of ringing timers: " + module.numberOfRingingTimers);
+			}
+			if (module.numberOfRingingTimers == 0) {
+				if (module.usingAudio) {
+					module.loadedAudio.currentTime = 0;
+					module.loadedAudio.pause();
+				}
 			}
 		}
+
 		this.setTimerStatus(module, timer, module.status.INACTIVE);
 
 		//reset msOffset so resetting a timer that has been paused doesn't resume when started again.

@@ -33,10 +33,11 @@ dashboard.registerModule({
 
 			//display the return value
 			let retValueSpan = module.q(".codeEditorReturnValue");
-			if(returnVal != undefined)
+			if(returnVal != undefined) {
 				retValueSpan.innerHTML = "Return value: " + returnVal;
-			else
+			} else {
 				retValueSpan.innerHTML = "";
+			}
 		}
 	},
 
@@ -208,9 +209,7 @@ dashboard.registerModule({
 					codeEditor.selectionStart = start + startOffset;
 					codeEditor.selectionEnd = end + endOffset;
 				}
-			}
-			//allow ctrl+d to duplicate the currently selected lines
-			else if(e.code == "KeyD" && e.ctrlKey){
+			} else if(e.code == "KeyD" && e.ctrlKey){ //allow ctrl+d to duplicate the currently selected lines
 				e.preventDefault();
 				//calculate the begining and end of the line
 				let lastOffset = 0;//fixes issue where selecting the end of the line selects after the newline
@@ -238,10 +237,10 @@ dashboard.registerModule({
 
 				codeEditor.value = start + "\n" + codeEditor.value.substring(startPos, endPos) + end;
 				codeEditor.selectionEnd = newCursorPos;
-			}else if(e.code == "KeyR" && e.ctrlKey){
+			} else if(e.code == "KeyR" && e.ctrlKey){
 				e.preventDefault();
 				_this.evalTextBox(module);
-			}else if(e.ctrlKey && e.shiftKey && (e.code == "ArrowUp" || e.code == "ArrowDown")){
+			} else if(e.ctrlKey && e.shiftKey && (e.code == "ArrowUp" || e.code == "ArrowDown")){
 				e.preventDefault();
 
 				let lines = _this.getLines(codeEditor.value);

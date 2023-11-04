@@ -131,10 +131,11 @@ dashboard.registerModule({
 			if (fs.hidden || searching)
 				fs.hidden = !fs.hidden;
 
-			if (!fs.hidden)
+			if (!fs.hidden) {
 				module.q(".replaceInputPattern").focus();
-			else
+			} else {
 				module.q(".textarea").focus();
+			}
 		}
 	},
 

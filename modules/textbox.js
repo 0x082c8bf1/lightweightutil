@@ -191,6 +191,10 @@ dashboard.registerModule({
 		_self.addEventListener("keydown",function(e){
 			_this.handleFind(module, e);
 		});
+		module.q(".tb_replace").addEventListener("click",function(){
+			let fs = module.q(".findSpan");
+			fs.hidden = !fs.hidden;
+		});
 	},
 
 	instantiate: function(where){
@@ -204,6 +208,7 @@ dashboard.registerModule({
 			<br/>
 			<input type="button" class="tb_sort" value="Sort lines">
 			<input type="button" class="tb_removeDupes" value="Remove duplicate lines">
+			<input type="button" class="tb_replace" value="Replace">
 			<input type="button" class="tb_toupper" value="Uppercase">
 			<input type="button" class="tb_tolower" value="Lowercase">
 			<input type="button" class="tb_torand" value="Randomcase">

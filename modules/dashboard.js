@@ -23,7 +23,7 @@ var dashboard = {
 		//save the module
 		this.modules[module.name] = module;
 
-		log("Registed module: " + module.name);
+		log("Registered module: " + module.name);
 	},
 
 	//dashboard.togglePane(toPane)

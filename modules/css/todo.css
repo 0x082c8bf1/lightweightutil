@@ -47,7 +47,7 @@
 	font-size: 12px;
 }
 
-.td_date {
+.td_date, .td_completedDisplay {
 	color: rgb(120, 120, 120);
 }
 

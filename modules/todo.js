@@ -359,11 +359,14 @@ dashboard.registerModule({
 	updateCompleted: function(child){
 		let todo = getParentOfClass(child, "todo_entry");
 		let unchecked = todo.querySelector(".td_checkbox:not(:checked)");
+		let dateElement = todo.querySelector(".td_completedDate");
 		if (!unchecked) {
 			//set the datetime that it was completed
-			todo.querySelector(".td_completedDate").value = Date.now();
+			dateElement.value = Date.now();
+			todo.querySelector(".td_completedDisplay").innerHTML = "Completed: " + this.getFormattedDate(new Date(+dateElement.value));
 		} else {
-			todo.querySelector(".td_completedDate").value = 0;
+			dateElement.value = 0;
+			todo.querySelector(".td_completedDisplay").innerHTML = "";
 		}
 	},
 
@@ -391,8 +394,11 @@ dashboard.registerModule({
 			element.querySelector(".td_description").innerHTML = description;
 
 		//set the completion date
-		if (!completionDate)
+		if (!completionDate) {
 			completionDate = 0;
+		} else if (completionDate !== "0") {
+			element.querySelector(".td_completedDisplay").innerHTML = "Completed: " + this.getFormattedDate(new Date(+completionDate));
+		}
 		element.querySelector(".td_completedDate").value = completionDate;
 
 		//set default todo
@@ -483,6 +489,7 @@ dashboard.registerModule({
 						<div class="td_date">
 							<span class="td_dueDate colorOverride"></span><span class="td_relativeDate colorOverride"></span>
 						</div>
+						<span class="td_completedDisplay colorOverride"></span>
 						<input type="hidden" class="td_completedDate" value="0">
 					</div>
 				</template>

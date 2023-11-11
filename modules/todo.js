@@ -378,10 +378,10 @@ dashboard.registerModule({
 		if (date) {
 			todoDate = date;
 		} else {
-			todoDate = new Date();
+			todoDate = "";
 		}
 
-		if (date != ""){
+		if (todoDate != ""){
 			element.querySelector(".td_dueDate").innerHTML = _this.getFormattedDate(todoDate);
 			this.setDateDisplay(element.querySelector(".td_relativeDate"), new Date(_this.getFormattedDate(todoDate)), element.querySelector(".td_date"));
 		}

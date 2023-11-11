@@ -323,6 +323,7 @@ dashboard.registerModule({
 				let addButton = document.createElement("input");
 				addButton.type = "button";
 				addButton.value = "+";
+				addButton.classList.add("td_spaced");
 
 				let _this = this;
 				addButton.addEventListener("click", function(){
@@ -334,6 +335,7 @@ dashboard.registerModule({
 				let removeButton = document.createElement("input");
 				removeButton.type = "button";
 				removeButton.value = "x";
+				removeButton.classList.add("td_spaced");
 
 				removeButton.addEventListener("click", function(){
 					//delete the task or the whole todo if it's the root task

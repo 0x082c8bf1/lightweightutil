@@ -122,6 +122,9 @@ dashboard.registerModule({
 	jsonBeautify: function(module){
 		let codeEditor = module.q(".codeEditorTextarea");
 		let outputDiv = module.q(".codeEditorOutput");
+		outputDiv.innerHTML = "";
+		outputDiv.style.color = "white";
+
 		try{
 			let obj = JSON.parse(codeEditor.value);
 			codeEditor.value = JSON.stringify(obj, null, "\t");

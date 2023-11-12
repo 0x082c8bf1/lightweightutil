@@ -1,4 +1,4 @@
-.bar {
+.progressBar .fullBar {
 	width: calc(100% - 16rem);
 	max-width: 45rem;
 	height: 20px;
@@ -9,17 +9,17 @@
 	position: relative;
 }
 
-.progressBar {
+.progressBar .bar {
 	height: 100%;
 	background-color: green;
 	display: inline-block;
 }
 
-.width6 {
+.progressBar .width6 {
 	width: 6ch;
 }
 
-.pb_label {
+.progressBar .label {
 	height: 20px;
 	background: transparent;
 	border: none;
@@ -32,7 +32,7 @@
 	padding-left: 0.25rem;
 }
 
-.pb_insertButton {
+.progressBar .insertButton {
 	width: 40px;
 	height: 40px;
 	font-size: 30px;

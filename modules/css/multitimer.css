@@ -1,19 +1,19 @@
-.flex-container {
+.multitimer .flex-container {
 	display: flex;
 	flex-wrap: wrap;
 	column-gap: 40px;
 	row-gap: 20px;
 }
 
-.flex-container > span {
+.multitimer .flex-container > span {
 	width: auto;
 }
 
-.width2{
+.multitimer .width2 {
 	width: 3ch;
 }
 
-.mt_insertButton {
+.multitimer .insertButton {
 	width: 40px;
 	height: 40px;
 	font-size: 30px;
@@ -21,6 +21,6 @@
 	margin-bottom: 10px;
 }
 
-.mt_name {
+.multitimer .name {
 	margin-bottom: 4px;
 }

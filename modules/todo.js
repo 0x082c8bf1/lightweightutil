@@ -7,48 +7,48 @@ dashboard.registerModule({
 		let _this = this;
 
 		//due now button
-		module.q(".td_dueNow").addEventListener("click", function(){
+		module.q(".dueNow").addEventListener("click", function(){
 			let today = new Date();
 			let now = _this.getFormattedDate(today);
 
-			module.q(".td_dueSetting").value = now;
+			module.q(".dueSetting").value = now;
 		});
 
-		module.q(".td_clearDate").addEventListener("click", function(){
-			module.q(".td_dueSetting").value = "";
+		module.q(".clearDate").addEventListener("click", function(){
+			module.q(".dueSetting").value = "";
 		});
 
 		//cancel button
-		module.q(".td_cancelSetting").addEventListener("click", function(){
+		module.q(".cancelSetting").addEventListener("click", function(){
 			_this.setSettingsHidden(module, true);
 		});
 
 		//save button
-		module.q(".td_saveSetting").addEventListener("click", function(){
+		module.q(".saveSetting").addEventListener("click", function(){
 			//update the DOM
 			_this.saveSettings(module);
 		});
 
 		//delete button
-		module.q(".td_deleteSetting").addEventListener("click", function(){
+		module.q(".deleteSetting").addEventListener("click", function(){
 			_this.deleteEditing(module);
 		});
 
 		//insert button
-		module.q(".td_insertButton").addEventListener("click", function(){
-			document.querySelector(".td_completed").checked = false;
+		module.q(".insertButton").addEventListener("click", function(){
+			document.querySelector(".completed").checked = false;
 			_this.hideFinishedTodos(module, true);
 			_this.newTodo(module, false);
 			_this.saveTodos(module);
 		});
 
 		//show all button
-		module.q(".td_completed").addEventListener("change", function(){
+		module.q(".completed").addEventListener("change", function(){
 			_this.hideFinishedTodos(module);
 		});
 
 		//cancel edit when clicking on the background
-		module.q(".td_backgroundFade").addEventListener("click", function(){
+		module.q(".backgroundFade").addEventListener("click", function(){
 			_this.setSettingsHidden(module, true);
 		});
 
@@ -56,8 +56,8 @@ dashboard.registerModule({
 		// been entered into settings haven't been written to the DOM yet, so those will not be saved.
 		// This does mean that the move up and down options will not respect the save button despite
 		// everything else in the settings pane doing so.
-		module.q(".td_moveup").addEventListener("click", function(){
-			let editing = module.q(".td_settings").editing;
+		module.q(".moveup").addEventListener("click", function(){
+			let editing = module.q(".settings").editing;
 
 			//find the next non-hidden sibling
 			let sibling = editing;
@@ -73,8 +73,8 @@ dashboard.registerModule({
 			_this.saveTodos(module);
 		});
 
-		module.q(".td_movedown").addEventListener("click", function(){
-			let editing = module.q(".td_settings").editing;
+		module.q(".movedown").addEventListener("click", function(){
+			let editing = module.q(".settings").editing;
 
 			//find the next non-hidden sibling
 			let sibling = editing;
@@ -83,14 +83,14 @@ dashboard.registerModule({
 
 				//make sure that we don't move it past the bottom
 				if (sibling == null || !sibling.classList.contains("todo_entry")) {
-					sibling = module.q(".td_bottomAnchor");
+					sibling = module.q(".bottomAnchor");
 				}
 			} while (sibling.hidden);
 
 			//make sure we go after the last element, we don't to use after() here because of the bottomAnchor
 			sibling = sibling.nextElementSibling;
 			if (sibling == null || !sibling.classList.contains("todo_entry"))
-				sibling = module.q(".td_bottomAnchor");
+				sibling = module.q(".bottomAnchor");
 
 			editing.parentNode.insertBefore(editing, sibling);
 			_this.saveTodos(module);
@@ -98,7 +98,7 @@ dashboard.registerModule({
 
 		//add an event listener to the body handle settings interaction
 		document.querySelector("body").addEventListener("keyup", function(e){
-			if(module.q(".td_settingsContainer").hidden)
+			if(module.q(".settingsContainer").hidden)
 				return;
 
 			if (e.key == 'Escape') {
@@ -117,35 +117,35 @@ dashboard.registerModule({
 	// The hide argument is whether to hide them or unhide then, leaving it blank checks the complete checkbox
 	hideFinishedTodos: function(module, hide){
 		if (hide == undefined) {
-			hide = !module.q(".td_completed").checked;
+			hide = !module.q(".completed").checked;
 		}
 
-		let list = module.q(".td_list");
+		let list = module.q(".list");
 		let todos = list.querySelectorAll(":scope > .todo_entry");
 		for(let i=0; i<todos.length; i++) {
-			todos[i].hidden = (hide == (todos[i].querySelector(".td_checkbox:not(:checked)") == null));
+			todos[i].hidden = (hide == (todos[i].querySelector(".checkbox:not(:checked)") == null));
 		}
 	},
 
 	saveSettings: function(module) {
 		//save element being edited
-		let editing = module.q(".td_settings").editing;
+		let editing = module.q(".settings").editing;
 		let entries = editing.querySelector(".listEntryContainer");
 
 		entries.innerHTML = "";
-		let js = this.todoEntryToJSON(module.q(".td_settings").querySelector(".listEntry"), true);
+		let js = this.todoEntryToJSON(module.q(".settings").querySelector(".listEntry"), true);
 
 		this.refreshList(module, js, entries, false);
 
 		//save date
-		let selectedDate = module.q(".td_dueSetting").value;
-		editing.querySelector(".td_dueDate").innerHTML = selectedDate;
+		let selectedDate = module.q(".dueSetting").value;
+		editing.querySelector(".dueDate").innerHTML = selectedDate;
 
 		//save description
-		let description = module.q(".td_descriptionSetting").value;
-		editing.querySelector(".td_description").innerHTML = description;
+		let description = module.q(".descriptionSetting").value;
+		editing.querySelector(".description").innerHTML = description;
 
-		this.setDateDisplay(editing.querySelector(".td_relativeDate"), selectedDate, editing.querySelector(".td_date"));
+		this.setDateDisplay(editing.querySelector(".relativeDate"), selectedDate, editing.querySelector(".date"));
 
 		//check if the todo was completed in editing mode
 		this.updateCompleted(editing);
@@ -193,24 +193,24 @@ dashboard.registerModule({
 	},
 
 	setSettingsHidden: function(module, value){
-		module.q(".td_settingsContainer").hidden = value;
+		module.q(".settingsContainer").hidden = value;
 
 		if (!value) {
-			module.q(".td_settingsContainer").querySelector(".td_title").focus();
+			module.q(".settingsContainer").querySelector(".title").focus();
 		}
 	},
 
 	//given the task container, convert it to a JSON object, need to pass in if we are in editing mode or not
 	todoEntryToJSON: function(task, editing) {
 		//get values
-		let checked = task.querySelector(".td_checkbox").checked;
+		let checked = task.querySelector(".checkbox").checked;
 		let children = task.querySelectorAll(":scope > .listEntry");
 
 		let name;
 		if (editing) {
-			name = task.querySelector(".td_title").value;
+			name = task.querySelector(".title").value;
 		} else {
-			name = task.querySelector(".td_title").innerHTML;
+			name = task.querySelector(".title").innerHTML;
 		}
 
 		//build children
@@ -234,18 +234,18 @@ dashboard.registerModule({
 	//save the todos to localStorage
 	saveTodos: function(module){
 		let obj = [];
-		let list = module.q(".td_list");
+		let list = module.q(".list");
 		let todos = list.querySelectorAll(".todo_entry");
 		for(let i=0; i<todos.length; i++) {
 			//save the tasks
 			let json = this.todoEntryToJSON(todos[i].querySelector(".listEntryContainer > .listEntry"), false);
 
 			//save the description
-			let description = todos[i].querySelector(".td_description").innerHTML;
+			let description = todos[i].querySelector(".description").innerHTML;
 
 			//save the dates
-			let date = todos[i].querySelector(".td_dueDate").innerHTML;
-			let completionDate = todos[i].querySelector(".td_completedDate").value;
+			let date = todos[i].querySelector(".dueDate").innerHTML;
+			let completionDate = todos[i].querySelector(".completedDate").value;
 
 			let todo = {"date": date, "tasks": json, "description": description,"completed": completionDate};
 			obj.push(todo);
@@ -290,7 +290,7 @@ dashboard.registerModule({
 			let checkbox = document.createElement("input");
 			checkbox.type = "checkbox";
 			checkbox.checked = todoList[i].checked;
-			checkbox.classList.add("td_checkbox");
+			checkbox.classList.add("checkbox");
 			entry.appendChild(checkbox);
 
 			let _this = this;
@@ -316,14 +316,14 @@ dashboard.registerModule({
 				name = document.createElement("span");
 				name.innerHTML = todoList[i].name;
 			}
-			name.classList.add("td_title")
+			name.classList.add("title")
 			entry.appendChild(name);
 
 			if (editing) {
 				let addButton = document.createElement("input");
 				addButton.type = "button";
 				addButton.value = "+";
-				addButton.classList.add("td_spaced");
+				addButton.classList.add("spaced");
 
 				let _this = this;
 				addButton.addEventListener("click", function(){
@@ -335,7 +335,7 @@ dashboard.registerModule({
 				let removeButton = document.createElement("input");
 				removeButton.type = "button";
 				removeButton.value = "x";
-				removeButton.classList.add("td_spaced");
+				removeButton.classList.add("spaced");
 
 				removeButton.addEventListener("click", function(){
 					//delete the task or the whole todo if it's the root task
@@ -360,15 +360,15 @@ dashboard.registerModule({
 
 	updateCompleted: function(child){
 		let todo = getParentOfClass(child, "todo_entry");
-		let unchecked = todo.querySelector(".td_checkbox:not(:checked)");
-		let dateElement = todo.querySelector(".td_completedDate");
+		let unchecked = todo.querySelector(".checkbox:not(:checked)");
+		let dateElement = todo.querySelector(".completedDate");
 		if (!unchecked) {
 			//set the datetime that it was completed
 			dateElement.value = Date.now();
-			todo.querySelector(".td_completedDisplay").innerHTML = "Completed: " + this.getFormattedDate(new Date(+dateElement.value));
+			todo.querySelector(".completedDisplay").innerHTML = "Completed: " + this.getFormattedDate(new Date(+dateElement.value));
 		} else {
 			dateElement.value = 0;
-			todo.querySelector(".td_completedDisplay").innerHTML = "";
+			todo.querySelector(".completedDisplay").innerHTML = "";
 		}
 	},
 
@@ -387,21 +387,21 @@ dashboard.registerModule({
 		}
 
 		if (todoDate != ""){
-			element.querySelector(".td_dueDate").innerHTML = _this.getFormattedDate(todoDate);
-			this.setDateDisplay(element.querySelector(".td_relativeDate"), new Date(_this.getFormattedDate(todoDate)), element.querySelector(".td_date"));
+			element.querySelector(".dueDate").innerHTML = _this.getFormattedDate(todoDate);
+			this.setDateDisplay(element.querySelector(".relativeDate"), new Date(_this.getFormattedDate(todoDate)), element.querySelector(".date"));
 		}
 
 		//set the description
 		if (description)
-			element.querySelector(".td_description").innerHTML = description;
+			element.querySelector(".description").innerHTML = description;
 
 		//set the completion date
 		if (!completionDate) {
 			completionDate = 0;
 		} else if (completionDate !== "0") {
-			element.querySelector(".td_completedDisplay").innerHTML = "Completed: " + this.getFormattedDate(new Date(+completionDate));
+			element.querySelector(".completedDisplay").innerHTML = "Completed: " + this.getFormattedDate(new Date(+completionDate));
 		}
-		element.querySelector(".td_completedDate").value = completionDate;
+		element.querySelector(".completedDate").value = completionDate;
 
 		//set default todo
 		let tasks;
@@ -415,31 +415,31 @@ dashboard.registerModule({
 		//setup settings trigger
 		element.addEventListener("click", function(e){
 			let classList = e.target.classList;
-			if (!classList.contains("td_checkbox"))
+			if (!classList.contains("checkbox"))
 				_this.editTodo(module, element);
 		});
 
 		//put at the top or bottom of the list depending on append
 		let firstTodo = module.q(".todo_entry");
 		if (append || firstTodo == null) {
-			module.q(".td_list").insertBefore(fragment, module.q(".td_bottomAnchor"));
+			module.q(".list").insertBefore(fragment, module.q(".bottomAnchor"));
 		} else {
-			module.q(".td_list").insertBefore(fragment, firstTodo);
+			module.q(".list").insertBefore(fragment, firstTodo);
 		}
 	},
 
 	editTodo: function(module, todo){
 		//remember what is being edited
-		module.q(".td_settings").editing = todo;
+		module.q(".settings").editing = todo;
 
 		//copy nested todo to settings
 		let json = this.todoEntryToJSON(todo.querySelector(".listEntry"), false);
-		let todoEditingElement = module.q(".td_settings").querySelector(".listEntryContainer");
+		let todoEditingElement = module.q(".settings").querySelector(".listEntryContainer");
 		todoEditingElement.innerHTML = "";
 		this.refreshList(module, json, todoEditingElement, true);
 
-		module.q(".td_dueSetting").value = todo.querySelector(".td_dueDate").innerHTML;
-		module.q(".td_descriptionSetting").value = todo.querySelector(".td_description").innerHTML;
+		module.q(".dueSetting").value = todo.querySelector(".dueDate").innerHTML;
+		module.q(".descriptionSetting").value = todo.querySelector(".description").innerHTML;
 
 
 		//close popup
@@ -452,7 +452,7 @@ dashboard.registerModule({
 		if (!shouldContinue)
 			return;
 
-		module.q(".td_settings").editing.remove();
+		module.q(".settings").editing.remove();
 		this.setSettingsHidden(module, true);
 		this.saveTodos(module);
 	},
@@ -460,42 +460,42 @@ dashboard.registerModule({
 	instantiate: function(where){
 		where.innerHTML = /*html*/`
 			<div class="fs30b">Todo List</div>
-			<div class="td_settingsContainer" hidden>
-				<div class="td_settings">
-					<input type="button" class="td_saveSetting" value="Save">
-					<input type="button" class="td_cancelSetting" value="Cancel">
-					<input type="button" class="td_deleteSetting" value="Delete">
+			<div class="settingsContainer" hidden>
+				<div class="settings">
+					<input type="button" class="saveSetting" value="Save">
+					<input type="button" class="cancelSetting" value="Cancel">
+					<input type="button" class="deleteSetting" value="Delete">
 					<br/>
-					<input type="button" class="td_moveup" value="Move up">
-					<input type="button" class="td_movedown" value="Move down">
+					<input type="button" class="moveup" value="Move up">
+					<input type="button" class="movedown" value="Move down">
 					<br/><br/>
 					<div class="listEntryContainer"></div>
 					<br/>
-					<textarea class="td_descriptionSetting" placeholder="Description"></textarea>
+					<textarea class="descriptionSetting" placeholder="Description"></textarea>
 					<br/><br/>
-					<input type="date" class="td_dueSetting">
-					<input type="button" class="td_dueNow" value="Today">
-					<input type="button" class="td_clearDate" value="Clear">
+					<input type="date" class="dueSetting">
+					<input type="button" class="dueNow" value="Today">
+					<input type="button" class="clearDate" value="Clear">
 				</div>
-				<div class="td_backgroundFade"></div>
+				<div class="backgroundFade"></div>
 			</div>
-			<input type="button" class="td_insertButton" value="+">
-			<input type="checkbox" class="td_completed" id="td_completed">
-			<label for="td_completed">Complete</label>
+			<input type="button" class="insertButton" value="+">
+			<input type="checkbox" class="completed" id="completed">
+			<label for="completed">Complete</label>
 			<br/>
-			<div class="td_list">
+			<div class="list">
 				<template class="todo_tmplt">
 					<div class="todo_entry">
 						<div class="listEntryContainer"></div>
-						<div class="td_description"></div>
-						<div class="td_date">
-							<span class="td_dueDate colorOverride"></span><span class="td_relativeDate colorOverride"></span>
+						<div class="description"></div>
+						<div class="date">
+							<span class="dueDate colorOverride"></span><span class="relativeDate colorOverride"></span>
 						</div>
-						<span class="td_completedDisplay colorOverride"></span>
-						<input type="hidden" class="td_completedDate" value="0">
+						<span class="completedDisplay colorOverride"></span>
+						<input type="hidden" class="completedDate" value="0">
 					</div>
 				</template>
-				<input type="hidden" class="td_bottomAnchor">
+				<input type="hidden" class="bottomAnchor">
 			</div>
 		`
 	},

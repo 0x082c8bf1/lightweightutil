@@ -1,4 +1,4 @@
-.td_settings {
+.todo .settings {
 	z-index: 9;
 	background-color: black;
 
@@ -10,7 +10,7 @@
 	padding: 10px;
 }
 
-.td_backgroundFade {
+.todo .backgroundFade {
 	z-index: 8;
 	left: 0;
 	top: 0;
@@ -21,7 +21,7 @@
 	opacity: 80%;
 }
 
-.td_insertButton {
+.todo .insertButton {
 	width: 40px;
 	height: 40px;
 	font-size: 30px;
@@ -29,33 +29,34 @@
 	margin-bottom: 10px;
 }
 
-:not(.listEntryContainer) > .listEntry{
+.todo :not(.listEntryContainer) > .listEntry{
 	margin-left: 10px;
 }
 
-.todo_entry {
+.todo .todo_entry {
 	margin-bottom: 3px;
 	background-color: rgb(32,32,32);
 	cursor: pointer;
 }
 
-.td_descriptionSetting {
+.todo .descriptionSetting {
 	height: 4ch;
 }
 
-.td_description {
+.todo .description {
 	font-size: 12px;
 }
 
-.td_date, .td_completedDisplay {
+.todo .date,
+.todo .completedDisplay {
 	color: rgb(120, 120, 120);
 }
 
-.due {
+.todo .due {
 	color: red;
 }
 
-.td_spaced {
+.todo .spaced {
 	margin-top: 4px;
 	margin-left: 4px;
 }

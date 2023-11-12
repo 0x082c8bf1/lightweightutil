@@ -364,6 +364,9 @@ var dashboard = {
 					}
 
 					let module = this.appendModuleToContainer(container);
+					if (mConfig.name) {
+						module.classList.add(mConfig.name);
+					}
 
 					//apply module settings
 					if (mConfig.width){

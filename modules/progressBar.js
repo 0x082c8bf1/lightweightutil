@@ -6,11 +6,11 @@ dashboard.registerModule({
 
 	updateBar: function(obj){
 		//get the progressbar entry
-		let progressBarEntry = getParentOfClass(obj, "pb_entry");
+		let progressBarEntry = getParentOfClass(obj, "entry");
 
 		//calculate the percent
-		let percent = progressBarEntry.querySelector(".pb_completedNumber").value;
-		percent /= progressBarEntry.querySelector(".pb_totalNumber").value;
+		let percent = progressBarEntry.querySelector(".completedNumber").value;
+		percent /= progressBarEntry.querySelector(".totalNumber").value;
 		percent *= 100;
 
 		//clamp number to a valid percent
@@ -20,13 +20,13 @@ dashboard.registerModule({
 			percent = 0;
 
 		//set the width of the bar
-		progressBarEntry.querySelector(".progressBar").style.width=percent+"%";
+		progressBarEntry.querySelector(".bar").style.width=percent+"%";
 		progressBarEntry.querySelector(".completionPercent").innerHTML = parseFloat(percent).toFixed(2) + "%"
 	},
 
 	//updates all of the progess bar widths
 	processAllBars: function(module){
-		let entries = module.qAll(".pb_entry");
+		let entries = module.qAll(".entry");
 		for(let i=0; i<entries.length; i++){
 			this.updateBar(entries[i]);
 		}
@@ -37,33 +37,33 @@ dashboard.registerModule({
 		let mod = getModule(obj);
 
 		//create from template
-		let element = mod.querySelector(".pb_tmplt").content.cloneNode(true);
-		let created = element.querySelector(".pb_entry");
+		let element = mod.querySelector(".tmplt").content.cloneNode(true);
+		let created = element.querySelector(".entry");
 
-		element.querySelector(".pb_label").value = getSetting(this.name, "defaultName");
+		element.querySelector(".label").value = getSetting(this.name, "defaultName");
 
 		//add bar event listeners
-		created.querySelector(".pb_completedNumber").addEventListener("input", function(){
+		created.querySelector(".completedNumber").addEventListener("input", function(){
 			_this.updateBar(this);
 		});
-		created.querySelector(".pb_totalNumber").addEventListener("input", function(){
+		created.querySelector(".totalNumber").addEventListener("input", function(){
 			_this.updateBar(this);
 		});
-		created.querySelector(".pb_deleteButton").addEventListener("click", function(){
+		created.querySelector(".deleteButton").addEventListener("click", function(){
 			_this.deleteBar(this, _this);
 		});
-		created.querySelector(".pb_label").addEventListener("keydown", function(e){
+		created.querySelector(".label").addEventListener("keydown", function(e){
 			if(e.key == "ArrowUp") {
 				e.preventDefault();
-				let bar = getParentOfClass(this, "pb_entry");
-				let input = bar.querySelector(".pb_completedNumber");
+				let bar = getParentOfClass(this, "entry");
+				let input = bar.querySelector(".completedNumber");
 				input.value = +input.value + 1;
 				_this.updateBar(bar);
 				_this.saveBars(this);
 			} else if(e.key == "ArrowDown") {
 				e.preventDefault();
-				let bar = getParentOfClass(this, "pb_entry");
-				let input = bar.querySelector(".pb_completedNumber");
+				let bar = getParentOfClass(this, "entry");
+				let input = bar.querySelector(".completedNumber");
 				input.value = +input.value - 1;
 				_this.updateBar(bar);
 				_this.saveBars(this);
@@ -71,19 +71,19 @@ dashboard.registerModule({
 		});
 
 		//add element to dom
-		mod.querySelector(".pb_bars").insertBefore(element, mod.querySelector(".pb_insertButton"));
+		mod.querySelector(".bars").insertBefore(element, mod.querySelector(".insertButton"));
 
 		return created;
 	},
 
 	deleteBar: function(element, _this){
-		let bar = getParentOfClass(element, "pb_entry");
+		let bar = getParentOfClass(element, "entry");
 
 		let shouldDelete = true;
 
-		let completed = bar.querySelector(".pb_completedNumber").value;
-		let total = bar.querySelector(".pb_totalNumber").value;
-		let label = bar.querySelector(".pb_label").value;
+		let completed = bar.querySelector(".completedNumber").value;
+		let total = bar.querySelector(".totalNumber").value;
+		let label = bar.querySelector(".label").value;
 		if (completed < total && getSetting(_this.name,"AskOnDeleteUnfinished")){
 			shouldDelete = confirm("This progress bar (" + label + ") is not completed. Are you sure you would like to delete it?");
 		}
@@ -97,13 +97,13 @@ dashboard.registerModule({
 
 		let saveObj = [];
 
-		let entries = mod.querySelectorAll(".pb_entry");
+		let entries = mod.querySelectorAll(".entry");
 		for(let i=0; i<entries.length; i++){
 			let curBar = {};
 
-			curBar.done = entries[i].querySelector(".pb_completedNumber").value;
-			curBar.total = entries[i].querySelector(".pb_totalNumber").value;
-			curBar.name = entries[i].querySelector(".pb_label").value;
+			curBar.done = entries[i].querySelector(".completedNumber").value;
+			curBar.total = entries[i].querySelector(".totalNumber").value;
+			curBar.name = entries[i].querySelector(".label").value;
 
 			saveObj.push(curBar);
 		}
@@ -120,9 +120,9 @@ dashboard.registerModule({
 		for(let i=0; i<loadedObj.length; i++){
 			let newBar = this.addBar(obj);
 
-			newBar.querySelector(".pb_completedNumber").value = loadedObj[i].done;
-			newBar.querySelector(".pb_totalNumber").value = loadedObj[i].total;
-			newBar.querySelector(".pb_label").value = loadedObj[i].name;
+			newBar.querySelector(".completedNumber").value = loadedObj[i].done;
+			newBar.querySelector(".totalNumber").value = loadedObj[i].total;
+			newBar.querySelector(".label").value = loadedObj[i].name;
 		}
 
 		this.processAllBars(module);
@@ -133,7 +133,7 @@ dashboard.registerModule({
 		let _this = this;
 
 
-		let barContainer = module.q(".pb_bars");
+		let barContainer = module.q(".bars");
 
 		//create module event listeners
 		barContainer.addEventListener("click", function(){
@@ -144,34 +144,34 @@ dashboard.registerModule({
 			_this.saveBars(this);
 		})
 
-		module.q(".pb_insertButton").addEventListener("click",function(){
+		module.q(".insertButton").addEventListener("click",function(){
 			let newBar = _this.addBar(this);
 			_this.updateBar(newBar);
 		});
 
 		//load from localStorage
-		this.loadBars(module, module.q(".pb_bars"));
+		this.loadBars(module, module.q(".bars"));
 	},
 
 	instantiate: function(where){
 		where.innerHTML = /*html*/`
 			<div class="fs30b progressTracker">Progress Tracker</div>
-			<div class="pb_bars">
-				<template class="pb_tmplt">
-					<span class="pb_entry">
-						<input type="number" min=0 class="width6 pb_completedNumber" value=0>
+			<div class="bars">
+				<template class="tmplt">
+					<span class="entry">
+						<input type="number" min=0 class="width6 completedNumber" value=0>
 						<span>/</span>
-						<input type="number" min=1 class="width6 pb_totalNumber" value=1>
-						<span class="bar">
-							<input type="text" class="pb_label">
-							<span class="progressBar"></span>
+						<input type="number" min=1 class="width6 totalNumber" value=1>
+						<span class="fullBar">
+							<input type="text" class="label">
+							<span class="bar"></span>
 						</span>
 						<span class="completionPercent"></span>
-						<input type="button" class="pb_deleteButton" value="x">
+						<input type="button" class="deleteButton" value="x">
 						<br/>
 					</span>
 				</template>
-				<input type="button" class="pb_insertButton" value="+">
+				<input type="button" class="insertButton" value="+">
 			</div>
 		`
 	},

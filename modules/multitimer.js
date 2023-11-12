@@ -96,7 +96,7 @@ dashboard.registerModule({
 		//start ringing
 		if (timeRemaining <= 0) {
 			if (!timer.notifSent && getSetting(this.name, "notifyOnRing")){
-				new Notification("Multi Timer: " + timer.querySelector(".mt_name").value + " is over.");
+				new Notification("Multi Timer: " + timer.querySelector(".name").value + " is over.");
 				timer.notifSent = true;
 			}
 
@@ -246,9 +246,9 @@ dashboard.registerModule({
 		//avoid document fragment shenanigans
 		timer.appendChild(timerFrag);
 		timer = timer.children[0];
-		module.q(".timers").insertBefore(timer, module.q(".mt_insertButton"));
+		module.q(".timers").insertBefore(timer, module.q(".insertButton"));
 
-		timer.querySelector(".mt_name").value = name;
+		timer.querySelector(".name").value = name;
 
 		//set hhmmss
 		let duration = this.getDurationFromMS(msTime);
@@ -318,7 +318,7 @@ dashboard.registerModule({
 			oneTimer.hh = timers[i].querySelector(".h-input").value;
 			oneTimer.mm = timers[i].querySelector(".m-input").value;
 			oneTimer.ss = timers[i].querySelector(".s-input").value;
-			oneTimer.name = timers[i].querySelector(".mt_name").value;
+			oneTimer.name = timers[i].querySelector(".name").value;
 
 			obj.push(oneTimer);
 		}
@@ -385,7 +385,7 @@ dashboard.registerModule({
 		module.numberOfRingingTimers = 0;
 
 		let _this = this;
-		module.q(".mt_insertButton").addEventListener("click",function(){
+		module.q(".insertButton").addEventListener("click",function(){
 			_this.addTimer(module);
 			_this.saveAllTimers(module);
 		});
@@ -406,7 +406,7 @@ dashboard.registerModule({
 		}
 
 		//sort button
-		module.q(".mt_sort").addEventListener("click", function(){
+		module.q(".sort").addEventListener("click", function(){
 			//get timers
 			let timers = Array.from(module.qAll(".timer"));
 
@@ -425,7 +425,7 @@ dashboard.registerModule({
 
 			//insert sorted timers
 			let timerList = module.q(".timers");
-			let addButton = module.q(".mt_insertButton");
+			let addButton = module.q(".insertButton");
 			for(let i=0; i<timers.length; i++) {
 				timerList.insertBefore(timers[i], addButton);
 			}
@@ -439,7 +439,7 @@ dashboard.registerModule({
 		});
 
 		//notifications button
-		module.q(".mt_notifButton").addEventListener("click", function(){
+		module.q(".notifButton").addEventListener("click", function(){
 			Notification.requestPermission().then((permission) => {
 				if (permission != "granted") {
 					alert("Timer notifications will not displayed while notifications are not granted.");
@@ -452,7 +452,7 @@ dashboard.registerModule({
 		//check if nofications are enabled
 		if (getSetting(_this.name, "notifyOnRing") && "Notification" in window &&
 			Notification.permission != "granted"){
-			module.q(".mt_notifButton").hidden = false;
+			module.q(".notifButton").hidden = false;
 		}
 
 		this.loadAllTimers(module);
@@ -473,7 +473,7 @@ dashboard.registerModule({
 			<div class="flex-container timers">
 				<template class="timer_tmplt">
 					<span class="timer">
-						<input type="text" class="mt_name"/>
+						<input type="text" class="name"/>
 						<input class="x-button" type="button" value="x">
 						<br/>
 						<input type="button" class="start-button" value="Start"/>
@@ -487,10 +487,10 @@ dashboard.registerModule({
 						</span>
 					</span>
 				</template>
-				<input type="button" class="mt_notifButton" value="Enable notifications" hidden>
-				<input type="button" class="mt_insertButton" value="+">
+				<input type="button" class="notifButton" value="Enable notifications" hidden>
+				<input type="button" class="insertButton" value="+">
 			</div>
-			<input type="button" class="mt_sort" value="Sort">
+			<input type="button" class="sort" value="Sort">
 		`
 	},
 

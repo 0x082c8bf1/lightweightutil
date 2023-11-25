@@ -246,7 +246,7 @@ dashboard.registerModule({
 		//avoid document fragment shenanigans
 		timer.appendChild(timerFrag);
 		timer = timer.children[0];
-		module.q(".timers").insertBefore(timer, module.q(".insertButton"));
+		module.q(".timers").insertBefore(timer, module.q(".trailingGroup"));
 
 		timer.querySelector(".name").value = name;
 
@@ -425,9 +425,9 @@ dashboard.registerModule({
 
 			//insert sorted timers
 			let timerList = module.q(".timers");
-			let addButton = module.q(".insertButton");
+			let trailingGroup = module.q(".trailingGroup");
 			for(let i=0; i<timers.length; i++) {
-				timerList.insertBefore(timers[i], addButton);
+				timerList.insertBefore(timers[i], trailingGroup);
 			}
 
 			_this.saveAllTimers(module);
@@ -488,9 +488,11 @@ dashboard.registerModule({
 					</span>
 				</template>
 				<input type="button" class="notifButton" value="Enable notifications" hidden>
-				<input type="button" class="insertButton" value="+">
-			</div>
-			<input type="button" class="sort" value="Sort">
+				<span class="trailingGroup">
+					<input type="button" class="insertButton" value="+">
+					<input type="button" class="sort" value="Sort">
+				<span>
+				</div>
 		`
 	},
 

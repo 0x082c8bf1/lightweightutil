@@ -108,6 +108,14 @@ dashboard.registerModule({
 			}
 		});
 
+		//don't type an enter when hitting enter with no shift in the description
+		//	so that it bubbles and saves without having an enter character at the cursor
+		module.q(".settings").addEventListener("keypress", function(e){
+			if (e.key == "Enter" && !e.shiftKey) {
+				e.preventDefault();
+			}
+		});
+
 		//load todos
 		this.loadTodos(module);
 		this.hideFinishedTodos(module, true);

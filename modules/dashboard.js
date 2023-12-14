@@ -1,5 +1,6 @@
 var dashboard = {
 	modules: [],
+	includes: [],
 
 	//registers a module object
 	//dashboard.registerModule(module)
@@ -24,6 +25,24 @@ var dashboard = {
 		this.modules[module.name] = module;
 
 		log("Registered module: " + module.name);
+	},
+
+	//dashboard.registerInclude(include)
+	registerInclude: function(include) {
+		if (!include.name) {
+			console.error("Include must have a name.");
+			return;
+		}
+
+		if (this.modules[include.name]){
+			console.error("Include " + include.name + " already exists.");
+			return;
+		}
+
+		//save the include
+		this.includes[include.name] = include;
+
+		log("Registed include: " + include.name);
 	},
 
 	//dashboard.togglePane(toPane)
@@ -375,6 +394,19 @@ var dashboard = {
 
 					//handle updates
 					dashboard.layout.updateModule(mConfig.name);
+
+					//load module includes
+					let mObj = dashboard.modules[mConfig.name];
+					if (mObj.include) {
+						for(let inc=0; inc<mObj.include.length; inc++) {
+							let include = dashboard.includes[mObj.include[inc]];
+							if (!include) {
+								console.error(mObj.name + ", " + mObj.include[inc] + " - include not found.");
+								continue;
+							}
+							include.apply(mObj);
+						}
+					}
 
 					//instantiate the module
 					let instFunc = dashboard.modules[mConfig.name].instantiate;

@@ -3,6 +3,7 @@ dashboard.registerModule({
 	name: "example",
 	displayName: "Example Module",
 	version: "1.0.1",
+	include: ["example_inc"],
 
 	//this is the code that is run after the module is added to the dom
 	init: function(module){
@@ -12,6 +13,9 @@ dashboard.registerModule({
 		//this is how you can use settings to affect your module
 		if (getSetting(this.name,"exampleBool"))
 			alert("hello from the example module.");
+
+		//function defined from an include
+		this.includeFunction();
 	},
 
 	//the where object is the module that you are adding to

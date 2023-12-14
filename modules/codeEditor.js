@@ -323,7 +323,7 @@ dashboard.registerModule({
 	instantiate: function(where){
 		where.innerHTML = /*html*/`
 			<div class="fs30b codeEditor">Code Editor</div>
-			<textarea class="codeEditorTextarea" tabIndex="-1" placeholder="Your code here." style="white-space: pre;"></textarea>
+			<textarea class="codeEditorTextarea" tabIndex="-1" placeholder="Your code here." style="white-space: pre;" spellcheck="false"></textarea>
 			<br/>
 			<abbr title="Use output('value') to write to the output. The return value is the return value of the last executed statement.">
 				<input type="button" class="ce_eval" value="JS eval"/>

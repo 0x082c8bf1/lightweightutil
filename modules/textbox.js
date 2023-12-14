@@ -126,7 +126,7 @@ dashboard.registerModule({
 			e.preventDefault();
 
 			let fs = module.q(".findSpan");
-			let searching = getParentOfClass(document.activeElement, "findSpan");
+			let searching = document.activeElement.closest(".findSpan");
 
 			if (fs.hidden || searching)
 				fs.hidden = !fs.hidden;

@@ -367,7 +367,7 @@ dashboard.registerModule({
 	},
 
 	updateCompleted: function(child){
-		let todo = getParentOfClass(child, "todo_entry");
+		let todo = child.closest(".todo_entry");
 		let unchecked = todo.querySelector(".checkbox:not(:checked)");
 		let dateElement = todo.querySelector(".completedDate");
 		if (!unchecked) {

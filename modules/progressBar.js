@@ -6,7 +6,7 @@ dashboard.registerModule({
 
 	updateBar: function(obj){
 		//get the progressbar entry
-		let progressBarEntry = getParentOfClass(obj, "entry");
+		let progressBarEntry = obj.closest(".entry");
 
 		//calculate the percent
 		let percent = progressBarEntry.querySelector(".completedNumber").value;
@@ -55,14 +55,14 @@ dashboard.registerModule({
 		created.querySelector(".label").addEventListener("keydown", function(e){
 			if(e.key == "ArrowUp") {
 				e.preventDefault();
-				let bar = getParentOfClass(this, "entry");
+				let bar = this.closest(".entry");
 				let input = bar.querySelector(".completedNumber");
 				input.value = +input.value + 1;
 				_this.updateBar(bar);
 				_this.saveBars(this);
 			} else if(e.key == "ArrowDown") {
 				e.preventDefault();
-				let bar = getParentOfClass(this, "entry");
+				let bar = this.closest(".entry");
 				let input = bar.querySelector(".completedNumber");
 				input.value = +input.value - 1;
 				_this.updateBar(bar);
@@ -77,7 +77,7 @@ dashboard.registerModule({
 	},
 
 	deleteBar: function(element, _this){
-		let bar = getParentOfClass(element, "entry");
+		let bar = element.closest(".entry");
 
 		let shouldDelete = true;
 

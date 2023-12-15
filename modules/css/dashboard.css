@@ -128,3 +128,11 @@ select {
 	cursor: pointer;
 	background-color: rgb(59, 59, 59);
 }
+
+label {
+	user-select: none;
+}
+
+label:hover {
+	cursor: pointer;
+}

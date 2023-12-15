@@ -45,6 +45,7 @@
 
 .todo .description {
 	font-size: 12px;
+	margin: 4px;
 }
 
 .todo .date,
@@ -59,4 +60,12 @@
 .todo .spaced {
 	margin-top: 4px;
 	margin-left: 4px;
+}
+
+.todo .completed {
+	margin-right: 0px;
+}
+
+.todo label {
+	padding-left: 3px;
 }

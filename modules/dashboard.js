@@ -56,7 +56,7 @@ var dashboard = {
 
 		//get current pane
 		let currentPane;
-		for(p in panes){
+		for(let p in panes){
 			if (!panes[p].pane.hidden)
 				currentPane = p;
 		}
@@ -74,7 +74,7 @@ var dashboard = {
 		}
 
 		//hide all panes
-		for(p in panes){
+		for(let p in panes){
 			panes[p].pane.hidden = true;
 		}
 
@@ -623,7 +623,7 @@ var dashboard = {
 				let tempId = name + "_" + mSettings[i].name;
 
 				//default checkbox
-				defaultInput = document.createElement("input");
+				let defaultInput = document.createElement("input");
 				defaultInput.type = "checkbox";
 				defaultInput.checked = getSettingFromStorage(name, mSettings[i].name) == null;
 				defaultInput.id = "default_" + name + "_" + mSettings[i].name;

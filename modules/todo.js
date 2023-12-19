@@ -235,7 +235,7 @@ dashboard.registerModule({
 		//build object
 		let obj = [{"name": name, "checked": checked}];
 		if (JSONChildren)
-			obj[0]["children"] = JSONChildren;
+			obj[0].children = JSONChildren;
 
 		return obj;
 	},

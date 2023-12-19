@@ -16,8 +16,8 @@ function getSetting(module, setting){
 	if (retrievedValue == null) {
 		let settings = dashboard.modules[module].registerSettings();
 		for(let i=0; i<settings.length; i++){
-			if (settings[i]["name"] == setting){
-				return settings[i]["default"];
+			if (settings[i].name == setting){
+				return settings[i].default;
 			}
 		}
 		console.error("Invalid setting being read.");

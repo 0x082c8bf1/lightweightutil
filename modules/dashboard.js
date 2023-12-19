@@ -95,7 +95,7 @@ var dashboard = {
 				obj.jsonFields.push(key);
 			} catch (e){}
 
-			obj["storage"][key] = value;
+			obj.storage[key] = value;
 		}
 
 		let seperator = getSetting("dashboard", "exportPrettified") ? "\t" : "";
@@ -147,8 +147,8 @@ var dashboard = {
 			fileReader.readAsText(file);
 			fileReader.addEventListener("load", function(){
 			let file = JSON.parse(fileReader.result);
-			let storage = file["storage"];
-			let jsonFields = file["jsonFields"];
+			let storage = file.storage;
+			let jsonFields = file.jsonFields;
 
 			for(let k in storage){
 				let data = storage[k];
@@ -613,20 +613,20 @@ var dashboard = {
 			let element = dashboard.layout.appendModuleToContainer(container);
 
 			let title = document.createElement("div");
-			let displayName = dashboard.modules[name]["displayName"];
+			let displayName = dashboard.modules[name].displayName;
 			title.innerHTML = displayName ? displayName : name;
 			title.classList.add("fs30b");
 			element.appendChild(title);
 
 			//go through the settings and create the entries for them
 			for(let i=0; i<mSettings.length; i++){
-				let tempId = name + "_" + mSettings[i]["name"];
+				let tempId = name + "_" + mSettings[i].name;
 
 				//default checkbox
 				defaultInput = document.createElement("input");
 				defaultInput.type = "checkbox";
-				defaultInput.checked = getSettingFromStorage(name, mSettings[i]["name"]) == null;
-				defaultInput.id = "default_" + name + "_" + mSettings[i]["name"];
+				defaultInput.checked = getSettingFromStorage(name, mSettings[i].name) == null;
+				defaultInput.id = "default_" + name + "_" + mSettings[i].name;
 				defaultInput.managing = tempId;
 				element.appendChild(defaultInput);
 				defaultInput.addEventListener("change", function(){
@@ -635,9 +635,9 @@ var dashboard = {
 
 				//append input
 				let input;
-				let value = getSetting(name, mSettings[i]["name"]);
+				let value = getSetting(name, mSettings[i].name);
 
-				switch(mSettings[i]["type"]){
+				switch(mSettings[i].type){
 					case "bool":
 						input = document.createElement("input");
 						input.type = "checkbox";
@@ -665,15 +665,15 @@ var dashboard = {
 				desc.setAttribute("for", input.id);
 
 				//tell the element what it is
-				input.dataType = mSettings[i]["type"];
-				input.name = mSettings[i]["name"];
+				input.dataType = mSettings[i].type;
+				input.name = mSettings[i].name;
 				input.module = name;
 				input.classList.add("settingInput");
 
 				element.appendChild(input);
 
 				//append description
-				desc.innerHTML = mSettings[i]["description"];
+				desc.innerHTML = mSettings[i].description;
 				element.appendChild(desc);
 
 				//append linebreak

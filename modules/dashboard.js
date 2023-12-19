@@ -1,3 +1,4 @@
+'use strict';
 var dashboard = {
 	modules: [],
 	includes: [],
@@ -420,19 +421,34 @@ var dashboard = {
 
 					//create the module instance
 					let instance = {
-						"module": module,
+						//queries for a single element that matches selector
 						q: function(selector){
 							if (selector.includes("#")){
 								log(mConfig.name + " is using an id q, this is not recommended.");
 							}
-							return this.module.querySelector(selector);
+							let results = module.querySelectorAll(selector);
+							if (results.length > 1){
+								console.error("module.q(\"" + selector+ "\") found multiple results. Did you mean to use qAll()?");
+							}
+
+							//return a result if any are found
+							if (results)
+								return results[0];
+							return null;
 						},
+
+						//queries for all elements that match a selector
 						qAll: function(selector){
 							if (selector.includes("#")){
 								log(mConfig.name + " is using an id qAll, this is really not recommended.");
 							}
-							return this.module.querySelectorAll(selector);
-						}
+							return module.querySelectorAll(selector);
+						},
+
+						//returns the module from the DOM
+						getBaseModule: function(){
+							return module;
+						},
 					};
 
 					let imodule = dashboard.modules[mConfig.name];

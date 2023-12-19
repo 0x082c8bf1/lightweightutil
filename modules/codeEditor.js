@@ -1,3 +1,4 @@
+'use strict';
 dashboard.registerModule({
 	name: "codeEditor",
 	displayName: "Code Editor",

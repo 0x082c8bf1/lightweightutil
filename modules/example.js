@@ -1,3 +1,4 @@
+'use strict';
 //currently if you are adding a module, it will also need to be added as a script in index.html and added to the default config in dashboard.js
 dashboard.registerModule({
 	name: "example",

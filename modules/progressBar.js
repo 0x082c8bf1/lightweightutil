@@ -1,3 +1,4 @@
+'use strict';
 //updates the parent progress bar width of the element passed to it
 dashboard.registerModule({
 	name: "progressBar",

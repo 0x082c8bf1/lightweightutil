@@ -1,3 +1,4 @@
+'use strict';
 dashboard.registerModule({
 	name: "todo",
 	displayName: "Todo List",
@@ -428,8 +429,8 @@ dashboard.registerModule({
 		});
 
 		//put at the top or bottom of the list depending on append
-		let firstTodo = module.q(".todo_entry");
-		if (append || firstTodo == null) {
+		let firstTodo = module.qAll(".todo_entry")[0];
+		if (append || !firstTodo) {
 			module.q(".list").insertBefore(fragment, module.q(".bottomAnchor"));
 		} else {
 			module.q(".list").insertBefore(fragment, firstTodo);

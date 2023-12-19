@@ -1,9 +1,8 @@
+'use strict';
 dashboard.registerModule({
 	name: "textbox",
 	displayName: "TextBox",
 	version: "1.0.1",
-
-	_self: null,
 
 	//updates the character and word counts of the text area
 	//words are considered any string of non-whitespace seperated by whitespace on either side
@@ -189,7 +188,8 @@ dashboard.registerModule({
 		module.q(".textarea").addEventListener("keyup",function(){
 			_this.updateCharacterCounts(module);
 		});
-		_self.addEventListener("keydown",function(e){
+
+		module.getBaseModule().addEventListener("keydown",function(e){
 			_this.handleFind(module, e);
 		});
 		module.q(".tb_replace").addEventListener("click",function(){
@@ -199,8 +199,6 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-		_self = where;
-
 		where.innerHTML = /*html*/`
 			<div class="fs30b textbox">TextBox</div>
 			<textarea class="textarea" placeholder="Your text here."></textarea>

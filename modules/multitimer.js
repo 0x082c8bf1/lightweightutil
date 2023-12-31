@@ -61,12 +61,14 @@ dashboard.registerModule({
 				timer.querySelector(".time-display").hidden = false;
 				timer.querySelector(".time-input").hidden = true;
 				timer.querySelector(".start-button").value = "Pause";
+				timer.querySelector(".time-display").style.color = "white";
 				this.checkStartTimerTickInterval(module);
 				break;
 			case module.status.PAUSED:
 				timer.querySelector(".time-display").hidden = false;
 				timer.querySelector(".time-input").hidden = true;
 				timer.querySelector(".start-button").value = "Resume";
+				timer.querySelector(".time-display").style.color = "grey";
 				this.checkStartTimerTickInterval(module);
 				break;
 			case module.status.RINGING:

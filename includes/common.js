@@ -1,3 +1,4 @@
+'use strict';
 //returns the module of the passed element, or null if it is not in a module
 function getModule(element){
 	return element.closest(".module");

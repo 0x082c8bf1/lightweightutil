@@ -506,7 +506,7 @@ dashboard.registerModule({
 				</template>
 				<input type="hidden" class="bottomAnchor">
 			</div>
-		`
+		`;
 	},
 
 	registerSettings: function(){

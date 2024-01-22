@@ -376,6 +376,7 @@ dashboard.registerModule({
 			RINGING: 4,
 		}
 
+		//set sound related variables
 		let volume = getSetting(this.name, "volume");
 		if (volume > 100) volume = 100;
 		if (volume < 0) volume = 0;
@@ -389,6 +390,11 @@ dashboard.registerModule({
 
 		module.timerTickInterval = null; //the interval set if any timers exist
 		module.numberOfRingingTimers = 0;
+
+		//set timer gap css variable
+		let r = module.getBaseModule();
+		r.style.setProperty("--timer_gap", getSetting(this.name, "gap") + "px");
+
 
 		let _this = this;
 		module.q(".insertButton").addEventListener("click",function(){
@@ -575,6 +581,12 @@ dashboard.registerModule({
 				"description": "Ringer volume percent",
 				"type": "number",
 				"default": 50,
+			},
+			{
+				"name": "gap",
+				"description": "Timer gap pixels",
+				"type": "number",
+				"default": 40,
 			},
 		]
 	},

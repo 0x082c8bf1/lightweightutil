@@ -241,7 +241,7 @@ dashboard.registerModule({
 
 				codeEditor.value = start + "\n" + codeEditor.value.substring(startPos, endPos) + end;
 				codeEditor.selectionEnd = newCursorPos;
-			} else if(e.code == "KeyR" && e.ctrlKey){
+			} else if((e.code == "Enter" || e.code == "NumpadEnter") && e.ctrlKey){
 				e.preventDefault();
 				_this.evalTextBox(module);
 			} else if(e.ctrlKey && e.shiftKey && (e.code == "ArrowUp" || e.code == "ArrowDown")){
@@ -360,7 +360,7 @@ dashboard.registerModule({
 			"Hitting ctrl+d will duplicate the currently selected line(s).",
 			"If you hit ctrl+shift+up/down it will move the selected line(s) up or down.",
 			"The wrap in parenthesis button will put the entire input inside of parenthesis.",
-			"The Eval button, or hitting ctrl+r will evaluate the inputted code as if it was JavaScript.",
+			"The Eval button, or hitting ctrl+enter will evaluate the inputted code as if it was JavaScript.",
 			"You can use output(string) to print output below the code editor.",
 			"The return value of the last statement executed will be shown in the return value section.",
 			"The JSON beautify button will beautify JSON that is inside of the code editor.",

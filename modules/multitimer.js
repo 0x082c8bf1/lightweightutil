@@ -234,9 +234,14 @@ dashboard.registerModule({
 			_this.saveAllTimers(module);
 		});
 
-		timer.addEventListener("keydown", function(e){
+		timer.querySelector(".time-input").addEventListener("keydown", function(e){
 			if(e.code == "Enter" || e.code == "NumpadEnter"){
-				_this.startButtonEvent(module, this);
+				_this.startButtonEvent(module, timer);
+			}
+		});
+		timer.querySelector(".name").addEventListener("keydown", function(e){
+			if(e.code == "Enter" || e.code == "NumpadEnter"){
+				_this.startButtonEvent(module, timer);
 			}
 		});
 

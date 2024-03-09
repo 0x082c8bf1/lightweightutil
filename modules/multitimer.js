@@ -426,13 +426,13 @@ dashboard.registerModule({
 			timers.sort(function(a,b){
 				let aSortVal = _this.statusToSortValue(module, a.status);
 				let bSortVal = _this.statusToSortValue(module, b.status);
-				if (aSortVal != bSortVal) return aSortVal > bSortVal;
+				if (aSortVal != bSortVal) return aSortVal - bSortVal;
 
 				let differenceA = new Date()-a.startDate;
 				let timeA = a.duration-(differenceA+a.msOffset);
 				let differenceB = new Date()-b.startDate;
 				let timeB = b.duration-(differenceB+b.msOffset);
-				return timeA > timeB;
+				return timeA - timeB;
 			});
 
 			//insert sorted timers

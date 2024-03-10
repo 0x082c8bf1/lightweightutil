@@ -475,7 +475,7 @@ var dashboard = {
 		//dashboard.documentation.createPane()
 		createPane: function(){
 			document.querySelector("#docs").innerHTML = "";
-			document.querySelector("#docIndex").innerHTML = "";
+			document.querySelector("#docIndex").innerHTML = /*html*/`<span class="fs30b">Index</span>`;
 
 			for(let moduleName in dashboard.modules){
 				dashboard.documentation.createDocumentationModule(moduleName);

@@ -136,3 +136,12 @@ label {
 label:hover {
 	cursor: pointer;
 }
+
+#docIndex {
+	position: fixed;
+	width: 200px;
+}
+
+#docs {
+	margin-left: 200px;
+}

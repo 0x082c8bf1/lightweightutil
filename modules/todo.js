@@ -346,7 +346,7 @@ dashboard.registerModule({
 
 				let removeButton = document.createElement("input");
 				removeButton.type = "button";
-				removeButton.value = "x";
+				removeButton.value = "X";
 				removeButton.classList.add("spaced");
 
 				removeButton.addEventListener("click", function(){

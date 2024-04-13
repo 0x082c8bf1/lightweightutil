@@ -168,7 +168,7 @@ dashboard.registerModule({
 							<span class="bar"></span>
 						</span>
 						<span class="completionPercent"></span>
-						<input type="button" class="deleteButton" value="x">
+						<input type="button" class="deleteButton" value="X">
 						<br/>
 					</span>
 				</template>

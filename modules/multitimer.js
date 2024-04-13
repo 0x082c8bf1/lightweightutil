@@ -491,7 +491,7 @@ dashboard.registerModule({
 				<template class="timer_tmplt">
 					<span class="timer">
 						<input type="text" class="name"/>
-						<input class="x-button" type="button" value="x">
+						<input class="x-button" type="button" value="X">
 						<br/>
 						<input type="button" class="start-button" value="Start"/>
 						<span hidden class="time-display"></span>

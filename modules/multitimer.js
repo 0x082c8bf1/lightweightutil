@@ -519,6 +519,7 @@ dashboard.registerModule({
 			{ver: "0.9.0", func: function(){
 				log("Converting mt_timers to less excessive escaping.");
 				let oldSave = localStorage.getItem("mt_timers");
+				if (!oldSave) return;
 				let firstParse = JSON.parse(oldSave);
 				let obj = [];
 				for(let i=0; i<firstParse.length; i++){

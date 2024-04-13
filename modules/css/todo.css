@@ -69,3 +69,18 @@
 .todo label {
 	padding-left: 3px;
 }
+
+.todo .todo_entry {
+	box-sizing: border-box;
+	padding: 2px;
+}
+
+.todo .over-top {
+	border-top: 2px solid red;
+	padding-top: 0px;
+}
+
+.todo .over-bottom {
+	border-bottom: 2px solid red;
+	padding-bottom: 0px;
+}

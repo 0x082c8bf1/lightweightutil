@@ -120,6 +120,9 @@ dashboard.registerModule({
 		//load todos
 		this.loadTodos(module);
 		this.hideFinishedTodos(module, true);
+
+		//the current element being dragged
+		module.getBaseModule().dragSrcElem = null;
 	},
 
 	//hides todos where none of the tasks are unchecked.
@@ -428,6 +431,58 @@ dashboard.registerModule({
 				_this.editTodo(module, element);
 		});
 
+		//dragging stuff
+
+		function removeDragClasses(e) {
+			e.classList.remove("over-top");
+			e.classList.remove("over-bottom");
+		}
+
+		//begin drag
+		element.addEventListener("dragstart", function(e){
+			module.getBaseModule().dragSrcElem = this;
+		});
+
+		//start drag over other
+		element.addEventListener("dragover", function(e){
+			e.preventDefault();
+
+			//ignore if we're dragging it onto itself
+			if (module.getBaseModule().dragSrcElem == this) {
+				return;
+			}
+
+			//dragging on the top half vs the bottom half
+			const rect = this.getBoundingClientRect();
+			if (e.clientY < rect.top + this.offsetHeight / 2) {
+				removeDragClasses(this);
+				this.classList.add("over-top");
+			} else {
+				removeDragClasses(this);
+				this.classList.add("over-bottom");
+			}
+		});
+
+		//stop drag over other
+		element.addEventListener("dragleave", function(){
+			removeDragClasses(this);
+		});
+
+		//end drag
+		element.addEventListener("drop", function(e){
+			if (module.getBaseModule().dragSrcElem !== this) {
+				//drop above or below
+				if (this.classList.contains("over-top")){
+					this.parentNode.insertBefore(module.getBaseModule().dragSrcElem, this);
+				} else {
+					this.parentNode.insertBefore(module.getBaseModule().dragSrcElem, this.nextElementSibling);
+				}
+			}
+			removeDragClasses(this);
+
+			_this.saveTodos(module);
+		});
+
 		//put at the top or bottom of the list depending on append
 		let firstTodo = module.qAll(".todo_entry")[0];
 		if (append || !firstTodo) {
@@ -494,7 +549,7 @@ dashboard.registerModule({
 			<br/>
 			<div class="list">
 				<template class="todo_tmplt">
-					<div class="todo_entry">
+					<div class="todo_entry" draggable="true">
 						<div class="listEntryContainer"></div>
 						<div class="description"></div>
 						<div class="date">

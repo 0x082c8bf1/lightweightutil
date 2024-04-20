@@ -8,6 +8,9 @@
 	transform: translate(-50%, -50%);
 
 	padding: 10px;
+	overflow: auto;
+	max-height: 90vh;
+	max-width: 90vw;
 }
 
 .todo .backgroundFade {

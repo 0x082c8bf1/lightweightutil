@@ -120,7 +120,7 @@ dashboard.registerModule({
 		module.q(".codeEditorTextarea").value = obj;
 	},
 
-	jsonBeautify: function(module){
+	jsonFormat: function(module, minify){
 		let codeEditor = module.q(".codeEditorTextarea");
 		let outputDiv = module.q(".codeEditorOutput");
 		outputDiv.innerHTML = "";
@@ -128,7 +128,11 @@ dashboard.registerModule({
 
 		try{
 			let obj = JSON.parse(codeEditor.value);
-			codeEditor.value = JSON.stringify(obj, null, "\t");
+			if (minify) {
+				codeEditor.value = JSON.stringify(obj);
+			} else {
+				codeEditor.value = JSON.stringify(obj, null, "\t");
+			}
 			outputDiv.innerHTML = "";
 		}catch(error){
 			outputDiv.style.color = "red";
@@ -292,8 +296,11 @@ dashboard.registerModule({
 		module.q(".ce_pwrap").addEventListener("click", function(){
 			_this.parenWrap(module);
 		});
-		module.q(".ce_json").addEventListener("click", function(){
-			_this.jsonBeautify(module);
+		module.q(".ce_beautify").addEventListener("click", function(){
+			_this.jsonFormat(module, false);
+		});
+		module.q(".ce_minify").addEventListener("click", function(){
+			_this.jsonFormat(module, true);
 		});
 
 		module.q(".saveCode").addEventListener("click", function(){
@@ -330,7 +337,8 @@ dashboard.registerModule({
 				<input type="button" class="ce_eval" value="JS eval"/>
 			</abbr>
 			<input type="button" class="ce_pwrap" value="Wrap in ()"/>
-			<input type="button" class="ce_json" value="JSON beautify"/>
+			<input type="button" class="ce_beautify" value="JSON beautify"/>
+			<input type="button" class="ce_minify" value="JSON minify"/>
 			<br/>
 			<span class="codeEditorOutput"></span>
 			<input type="button" class="saveCode" value="Save"/>

@@ -294,10 +294,95 @@ dashboard.registerModule({
 		}
 	},
 
+	//Add event listeners to element to make it dragable, used by both the settings modal and display list
+	//	Mode 0 = on the module screen, 1 = in the settings modal
+	makeDraggable: function(module, element, mode) {
+		let _this = this;
+		element.draggable = true;
+
+		function removeDragClasses(e) {
+			e.classList.remove("over-top");
+			e.classList.remove("over-bottom");
+		}
+
+		//begin drag
+		element.addEventListener("dragstart", function(e){
+			e.stopPropagation();
+			module.getBaseModule().dragSrcElem = this;
+		});
+
+		//start drag over other
+		element.addEventListener("dragover", function(e){
+			//element cannot be moved into itself or it's child
+			if (module.getBaseModule().dragSrcElem == this || module.getBaseModule().dragSrcElem.contains(this)) {
+				return;
+			}
+
+			//don't let us drag the root element
+			if (mode === 1 && this.parentNode.classList.contains("listEntryContainer")) {
+				return;
+			}
+
+			e.stopPropagation();
+			e.preventDefault();
+
+			//dragging on the top half vs the bottom half
+			const rect = this.getBoundingClientRect();
+			if (e.clientY < rect.top + this.offsetHeight / 2) {
+				removeDragClasses(this);
+				this.classList.add("over-top");
+			} else {
+				removeDragClasses(this);
+				this.classList.add("over-bottom");
+			}
+		});
+
+		//stop drag over other
+		element.addEventListener("dragleave", function(){
+			removeDragClasses(this);
+		});
+
+		//end drag
+		element.addEventListener("drop", function(e){
+			if (module.getBaseModule().dragSrcElem !== this) {
+				//parent cannot be moved into itself
+				if (module.getBaseModule().dragSrcElem.contains(this)) {
+					return;
+				}
+
+				//don't let us drag the root element
+				if (mode === 1 && this.parentNode.classList.contains("listEntryContainer")) {
+					return;
+				}
+
+				e.stopPropagation();
+				//drop above or below
+				if (this.classList.contains("over-top")){
+					this.parentNode.insertBefore(module.getBaseModule().dragSrcElem, this);
+				} else {
+					this.parentNode.insertBefore(module.getBaseModule().dragSrcElem, this.nextElementSibling);
+				}
+			}
+			removeDragClasses(this);
+			if (mode === 0) {
+				_this.saveTodos(module);
+			}
+		});
+	},
+
 	refreshList: function(module, todoList, parent, editing){
 		for(let i=0; i<todoList.length; i++) {
 			let entry = document.createElement("div");
 			entry.classList.add("listEntry");
+
+			if (editing) {
+				let dragArea = document.createElement("span");
+				dragArea.innerHTML = '=';
+				dragArea.classList.add("drag-handle");
+				entry.appendChild(dragArea);
+
+				this.makeDraggable(module, entry, 1);
+			}
 
 			let checkbox = document.createElement("input");
 			checkbox.type = "checkbox";
@@ -431,57 +516,7 @@ dashboard.registerModule({
 				_this.editTodo(module, element);
 		});
 
-		//dragging stuff
-
-		function removeDragClasses(e) {
-			e.classList.remove("over-top");
-			e.classList.remove("over-bottom");
-		}
-
-		//begin drag
-		element.addEventListener("dragstart", function(e){
-			module.getBaseModule().dragSrcElem = this;
-		});
-
-		//start drag over other
-		element.addEventListener("dragover", function(e){
-			e.preventDefault();
-
-			//ignore if we're dragging it onto itself
-			if (module.getBaseModule().dragSrcElem == this) {
-				return;
-			}
-
-			//dragging on the top half vs the bottom half
-			const rect = this.getBoundingClientRect();
-			if (e.clientY < rect.top + this.offsetHeight / 2) {
-				removeDragClasses(this);
-				this.classList.add("over-top");
-			} else {
-				removeDragClasses(this);
-				this.classList.add("over-bottom");
-			}
-		});
-
-		//stop drag over other
-		element.addEventListener("dragleave", function(){
-			removeDragClasses(this);
-		});
-
-		//end drag
-		element.addEventListener("drop", function(e){
-			if (module.getBaseModule().dragSrcElem !== this) {
-				//drop above or below
-				if (this.classList.contains("over-top")){
-					this.parentNode.insertBefore(module.getBaseModule().dragSrcElem, this);
-				} else {
-					this.parentNode.insertBefore(module.getBaseModule().dragSrcElem, this.nextElementSibling);
-				}
-			}
-			removeDragClasses(this);
-
-			_this.saveTodos(module);
-		});
+		this.makeDraggable(module, element, 0);
 
 		//put at the top or bottom of the list depending on append
 		let firstTodo = module.qAll(".todo_entry")[0];
@@ -549,7 +584,7 @@ dashboard.registerModule({
 			<br/>
 			<div class="list">
 				<template class="todo_tmplt">
-					<div class="todo_entry" draggable="true">
+					<div class="todo_entry">
 						<div class="listEntryContainer"></div>
 						<div class="description"></div>
 						<div class="date">

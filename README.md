@@ -33,3 +33,4 @@ To try out on the web: go to https://0x082c8bf1.github.io/lightweightutil/
   - Assets should be kept to a minimum and should be human readable when possible (E.g Use SVGs for images).
   - Assets should be placed in their respective locations.
   - Elements should match the general style of everything else.
+  - Run test/checkCode.sh before making a PR.

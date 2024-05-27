@@ -6,7 +6,7 @@ dashboard.registerModule({
 	version: "1.0.1",
 
 	updateBar: function(obj){
-		//get the progressbar entry
+		//get the progress bar entry
 		let progressBarEntry = obj.closest(".entry");
 
 		//calculate the percent
@@ -25,7 +25,7 @@ dashboard.registerModule({
 		progressBarEntry.querySelector(".completionPercent").innerHTML = parseFloat(percent).toFixed(2) + "%"
 	},
 
-	//updates all of the progess bar widths
+	//updates all of the progress bar widths
 	processAllBars: function(module){
 		let entries = module.qAll(".entry");
 		for(let i=0; i<entries.length; i++){

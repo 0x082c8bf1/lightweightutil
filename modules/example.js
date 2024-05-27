@@ -70,7 +70,7 @@ dashboard.registerModule({
 	registerDocumentation: function(){
 		return [
 			"This is the text that will show up in the documentation tab.",
-			"Multiple entires will be multiple lines.",
+			"Multiple entries will be multiple lines.",
 		]
 	},
 });

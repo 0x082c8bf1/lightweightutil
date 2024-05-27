@@ -203,7 +203,7 @@ dashboard.registerModule({
 		this.saveAllTimers(module);
 	},
 
-	//start the TimerTickInterval if it isn't already
+	//start the timerTickInterval if it isn't already
 	checkStartTimerTickInterval: function(module) {
 		let _this = this;
 
@@ -466,7 +466,7 @@ dashboard.registerModule({
 			});
 		});
 
-		//check if nofications are enabled
+		//check if notifications are enabled
 		if (getSetting(_this.name, "notifyOnRing") && "Notification" in window &&
 			Notification.permission != "granted"){
 			module.q(".notifButton").hidden = false;

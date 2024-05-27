@@ -219,7 +219,7 @@ dashboard.registerModule({
 				}
 			} else if(e.code == "KeyD" && e.ctrlKey){ //allow ctrl+d to duplicate the currently selected lines
 				e.preventDefault();
-				//calculate the begining and end of the line
+				//calculate the beginning and end of the line
 				let lastOffset = 0;//fixes issue where selecting the end of the line selects after the newline
 				if(codeEditor.value[codeEditor.selectionStart] == "\n"){
 					lastOffset = -1

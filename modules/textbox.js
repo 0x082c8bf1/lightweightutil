@@ -5,7 +5,7 @@ dashboard.registerModule({
 	version: "1.0.1",
 
 	//updates the character and word counts of the text area
-	//words are considered any string of non-whitespace seperated by whitespace on either side
+	//words are considered any string of non-whitespace separated by whitespace on either side
 	updateCharacterCounts: function(module){
 		let input = module.q(".textarea").value;
 

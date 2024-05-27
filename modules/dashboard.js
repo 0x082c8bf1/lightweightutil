@@ -13,7 +13,7 @@ var dashboard = {
 		}
 
 		if (this.modules[module.name]){
-			console.error("Module " + module.name + " already exsits.");
+			console.error("Module " + module.name + " already exists.");
 			return;
 		}
 
@@ -43,7 +43,7 @@ var dashboard = {
 		//save the include
 		this.includes[include.name] = include;
 
-		log("Registed include: " + include.name);
+		log("Registered include: " + include.name);
 	},
 
 	//dashboard.togglePane(toPane)
@@ -327,7 +327,7 @@ var dashboard = {
 				}
 			}
 
-			//need to reload versions incase an update function changed it
+			//need to reload versions in case an update function changed it
 			versionsStr = localStorage.getItem("db_versions");
 			versions = null;
 			if (versionsStr) {
@@ -676,7 +676,7 @@ var dashboard = {
 				desc.innerHTML = mSettings[i].description;
 				element.appendChild(desc);
 
-				//append linebreak
+				//append line break
 				let br = document.createElement("br");
 				element.appendChild(br);
 			}

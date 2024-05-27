@@ -195,7 +195,7 @@ dashboard.registerModule({
 		return days;
 	},
 
-	//warning: this function does not account for timezones
+	//warning: this function does not account for time zones
 	getFormattedDate: function(date){
 		let output = (""+date.getFullYear()).padStart(4,"0") + "-";
 		output += (""+(date.getMonth()+1)).padStart(2,"0") + "-";
@@ -289,7 +289,7 @@ dashboard.registerModule({
 			if (date && date != "") {
 				date = new Date(saved[i].date+"T00:00:00.000");
 			}
-			//the time needs to be appended to the date here to account for timezones
+			//the time needs to be appended to the date here to account for time zones
 			this.newTodo(module, true, saved[i].tasks, date, saved[i].completed, saved[i].description);
 		}
 	},
@@ -622,7 +622,7 @@ dashboard.registerModule({
 			"To edit a todo, click on it's background and this wil take you to the settings for that todo.",
 			"On the settings page you can edit the due date and tasks on the todo.",
 			"To add a new task, you can click on the add button, this will add a new task under the selected one.",
-			"If you want to delete a task, you can click the x next to it, this will also delete all of it's childre.",
+			"If you want to delete a task, you can click the x next to it, this will also delete all of it's children.",
 			"If you want to delete a todo, you can either click on the delete button or you can delete the top task.",
 			"If you decide that you do not want to edit a task at any time you can click cancel, escape, or click on the faded background.",
 			"To save a task, you can either hit the save button or hit enter.",

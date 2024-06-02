@@ -91,4 +91,5 @@
 
 .todo .drag-handle {
 	user-select: none;
+	cursor: grab;
 }

@@ -306,6 +306,15 @@ dashboard.registerModule({
 			e.classList.remove("over-right");
 		}
 
+		//don't let a drag start when dragging on the textbox
+		let title = element.querySelector(".title");
+		title.addEventListener("mousedown", function(){
+			element.draggable=false;
+		});
+		title.addEventListener("mouseleave", function(){
+			element.draggable=true;
+		});
+
 		//begin drag
 		element.addEventListener("dragstart", function(e){
 			e.stopPropagation();
@@ -337,7 +346,7 @@ dashboard.registerModule({
 				this.classList.add("over-bottom");
 			}
 			//If you drag on the right, add as a child instead of a sibling
-			if (editMode && e.clientX > rect.left + this.offsetWidth * 0.66) {
+			if (editMode && e.clientX > rect.left + this.offsetWidth * 0.5) {
 				this.classList.add("over-right");
 			}
 		});
@@ -398,13 +407,10 @@ dashboard.registerModule({
 			let entry = document.createElement("div");
 			entry.classList.add("listEntry");
 			if (editing) {
-				//Add marker that this is an editing listEntry
-				entry.classList.add("editable");
-
-				//don't make root node draggable
-				if (!parent.classList.contains("listEntryContainer")) {
-					this.makeDraggable(module, entry);
-				}
+				let dragArea = document.createElement("span");
+				dragArea.innerHTML = '=';
+				dragArea.classList.add("drag-handle");
+				entry.appendChild(dragArea);
 			}
 
 			let checkbox = document.createElement("input");
@@ -438,6 +444,16 @@ dashboard.registerModule({
 			}
 			name.classList.add("title")
 			entry.appendChild(name);
+
+			if (editing) {
+				//Add marker that this is an editing listEntry
+				entry.classList.add("editable");
+
+				//don't make root node draggable
+				if (!parent.classList.contains("listEntryContainer")) {
+					this.makeDraggable(module, entry);
+				}
+			}
 
 			if (editing) {
 				let addButton = document.createElement("input");

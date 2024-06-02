@@ -303,6 +303,7 @@ dashboard.registerModule({
 		function removeDragClasses(e) {
 			e.classList.remove("over-top");
 			e.classList.remove("over-bottom");
+			e.classList.remove("over-right");
 		}
 
 		//begin drag
@@ -328,12 +329,16 @@ dashboard.registerModule({
 
 			//dragging on the top half vs the bottom half
 			const rect = this.getBoundingClientRect();
-			if (e.clientY < rect.top + this.offsetHeight / 2) {
+			if (e.clientY < rect.top + this.offsetHeight * 0.5) {
 				removeDragClasses(this);
 				this.classList.add("over-top");
 			} else {
 				removeDragClasses(this);
 				this.classList.add("over-bottom");
+			}
+			//If you drag on the right, add as a child instead of a sibling
+			if (editMode && e.clientX > rect.left + this.offsetWidth * 0.66) {
+				this.classList.add("over-right");
 			}
 		});
 
@@ -364,11 +369,21 @@ dashboard.registerModule({
 				}
 
 				e.stopPropagation();
-				//drop above or below
-				if (this.classList.contains("over-top")){
-					this.parentNode.insertBefore(dragSource, this);
+				//drop on right or left
+				if (this.classList.contains("over-right")) {
+					//drop above or below
+					if (this.classList.contains("over-top")){
+						this.appendChild(dragSource);
+					} else {
+						this.appendChild(dragSource);
+					}
 				} else {
-					this.parentNode.insertBefore(dragSource, this.nextElementSibling);
+					//drop above or below
+					if (this.classList.contains("over-top")){
+						this.parentNode.insertBefore(dragSource, this);
+					} else {
+						this.parentNode.insertBefore(dragSource, this.nextElementSibling);
+					}
 				}
 			}
 			removeDragClasses(this);

@@ -294,11 +294,11 @@ dashboard.registerModule({
 		}
 	},
 
-	//Add event listeners to element to make it dragable, used by both the settings modal and display list
-	//	Mode 0 = on the module screen, 1 = in the settings modal
-	makeDraggable: function(module, element, mode) {
+	//Add event listeners to element to make it draggable, used by both the settings modal and display list
+	makeDraggable: function(module, element) {
 		let _this = this;
 		element.draggable = true;
+		let editMode = element.classList.contains("editable"); //if we're in the settings modal
 
 		function removeDragClasses(e) {
 			e.classList.remove("over-top");
@@ -319,7 +319,7 @@ dashboard.registerModule({
 			}
 
 			//don't let us drag the root element
-			if (mode === 1 && this.parentNode.classList.contains("listEntryContainer")) {
+			if (editMode && this.parentNode.classList.contains("listEntryContainer")) {
 				return;
 			}
 
@@ -344,27 +344,35 @@ dashboard.registerModule({
 
 		//end drag
 		element.addEventListener("drop", function(e){
-			if (module.getBaseModule().dragSrcElem !== this) {
+			let dragSource = module.getBaseModule().dragSrcElem;
+
+			//abort the drag if you're trying to drag from the settings page outside of it or vice versa
+			if (this.classList.contains("editable") != dragSource.classList.contains("editable")) {
+				removeDragClasses(this);
+				return;
+			}
+
+			if (dragSource !== this) {
 				//parent cannot be moved into itself
-				if (module.getBaseModule().dragSrcElem.contains(this)) {
+				if (dragSource.contains(this)) {
 					return;
 				}
 
 				//don't let us drag the root element
-				if (mode === 1 && this.parentNode.classList.contains("listEntryContainer")) {
+				if (editMode && this.parentNode.classList.contains("listEntryContainer")) {
 					return;
 				}
 
 				e.stopPropagation();
 				//drop above or below
 				if (this.classList.contains("over-top")){
-					this.parentNode.insertBefore(module.getBaseModule().dragSrcElem, this);
+					this.parentNode.insertBefore(dragSource, this);
 				} else {
-					this.parentNode.insertBefore(module.getBaseModule().dragSrcElem, this.nextElementSibling);
+					this.parentNode.insertBefore(dragSource, this.nextElementSibling);
 				}
 			}
 			removeDragClasses(this);
-			if (mode === 0) {
+			if (!editMode) {
 				_this.saveTodos(module);
 			}
 		});
@@ -374,14 +382,14 @@ dashboard.registerModule({
 		for(let i=0; i<todoList.length; i++) {
 			let entry = document.createElement("div");
 			entry.classList.add("listEntry");
-
 			if (editing) {
-				let dragArea = document.createElement("span");
-				dragArea.innerHTML = '=';
-				dragArea.classList.add("drag-handle");
-				entry.appendChild(dragArea);
+				//Add marker that this is an editing listEntry
+				entry.classList.add("editable");
 
-				this.makeDraggable(module, entry, 1);
+				//don't make root node draggable
+				if (!parent.classList.contains("listEntryContainer")) {
+					this.makeDraggable(module, entry);
+				}
 			}
 
 			let checkbox = document.createElement("input");
@@ -516,7 +524,7 @@ dashboard.registerModule({
 				_this.editTodo(module, element);
 		});
 
-		this.makeDraggable(module, element, 0);
+		this.makeDraggable(module, element);
 
 		//put at the top or bottom of the list depending on append
 		let firstTodo = module.qAll(".todo_entry")[0];

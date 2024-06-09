@@ -42,3 +42,8 @@ function getSettingFromStorage(module, setting) {
 
 	return retrievedValue;
 }
+
+//clamp a number to min and max
+function clamp(number, min, max) {
+	return Math.min(Math.max(number, min), max);
+}

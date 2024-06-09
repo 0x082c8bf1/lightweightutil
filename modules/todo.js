@@ -442,8 +442,28 @@ dashboard.registerModule({
 				name = document.createElement("span");
 				name.innerHTML = todoList[i].name;
 			}
-			name.classList.add("title")
+			name.classList.add("title");
 			entry.appendChild(name);
+
+			if (editing) {
+				name.addEventListener("keydown",function(e){
+					//allow navigation with ctrl+up/down
+					if (e.ctrlKey){
+						if (e.code == "ArrowDown") {
+							let titles = module.qAll(".listEntry.editable>.title");
+							let next = Array.from(titles).indexOf(document.activeElement) + 1;
+							next = clamp(next, 0, titles.length-1);
+							titles[next].focus();
+						} else if (e.code == "ArrowUp") {
+							let titles = module.qAll(".listEntry.editable>.title");
+							let next = Array.from(titles).indexOf(document.activeElement) - 1;
+							next = clamp(next, 0, titles.length-1);
+							titles[next].focus();
+						}
+					}
+				});
+			}
+
 
 			if (editing) {
 				//Add marker that this is an editing listEntry

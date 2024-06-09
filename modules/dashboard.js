@@ -117,6 +117,14 @@ var dashboard = {
 		document.body.removeChild(downloadAnchor);
 	},
 
+	//dashboard.setSingleLayout(moduleName)
+	setSingleLayout(moduleName){
+		let layout;
+		//don't set layout if we want to load from settings
+		layout = "[[{\"name\": \"" + moduleName + "\"}]]";
+		dashboard.layout.reload(layout);
+	},
+
 	//dashboard.pageLoad()
 	pageLoad: function(){
 		document.querySelector("#settingsToggle").addEventListener("click", function(){
@@ -135,7 +143,7 @@ var dashboard = {
 			if (!file)
 				return;
 
-			let doRead = confirm("Importing data will wipe all currently saved data. Would you like to continue?");
+			let doRead = db_confirm("Importing data will wipe all currently saved data. Would you like to continue?");
 			if (!doRead)
 				return;
 
@@ -178,9 +186,10 @@ var dashboard = {
 			let layout;
 			//don't set layout if we want to load from settings
 			if (this.value != "default") {
-				layout = "[[{\"name\": \"" + this.value + "\"}]]";
+				dashboard.setSingleLayout(this.value);
+			} else {
+				dashboard.layout.reload(layout);
 			}
-			dashboard.layout.reload(layout);
 		});
 
 		for(let moduleName in dashboard.modules){
@@ -193,6 +202,14 @@ var dashboard = {
 			e.value = module.name;
 			e.innerHTML = module.displayName;
 			layouts.appendChild(e);
+		}
+
+		//set this to true to run the tests on page load
+		if (dashboard.tests.enabled) {
+			//load scripts
+			for(let moduleName in dashboard.modules){
+				dashboard.tests.loadTests(moduleName, Object.keys(dashboard.modules).length);
+			}
 		}
 	},
 
@@ -316,7 +333,7 @@ var dashboard = {
 						if (!lastVersion || (lastVersion <= updates[i].ver && updates[i].ver < currentVersion)){
 							if (!dashboard.layout.exportWarning) {
 								dashboard.layout.exportWarning = true;
-								let shouldExprt = confirm("The save data of some module has been changed and is about to be updated, would you like to make an export of your data first? (highly recommended)");
+								let shouldExprt = db_confirm("The save data of some module has been changed and is about to be updated, would you like to make an export of your data first? (highly recommended)");
 								if (shouldExprt) {
 									dashboard.makeExport();
 								}
@@ -550,7 +567,7 @@ var dashboard = {
 
 				//if the user has unsaved settings
 				if (savedSettings != unsavedSettings){
-					discard = confirm("You have unsaved settings, would you like to discard them?");
+					discard = db_confirm("You have unsaved settings, would you like to discard them?");
 				}
 			}
 			return discard;
@@ -684,6 +701,104 @@ var dashboard = {
 			document.querySelector("#settings").appendChild(element);
 		},
 
+	},
+
+	//dashboard.tests
+	tests : {
+		//dashboard.tests.enabled
+		enabled: false,
+		//dashboard.tests.testers
+		testers: {},
+		//dashboard.tests.loadedTests
+		loadedTests: 0,
+		//dashboard.test.overrideSettings
+		overrideSettings: {},
+
+		//dashboard.tests.loadTests(moduleName, testCount)
+		loadTests: function(moduleName, testCount) {
+			let _this = this;
+			let script = document.createElement("script");
+			script.src = "test/" + moduleName + "_tests.js";
+			script.addEventListener("error", function(){
+				_this.loadedTests++;
+				if (_this.loadedTests == testCount) {
+					dashboard.tests.runTests();
+				}
+			});
+			script.addEventListener("load", function(){
+				_this.loadedTests++;
+				if (_this.loadedTests == testCount) {
+					dashboard.tests.runTests();
+				}
+			});
+			document.body.appendChild(script);
+			script.remove();
+		},
+
+		//dashboard.test.registerTester(tests)
+		registerTester: function(name, tests){
+			dashboard.tests.testers[name] = tests;
+		},
+
+		//dashboard.test.runTests
+		runTests(){
+			let output = [];
+			for(let name in dashboard.tests.testers){
+				dashboard.setSingleLayout(name);
+				let fails = [];
+
+				let tests = this.testers[name];
+				let passCount = 0;
+				for(let i=0; i<tests.length; i++) {
+					let instance = dashboard.modules[name];
+					let module = instance.instances[0];
+					let result;
+					try {
+						result = tests[i].test(module, instance);
+					} catch (e) {
+						error(e);
+						result = false;
+					}
+					if (result) {
+						passCount++;
+					} else {
+						error("Failed " + tests[i].name);
+						fails.push(tests[i].name);
+					}
+				}
+				output.push({name: name, passCount: passCount, testCount: tests.length});
+
+				if (fails.length > 0) {
+					output[output.length-1].fails = fails;
+				}
+			}
+
+			//go back to the user defined layout
+			dashboard.layout.reload();
+
+			//log the results
+			log(output);
+		},
+
+		//dashboard.tests.click(element)
+		//Send a synchronous click event to element
+		click: function(element) {
+			element.dispatchEvent(new MouseEvent("click", { detail: 1, bubbles: true}));
+		},
+
+		//dashboard.test.forceSetting
+		//Sets a setting to a specific value for testing
+		//If a test is influenced by a setting, it should use this at the begining of the test
+		forceSetting: function(moduleName, setting, newValue) {
+			if (!settingExists(moduleName, setting)) {
+				error("Invalid setting being set as override.");
+				return;
+			}
+			if (!dashboard.tests.overrideSettings[moduleName])
+				dashboard.tests.overrideSettings[moduleName] = {};
+
+			dashboard.tests.overrideSettings[moduleName][setting] = newValue;
+		}
 	}
 }
 

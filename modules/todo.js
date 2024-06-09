@@ -37,7 +37,7 @@ dashboard.registerModule({
 
 		//insert button
 		module.q(".insertButton").addEventListener("click", function(){
-			document.querySelector(".completed").checked = false;
+			module.q(".completed").checked = false;
 			_this.hideFinishedTodos(module, true);
 			_this.newTodo(module, false);
 			_this.saveTodos(module);
@@ -605,7 +605,7 @@ dashboard.registerModule({
 	},
 
 	deleteEditing: function(module){
-		let shouldContinue = confirm("Are you sure that you would like to delete this todo?");
+		let shouldContinue = db_confirm("Are you sure that you would like to delete this todo?");
 
 		if (!shouldContinue)
 			return;

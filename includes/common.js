@@ -9,7 +9,29 @@ function log(m){
 	console.log(m);
 }
 
+function error(e){
+	console.error(e);
+}
+
 function getSetting(module, setting){
+	//check input validity
+	if (typeof module !== "string"){
+		debugger;
+		error("getSetting module must be a string.");
+		return;
+	}
+
+	//check for tests override
+	if (dashboard.tests.enabled) {
+		if (dashboard.tests.overrideSettings[module]) {
+			// using hasOwnProperty here so that we can check if it exists even if it's false
+			if (dashboard.tests.overrideSettings[module].hasOwnProperty(setting)) {
+				let override = dashboard.tests.overrideSettings[module][setting];
+				return override;
+			}
+		}
+	}
+
 	//check if the setting is saved
 	let retrievedValue = getSettingFromStorage(module, setting);
 
@@ -25,6 +47,22 @@ function getSetting(module, setting){
 	}
 
 	return retrievedValue;
+}
+
+// returns true or false if the setting exists or not
+function settingExists(module, setting){
+	let settings = dashboard.modules[module]?.registerSettings();
+	if (!settings) {
+		error("Module " + module + " could not be found.");
+		return false;
+	}
+
+	for(let i=0; i<settings.length; i++){
+		if (settings[i].name == setting){
+			return true;
+		}
+	}
+	return false;
 }
 
 //check if a setting was manually set by the user or is being defaulted
@@ -46,4 +84,16 @@ function getSettingFromStorage(module, setting) {
 //clamp a number to min and max
 function clamp(number, min, max) {
 	return Math.min(Math.max(number, min), max);
+}
+
+function db_alert(a){
+	if (!dashboard.tests.enabled)
+		alert(a);
+}
+
+function db_confirm(a) {
+	if (!dashboard.tests.enabled)
+		return confirm(a);
+	else
+		return true;
 }

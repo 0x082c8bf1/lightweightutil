@@ -86,7 +86,7 @@ dashboard.registerModule({
 		let total = bar.querySelector(".totalNumber").value;
 		let label = bar.querySelector(".label").value;
 		if (completed < total && getSetting(_this.name,"AskOnDeleteUnfinished")){
-			shouldDelete = confirm("This progress bar (" + label + ") is not completed. Are you sure you would like to delete it?");
+			shouldDelete = db_confirm("This progress bar (" + label + ") is not completed. Are you sure you would like to delete it?");
 		}
 
 		if (shouldDelete)

@@ -111,7 +111,7 @@ dashboard.registerModule({
 					module.loadedAudio.currentTime = 0;
 					let p = module.loadedAudio.play();
 					p.catch(function(){
-						alert("Multitimer audio failed to play. This is likely because autoplay is disabled in your browser, please enable it or set the volume to 0 to disable audio.");
+						db_alert("Multitimer audio failed to play. This is likely because autoplay is disabled in your browser, please enable it or set the volume to 0 to disable audio.");
 					});
 				}
 			}
@@ -150,38 +150,43 @@ dashboard.registerModule({
 		return input.replace(pattern, "");
 	},
 
+	valuesToDuration: function(hInput, mInput, sInput) {
+		let h;
+
+		if (hInput.includes("d")){
+			//get the left and right of "d"
+			let splitPos = hInput.indexOf("d");
+			let lStr = hInput.substring(0,splitPos);
+			let rStr = hInput.substring(splitPos+1);
+
+			//convert days and hours to number to numbers
+			let dNum = parseFloat(this.makeValidNumber(lStr));
+			let hNum = parseFloat(this.makeValidNumber(rStr));
+
+			//handle not putting a number before or after "d"
+			dNum = (isNaN(dNum)) ? 0 : dNum;
+			hNum = (isNaN(hNum)) ? 0 : hNum;
+
+			//convert to hours
+			h = dNum*24 + hNum;
+		} else {
+			h = this.makeValidNumber(hInput);
+		}
+
+		let m = this.makeValidNumber(mInput);
+		let s = this.makeValidNumber(sInput);
+
+		return this.createDuration(h ? h : 0, m ? m : 0, s ? s : 0).totalMS;
+
+	},
+
 	startButtonEvent: function(module, timer) {
 		switch(timer.status) {
 			case module.status.INACTIVE:
 				{
 					//handle hour input
-					let hInput = timer.querySelector(".h-input").value;
-					let h;
-
-					if (hInput.includes("d")){
-						//get the left and right of "d"
-						let splitPos = hInput.indexOf("d");
-						let lStr = hInput.substring(0,splitPos);
-						let rStr = hInput.substring(splitPos+1);
-
-						//convert days and hours to number to numbers
-						let dNum = parseFloat(this.makeValidNumber(lStr));
-						let hNum = parseFloat(this.makeValidNumber(rStr));
-
-						//handle not putting a number before or after "d"
-						dNum = (isNaN(dNum)) ? 0 : dNum;
-						hNum = (isNaN(hNum)) ? 0 : hNum;
-
-						//convert to hours
-						h = dNum*24 + hNum;
-					} else {
-						h = this.makeValidNumber(hInput);
-					}
-
-					let m = this.makeValidNumber(timer.querySelector(".m-input").value);
-					let s = this.makeValidNumber(timer.querySelector(".s-input").value);
-
-					timer.duration = this.createDuration(h ? h : 0, m ? m : 0, s ? s : 0).totalMS;
+					timer.duration = this.valuesToDuration(timer.querySelector(".h-input").value,
+						timer.querySelector(".m-input").value, timer.querySelector(".s-input").value);
 					timer.startDate = new Date();
 					this.setTimerStatus(module, timer, module.status.ACTIVE);
 					this.tick(module, timer);
@@ -459,7 +464,7 @@ dashboard.registerModule({
 		module.q(".notifButton").addEventListener("click", function(){
 			Notification.requestPermission().then((permission) => {
 				if (permission != "granted") {
-					alert("Timer notifications will not displayed while notifications are not granted.");
+					db_alert("Timer notifications will not displayed while notifications are not granted.");
 				} else {
 					this.hidden = true;
 				}

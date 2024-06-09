@@ -8,7 +8,7 @@ dashboard.registerModule({
 		let shouldContinue = true;
 
 		if (getSetting(this.name, "evalWarn"))
-			shouldContinue = confirm("Eval can be unsafe, do not use this function unless you know exactly what the code is doing. Would you like to proceed?");
+			shouldContinue = db_confirm("Eval can be unsafe, do not use this function unless you know exactly what the code is doing. Would you like to proceed?");
 
 		if(shouldContinue){
 			//define functions
@@ -84,7 +84,7 @@ dashboard.registerModule({
 		//create the object
 		let name = module.q(".codeEditorSaveName").value;
 		if (name == "New Script"){
-			alert("\"New Script\" is not an allowed save name.");
+			db_alert("\"New Script\" is not an allowed save name.");
 			return;
 		}
 		let output = {};
@@ -315,7 +315,7 @@ dashboard.registerModule({
 			let name = module.q(".ce_selector").value;
 			if (name == "New Script")
 				return;
-			let del = confirm("Would you like to delete \"" + name + "\"?");
+			let del = db_confirm("Would you like to delete \"" + name + "\"?");
 			if (!del)
 				return;
 

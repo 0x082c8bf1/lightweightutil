@@ -13,10 +13,14 @@ dashboard.registerModule({
 
 		//this is how you can use settings to affect your module
 		if (getSetting(this.name,"exampleBool"))
-			alert("hello from the example module.");
+			db_alert("hello from the example module.");
 
 		//function defined from an include
 		this.includeFunction();
+
+		module.q(".click").addEventListener("click", function(){
+			this.value = +this.value + 1;
+		});
 	},
 
 	//the where object is the module that you are adding to
@@ -24,8 +28,14 @@ dashboard.registerModule({
 	instantiate: function(where){
 		where.innerHTML = /*html*/`
 			<div class="fs30b">Example</div>
+			<input type="button" class="click" value="0"/>
 			<div>This is what the example module adds to the DOM.</div>
 		`
+	},
+
+	//this is uses in example_tests to show accessing module routines
+	return4: function(){
+		return 4;
 	},
 
 	//this is where you can add settings

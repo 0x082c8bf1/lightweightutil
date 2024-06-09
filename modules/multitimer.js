@@ -91,7 +91,7 @@ dashboard.registerModule({
 			difference = new Date()-timer.startDate;
 		}
 		let timeRemaining = timer.duration-(difference+timer.msOffset);
-		let displayTime = this.getDurationAsString(timeRemaining)
+		let displayTime = this.getDurationAsString(timeRemaining);
 		if (displayTime !== timer.querySelector(".time-display").innerHTML) {
 			timer.querySelector(".time-display").innerHTML = displayTime;
 		}

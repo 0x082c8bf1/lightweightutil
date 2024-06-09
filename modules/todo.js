@@ -498,7 +498,7 @@ dashboard.registerModule({
 					if (parent.classList.contains("listEntry")) {
 						this.parentNode.remove();
 					} else {
-						_this.deleteEditing(module)
+						_this.deleteEditing(module);
 					}
 				});
 
@@ -562,7 +562,7 @@ dashboard.registerModule({
 		//set default todo
 		let tasks;
 		if (JSONTasks) {
-			tasks = JSONTasks
+			tasks = JSONTasks;
 		} else {
 			tasks = [{"name":getSetting(_this.name, "defaultName"), "checked":false}];
 		}

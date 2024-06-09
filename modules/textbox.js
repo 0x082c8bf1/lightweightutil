@@ -203,7 +203,7 @@ dashboard.registerModule({
 			<div class="fs30b textbox">TextBox</div>
 			<textarea class="textarea" placeholder="Your text here."></textarea>
 			<br/>
-			<span class="characterCount">0</span> characters, <span class="wordCount">0</span> words, <span class="lineCount">1</span> lines.
+			<span><span class="characterCount">0</span> characters, <span class="wordCount">0</span> words, <span class="lineCount">1</span> lines.</span>
 			<br/>
 			<input type="button" class="tb_sort" value="Sort lines">
 			<input type="button" class="tb_removeDupes" value="Remove duplicate lines">

@@ -22,7 +22,7 @@ dashboard.registerModule({
 
 		//set the width of the bar
 		progressBarEntry.querySelector(".bar").style.width=percent+"%";
-		progressBarEntry.querySelector(".completionPercent").innerHTML = parseFloat(percent).toFixed(2) + "%"
+		progressBarEntry.querySelector(".completionPercent").innerHTML = parseFloat(percent).toFixed(2) + "%";
 	},
 
 	//updates all of the progress bar widths
@@ -143,7 +143,7 @@ dashboard.registerModule({
 
 		barContainer.addEventListener("change", function(){
 			_this.saveBars(this);
-		})
+		});
 
 		module.q(".insertButton").addEventListener("click",function(){
 			let newBar = _this.addBar(this);
@@ -189,7 +189,7 @@ dashboard.registerModule({
 				"name": "AskOnDeleteUnfinished",
 				"description": "Prompt for confirmation when deleting an unfinished progress bar",
 				"type": "bool",
-				"default": true
+				"default": true,
 			},
 		]
 	},

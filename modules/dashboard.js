@@ -508,7 +508,7 @@ var dashboard = {
 			a.addEventListener("click", function(e){
 				e.preventDefault();
 				document.querySelector("#" + module.name).scrollIntoView();
-			})
+			});
 			a.innerHTML = module.displayName;
 			entry.appendChild(a);
 			document.querySelector("#docIndex").appendChild(entry);
@@ -553,7 +553,7 @@ var dashboard = {
 					discard = confirm("You have unsaved settings, would you like to discard them?");
 				}
 			}
-			return discard
+			return discard;
 		},
 
 		//dashboard.settings.getNewSettings()

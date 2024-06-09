@@ -31,7 +31,7 @@ function getSetting(module, setting){
 function getSettingFromStorage(module, setting) {
 	let settings = localStorage.getItem("settings");
 
-	let retrievedValue = null
+	let retrievedValue = null;
 	if (settings != null) {
 		settings = JSON.parse(settings);
 

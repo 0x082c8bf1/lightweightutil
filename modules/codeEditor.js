@@ -222,7 +222,7 @@ dashboard.registerModule({
 				//calculate the beginning and end of the line
 				let lastOffset = 0;//fixes issue where selecting the end of the line selects after the newline
 				if(codeEditor.value[codeEditor.selectionStart] == "\n"){
-					lastOffset = -1
+					lastOffset = -1;
 				}
 				let lastNewLinePos = codeEditor.selectionStart + lastOffset;
 				while(lastNewLinePos>=0 && codeEditor.value[lastNewLinePos] != "\n"){
@@ -307,7 +307,7 @@ dashboard.registerModule({
 			_this.saveCode(module);
 		});
 		module.q(".ce_selector").addEventListener("change", function(){
-			let name = module.q(".ce_selector").value
+			let name = module.q(".ce_selector").value;
 			_this.loadCode(module, name);
 		});
 		module.q(".deleteSelection").addEventListener("click", function(){

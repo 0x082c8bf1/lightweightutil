@@ -24,3 +24,5 @@ testRegex	"debugger"				"Remove all debugger calls"
 testRegex	"/\*(?!html)"			"No block comments (except html specifier)"
 testRegex	"[!=]=\s*(true|false)"	"Don't check equality on true/false"
 testRegex	"\r$"					"Line endings should be LF"
+testRegex	'^(?!.*//)(?!\r)(?!.*\sif[\s(])(?!\s*$)(?!.*[{};,[\]:>\`]$)' \
+									"Lines should end in a semicolon"

@@ -83,7 +83,7 @@ dashboard.registerModule({
 	saveCode: function(module){
 		//create the object
 		let name = module.q(".codeEditorSaveName").value;
-		if (name == "New Script"){
+		if (name === "New Script"){
 			db_alert("\"New Script\" is not an allowed save name.");
 			return;
 		}
@@ -109,7 +109,7 @@ dashboard.registerModule({
 	//loads the selected code from localStorage
 	loadCode: function(module, name){
 		let obj;
-		if (name == "New Script"){
+		if (name === "New Script"){
 			obj = "";
 		} else {
 			let save = localStorage.getItem("CESaves");
@@ -171,7 +171,7 @@ dashboard.registerModule({
 		let _this = this;
 		codeEditor.addEventListener("keydown", function(e){
 			//allow typing tabs without changing the focus
-			if(e.code == "Tab"){
+			if(e.code === "Tab"){
 				e.preventDefault();
 
 				if(codeEditor.selectionStart == codeEditor.selectionEnd && !e.shiftKey){
@@ -198,7 +198,7 @@ dashboard.registerModule({
 					//modify selected lines
 					for(let i=sLine; i<eLine+1; i++){
 						if (e.shiftKey){
-							if (lines[i][0] == "\t"){
+							if (lines[i][0] === "\t"){
 								lines[i] = lines[i].substring(1);
 								endOffset--;
 								if (i==sLine) startOffset--;
@@ -217,11 +217,11 @@ dashboard.registerModule({
 					codeEditor.selectionStart = start + startOffset;
 					codeEditor.selectionEnd = end + endOffset;
 				}
-			} else if(e.code == "KeyD" && e.ctrlKey){ //allow ctrl+d to duplicate the currently selected lines
+			} else if(e.code === "KeyD" && e.ctrlKey){ //allow ctrl+d to duplicate the currently selected lines
 				e.preventDefault();
 				//calculate the beginning and end of the line
 				let lastOffset = 0;//fixes issue where selecting the end of the line selects after the newline
-				if(codeEditor.value[codeEditor.selectionStart] == "\n"){
+				if(codeEditor.value[codeEditor.selectionStart] === "\n"){
 					lastOffset = -1;
 				}
 				let lastNewLinePos = codeEditor.selectionStart + lastOffset;
@@ -245,10 +245,10 @@ dashboard.registerModule({
 
 				codeEditor.value = start + "\n" + codeEditor.value.substring(startPos, endPos) + end;
 				codeEditor.selectionEnd = newCursorPos;
-			} else if((e.code == "Enter" || e.code == "NumpadEnter") && e.ctrlKey){
+			} else if((e.code === "Enter" || e.code === "NumpadEnter") && e.ctrlKey){
 				e.preventDefault();
 				_this.evalTextBox(module);
-			} else if(e.ctrlKey && e.shiftKey && (e.code == "ArrowUp" || e.code == "ArrowDown")){
+			} else if(e.ctrlKey && e.shiftKey && (e.code === "ArrowUp" || e.code === "ArrowDown")){
 				e.preventDefault();
 
 				let lines = _this.getLines(codeEditor.value);
@@ -260,7 +260,7 @@ dashboard.registerModule({
 
 				let selOffset = 0;
 
-				if (e.code == "ArrowUp"){
+				if (e.code === "ArrowUp"){
 					let prefix = [];
 					if (sLine != 0)
 						prefix = lines.slice(0, sLine-1);
@@ -313,7 +313,7 @@ dashboard.registerModule({
 		module.q(".deleteSelection").addEventListener("click", function(){
 			//confirm deletion
 			let name = module.q(".ce_selector").value;
-			if (name == "New Script")
+			if (name === "New Script")
 				return;
 			let del = db_confirm("Would you like to delete \"" + name + "\"?");
 			if (!del)

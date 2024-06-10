@@ -104,7 +104,7 @@ dashboard.registerModule({
 
 			if (e.key == 'Escape') {
 				_this.setSettingsHidden(module, true);
-			} else if (e.key == "Enter" && !e.shiftKey) {
+			} else if (e.key === "Enter" && !e.shiftKey) {
 				_this.saveSettings(module);
 			}
 		});
@@ -112,7 +112,7 @@ dashboard.registerModule({
 		//don't type an enter when hitting enter with no shift in the description
 		//	so that it bubbles and saves without having an enter character at the cursor
 		module.q(".settings").addEventListener("keypress", function(e){
-			if (e.key == "Enter" && !e.shiftKey) {
+			if (e.key === "Enter" && !e.shiftKey) {
 				e.preventDefault();
 			}
 		});
@@ -449,12 +449,12 @@ dashboard.registerModule({
 				name.addEventListener("keydown",function(e){
 					//allow navigation with ctrl+up/down
 					if (e.ctrlKey){
-						if (e.code == "ArrowDown") {
+						if (e.code === "ArrowDown") {
 							let titles = module.qAll(".listEntry.editable>.title");
 							let next = Array.from(titles).indexOf(document.activeElement) + 1;
 							next = clamp(next, 0, titles.length-1);
 							titles[next].focus();
-						} else if (e.code == "ArrowUp") {
+						} else if (e.code === "ArrowUp") {
 							let titles = module.qAll(".listEntry.editable>.title");
 							let next = Array.from(titles).indexOf(document.activeElement) - 1;
 							next = clamp(next, 0, titles.length-1);

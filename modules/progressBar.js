@@ -54,14 +54,14 @@ dashboard.registerModule({
 			_this.deleteBar(this, _this);
 		});
 		created.querySelector(".label").addEventListener("keydown", function(e){
-			if(e.key == "ArrowUp") {
+			if(e.key === "ArrowUp") {
 				e.preventDefault();
 				let bar = this.closest(".entry");
 				let input = bar.querySelector(".completedNumber");
 				input.value = +input.value + 1;
 				_this.updateBar(bar);
 				_this.saveBars(this);
-			} else if(e.key == "ArrowDown") {
+			} else if(e.key === "ArrowDown") {
 				e.preventDefault();
 				let bar = this.closest(".entry");
 				let input = bar.querySelector(".completedNumber");

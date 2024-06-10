@@ -24,9 +24,14 @@ testRegex	"$src"	"debugger"				"Remove all debugger calls"
 testRegex	"$src"	"/\*(?!html)"			"No block comments (except html specifier)"
 testRegex	"$src"	"[!=]=\s*(true|false)"	"Don't check equality on true/false"
 testRegex	"$src"	"\r$"					"Line endings should be LF"
-testRegex	"$src"	'^(?!.*//)(?!\r)(?!.*\sif[\s(])(?!\s*$)(?!.*[{};,[\]:>\`(]$)' \
+testRegex	"$src"	"^(?!.*//)(?!\r)(?!.*\sif[\s(])(?!\s*$)(?!.*[{};,[\]:>\`(]$)" \
 											"Lines should end in a semicolon"
 testRegex	"$src"	"[\s=](confirm|alert)\(" \
 											"Use db_confirm and db_alert"				"--exclude="common.js""
 testRegex	"$src/modules/dashboard.js" \
 					"enabled: true,"		"Don't leave tests enabled"					"--with-filename"
+testRegex	"$src"	"[^\s]\[\".+\"\]"			"Constant accessors should use . instead of []"
+testRegex	"$src"	"\sif[\s(].*[^=^!^<^>]=[^=].*\)" \
+											"No assignments in ifs"
+testRegex	"$src"	"(\w+\s*==\s*\"(\w\s*)+\"|\"(\w\s*)+\"\s*==\s*\w+)" \
+											"Comapre strings with ==="

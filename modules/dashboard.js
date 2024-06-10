@@ -193,7 +193,8 @@ var dashboard = {
 		});
 
 		for(let moduleName in dashboard.modules){
-			if (moduleName == "dashboard") continue;
+			if (moduleName === "dashboard")
+				continue;
 
 			let module = dashboard.modules[moduleName];
 

@@ -240,12 +240,12 @@ dashboard.registerModule({
 		});
 
 		timer.querySelector(".time-input").addEventListener("keydown", function(e){
-			if(e.code == "Enter" || e.code == "NumpadEnter"){
+			if(e.code === "Enter" || e.code === "NumpadEnter"){
 				_this.startButtonEvent(module, timer);
 			}
 		});
 		timer.querySelector(".name").addEventListener("keydown", function(e){
-			if(e.code == "Enter" || e.code == "NumpadEnter"){
+			if(e.code === "Enter" || e.code === "NumpadEnter"){
 				_this.startButtonEvent(module, timer);
 			}
 		});

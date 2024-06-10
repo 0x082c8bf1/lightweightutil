@@ -17,7 +17,7 @@ dashboard.tests.registerTester(
 		{name: "interaction", test: function(module){
 			dashboard.tests.click(module.q(".click"));
 			dashboard.tests.click(module.q(".click"));
-			return module.q(".click").value == "2";
+			return module.q(".click").value === "2";
 		}},
 
 		//test force settings

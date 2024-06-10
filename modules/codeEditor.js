@@ -103,7 +103,7 @@ dashboard.registerModule({
 		localStorage.setItem("CESaves", saves);
 
 		//refresh the selection box
-		this.refreshSaves(module);
+		this.refreshSaves(module, false);
 	},
 
 	//loads the selected code from localStorage

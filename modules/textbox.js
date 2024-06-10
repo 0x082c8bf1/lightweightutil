@@ -219,7 +219,7 @@ dashboard.registerModule({
 				<span> with </span>
 				<input type="text" class="replaceOutputPattern">
 				<input type="button" class="tb_repace" value="Go">
-				<input type="checkbox" class="regexSearch" checked=true>
+				<input type="checkbox" class="regexSearch" id="regexSearch" checked=true>
 				<label for="regexSearch">Regex</label>
 			</span>
 		`

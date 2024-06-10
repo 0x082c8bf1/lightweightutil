@@ -127,7 +127,7 @@ dashboard.registerModule({
 		if (timer.status == module.status.RINGING) {
 			module.numberOfRingingTimers--;
 			if (module.numberOfRingingTimers < 0) {
-				console.error("Invalid number of ringing timers: " + module.numberOfRingingTimers);
+				error("Invalid number of ringing timers: " + module.numberOfRingingTimers);
 			}
 			if (module.numberOfRingingTimers == 0) {
 				if (module.usingAudio) {

@@ -8,17 +8,17 @@ var dashboard = {
 	registerModule: function(module){
 		//error checking
 		if (!module.name){
-			console.error("Module must have a name.");
+			error("Module must have a name.");
 			return;
 		}
 
 		if (this.modules[module.name]){
-			console.error("Module " + module.name + " already exists.");
+			error("Module " + module.name + " already exists.");
 			return;
 		}
 
 		if (!module.version){
-			console.error("Module " + module.name + " must have a version.");
+			error("Module " + module.name + " must have a version.");
 			return;
 		}
 
@@ -31,12 +31,12 @@ var dashboard = {
 	//dashboard.registerInclude(include)
 	registerInclude: function(include) {
 		if (!include.name) {
-			console.error("Include must have a name.");
+			error("Include must have a name.");
 			return;
 		}
 
 		if (this.modules[include.name]){
-			console.error("Include " + include.name + " already exists.");
+			error("Include " + include.name + " already exists.");
 			return;
 		}
 
@@ -138,7 +138,7 @@ var dashboard = {
 		});
 
 		document.querySelector("#importFile").addEventListener("change", function(){
-			const [file] = document.querySelector("#importFile").files;
+			const file = document.querySelector("#importFile").files[0];
 
 			if (!file)
 				return;
@@ -244,7 +244,7 @@ var dashboard = {
 					continue;
 
 				if (dashboard.modules[m].deconstructInstance) {
-					for(let i=0; i<dashboard.modules[m]?.instances.length; i++){
+					for(let i=0; i<dashboard.modules[m].instances.length; i++){
 						dashboard.modules[m].deconstructInstance(dashboard.modules[m].instances[i]);
 					}
 				}
@@ -334,7 +334,7 @@ var dashboard = {
 						if (!lastVersion || (lastVersion <= updates[i].ver && updates[i].ver < currentVersion)){
 							if (!dashboard.layout.exportWarning) {
 								dashboard.layout.exportWarning = true;
-								let shouldExprt = db_confirm("The save data of some module has been changed and is about to be updated, would you like to make an export of your data first? (highly recommended)");
+								let shouldExprt = db_confirm("The save data of some modules have been changed and are about to be updated, would you like to make an export of your data first? (highly recommended)");
 								if (shouldExprt) {
 									dashboard.makeExport();
 								}
@@ -373,7 +373,7 @@ var dashboard = {
 				try {
 					dashboard.modules[m].init();
 				} catch (e) {
-					console.error("Error running init for " + m + "\n", e);
+					error("Error running init for " + m + "\n", e);
 				}
 				dashboard.layout.updateModule(dashboard.modules[m].name);
 			}
@@ -388,7 +388,7 @@ var dashboard = {
 					//container settings
 					let mConfig = config[cPos][mPos];
 					if (!mConfig.name) {
-						if (mConfig.maxHeight){
+						if (mConfig.hasOwnProperty("maxHeight")){
 							container.style.maxHeight = mConfig.maxHeight;
 						}
 
@@ -397,14 +397,12 @@ var dashboard = {
 					}
 
 					if (!dashboard.modules[mConfig.name]) {
-						console.error("Failed to load module from config: " + mConfig.name);
+						error("Failed to load module from config: " + mConfig.name);
 						continue;
 					}
 
 					let module = this.appendModuleToContainer(container);
-					if (mConfig.name) {
-						module.classList.add(mConfig.name);
-					}
+					module.classList.add(mConfig.name);
 
 					//apply module settings
 					if (mConfig.width){
@@ -420,7 +418,7 @@ var dashboard = {
 						for(let inc=0; inc<mObj.include.length; inc++) {
 							let include = dashboard.includes[mObj.include[inc]];
 							if (!include) {
-								console.error(mObj.name + ", " + mObj.include[inc] + " - include not found.");
+								error(mObj.name + ", " + mObj.include[inc] + " - include not found.");
 								continue;
 							}
 							include.apply(mObj);
@@ -433,7 +431,7 @@ var dashboard = {
 						try {
 							instFunc(module);
 						} catch (e) {
-							console.error("Error running instantiate for " + mConfig.name + "\n", e);
+							error("Error running instantiate for " + mConfig.name + "\n", e);
 						}
 					}
 
@@ -446,7 +444,7 @@ var dashboard = {
 							}
 							let results = module.querySelectorAll(selector);
 							if (results.length > 1){
-								console.error("module.q(\"" + selector+ "\") found multiple results. Did you mean to use qAll()?");
+								error("module.q(\"" + selector+ "\") found multiple results. Did you mean to use qAll()?");
 							}
 
 							//return a result if any are found
@@ -480,7 +478,7 @@ var dashboard = {
 						try {
 							imodule.init(instance);
 						} catch (e) {
-							console.error("Error running init for " + mConfig.name + "\n", e);
+							error("Error running init for " + mConfig.name + "\n", e);
 						}
 					}
 				}
@@ -511,7 +509,7 @@ var dashboard = {
 			try {
 				mDocs = mDocsFunc();
 			} catch (e) {
-				console.error("Error running registerDocumentation for " + name + "\n", e);
+				error("Error running registerDocumentation for " + name + "\n", e);
 				return;
 			}
 
@@ -622,7 +620,7 @@ var dashboard = {
 			try {
 				mSettings = mSettingsFunc();
 			} catch (e) {
-				console.error("Error running registerSettings for " + name + "\n", e);
+				error("Error running registerSettings for " + name + "\n", e);
 				return;
 			}
 

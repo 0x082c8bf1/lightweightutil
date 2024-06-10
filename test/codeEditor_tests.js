@@ -57,7 +57,7 @@ dashboard.tests.registerTester(
 			//check that testScript doesn't already exist, otherwise the test will fail
 			let testExists = module.q(".ce_selector > option[value='testScript']");
 			if (testExists) {
-				console.error("Failed to run test, testScript already exists.");
+				error("Failed to run test, testScript already exists.");
 				return false;
 			}
 

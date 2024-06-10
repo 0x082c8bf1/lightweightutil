@@ -43,7 +43,7 @@ function getSetting(module, setting){
 				return settings[i].default;
 			}
 		}
-		console.error("Invalid setting being read.");
+		error("Invalid setting being read.");
 	}
 
 	return retrievedValue;

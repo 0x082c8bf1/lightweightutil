@@ -16,6 +16,7 @@ src=$(dirname "$(dirname "$(realpath "$0")")")
 #			Files	Pattern					Comment										Custom grep arguments
 testRegex	"$src"	"/[/\*].*todo.*:"		"Remove all todos"
 testRegex	"$src"	"console\?*.log"		"use log() for all permanent logging" 		"--exclude="common.js""
+testRegex	"$src"	"console\?*.error"		"use error() for all permanent errors" 		"--exclude="common.js""
 testRegex	"$src"	"(\s | \s)"				"Use tabs and/or don't mix whitespace"
 testRegex	"$src"	"(\}else|else\{)"		"Use spaces between else and braces"
 testRegex	"$src"	"[\t ]$"				"No trailing whitespace"
@@ -34,4 +35,4 @@ testRegex	"$src"	"[^\s]\[\".+\"\]"			"Constant accessors should use . instead of
 testRegex	"$src"	"\sif[\s(].*[^=^!^<^>]=[^=].*\)" \
 											"No assignments in ifs"
 testRegex	"$src"	"(\w+\s*==\s*\"(\w\s*)+\"|\"(\w\s*)+\"\s*==\s*\w+)" \
-											"Comapre strings with ==="
+											"Compare strings with ==="

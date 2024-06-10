@@ -688,6 +688,7 @@ dashboard.registerModule({
 			"Once you have your todo, you can mark them as completed from the dashboard.",
 			"When the Show all button is checked, all todos will be shown, when it is not checked only the non-completed todo will be shown.",
 			"A completed task must have all of it's tasks checked.",
+			"You can drag tasks around either when viewing them or in edit mode, in edit mode you can make a task the child of another by dragging it to the right side of another task.",
 		]
 	},
 });

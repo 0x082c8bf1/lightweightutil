@@ -23,7 +23,7 @@ dashboard.registerModule({
 		});
 	},
 
-	//the where object is the module that you are adding to
+	//the "where" object is the element that is being added to
 	//if this function does not exist, then it will not add a module.
 	instantiate: function(where){
 		where.innerHTML = /*html*/`

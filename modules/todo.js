@@ -123,6 +123,11 @@ dashboard.registerModule({
 
 		//the current element being dragged
 		module.getBaseModule().dragSrcElem = null;
+
+		//apply labels
+		let completedId = "completed" + module.getId();
+		module.q(".completed").id = completedId;
+		module.q(".completedLabel").setAttribute("for", completedId);
 	},
 
 	//hides todos where none of the tasks are unchecked.
@@ -638,8 +643,8 @@ dashboard.registerModule({
 				<div class="backgroundFade"></div>
 			</div>
 			<input type="button" class="insertButton" value="+">
-			<input type="checkbox" class="completed" id="completed">
-			<label for="completed">Complete</label>
+			<input type="checkbox" class="completed">
+			<label class="completedLabel">Complete</label>
 			<br/>
 			<div class="list">
 				<template class="todo_tmplt">

@@ -196,6 +196,11 @@ dashboard.registerModule({
 			let fs = module.q(".findSpan");
 			fs.hidden = !fs.hidden;
 		});
+
+		//apply labels
+		let regexId = "regexSearch" + module.getId();
+		module.q(".regexSearch").id = regexId;
+		module.q(".regexLabel").setAttribute("for", regexId);
 	},
 
 	instantiate: function(where){
@@ -219,8 +224,8 @@ dashboard.registerModule({
 				<span> with </span>
 				<input type="text" class="replaceOutputPattern">
 				<input type="button" class="tb_repace" value="Go">
-				<input type="checkbox" class="regexSearch" id="regexSearch" checked=true>
-				<label for="regexSearch">Regex</label>
+				<input type="checkbox" class="regexSearch" checked=true>
+				<label class="regexLabel">Regex</label>
 			</span>
 		`
 	},

@@ -231,6 +231,9 @@ var dashboard = {
 		firstLoad: false,
 		exportWarning: false,
 
+		// used to uniquely identify a module, should only be necessary for label elements
+		nextModuleId: 0,
+
 		//dashboard.layout.reload(overrideConfig)
 		reload: function(overrideConfig){
 			dashboard.layout.delete();
@@ -373,12 +376,14 @@ var dashboard = {
 				try {
 					dashboard.modules[m].init();
 				} catch (e) {
+					error(e);
 					error("Error running init for " + m + "\n", e);
 				}
 				dashboard.layout.updateModule(dashboard.modules[m].name);
 			}
 
 			//create containers
+			dashboard.layout.nextModuleId = 0;
 			for(let cPos = 0; cPos<config.length; cPos++){
 				let container = this.appendNewContainer(document.querySelector("#layout"));
 
@@ -436,6 +441,9 @@ var dashboard = {
 					}
 
 					//create the module instance
+					let moduleId = dashboard.layout.nextModuleId;
+					dashboard.layout.nextModuleId++;
+
 					let instance = {
 						//queries for a single element that matches selector
 						q: function(selector){
@@ -465,6 +473,11 @@ var dashboard = {
 						getBaseModule: function(){
 							return module;
 						},
+
+						//The ID is a temporary unique identifier for this instance, and should not be used for saving
+						getId: function(){
+							return moduleId;
+						},
 					};
 
 					let imodule = dashboard.modules[mConfig.name];
@@ -478,6 +491,7 @@ var dashboard = {
 						try {
 							imodule.init(instance);
 						} catch (e) {
+							error(e);
 							error("Error running init for " + mConfig.name + "\n", e);
 						}
 					}

@@ -4,61 +4,61 @@ dashboard.registerModule({
 	displayName: "Todo List",
 	version: "1.0.1",
 
-	init: function(module){
+	init: function(inst){
 		let _this = this;
 
 		//due now button
-		module.q(".dueNow").addEventListener("click", function(){
+		inst.q(".dueNow").addEventListener("click", function(){
 			let today = new Date();
 			let now = _this.getFormattedDate(today);
 
-			module.q(".dueSetting").value = now;
+			inst.q(".dueSetting").value = now;
 		});
 
-		module.q(".clearDate").addEventListener("click", function(){
-			module.q(".dueSetting").value = "";
+		inst.q(".clearDate").addEventListener("click", function(){
+			inst.q(".dueSetting").value = "";
 		});
 
 		//cancel button
-		module.q(".cancelSetting").addEventListener("click", function(){
-			_this.setSettingsHidden(module, true);
+		inst.q(".cancelSetting").addEventListener("click", function(){
+			_this.setSettingsHidden(inst, true);
 		});
 
 		//save button
-		module.q(".saveSetting").addEventListener("click", function(){
+		inst.q(".saveSetting").addEventListener("click", function(){
 			//update the DOM
-			_this.saveSettings(module);
+			_this.saveSettings(inst);
 		});
 
 		//delete button
-		module.q(".deleteSetting").addEventListener("click", function(){
-			_this.deleteEditing(module);
+		inst.q(".deleteSetting").addEventListener("click", function(){
+			_this.deleteEditing(inst);
 		});
 
 		//insert button
-		module.q(".insertButton").addEventListener("click", function(){
-			module.q(".completed").checked = false;
-			_this.hideFinishedTodos(module, true);
-			_this.newTodo(module, false);
-			_this.saveTodos(module);
+		inst.q(".insertButton").addEventListener("click", function(){
+			inst.q(".completed").checked = false;
+			_this.hideFinishedTodos(inst, true);
+			_this.newTodo(inst, false);
+			_this.saveTodos(inst);
 		});
 
 		//show all button
-		module.q(".completed").addEventListener("change", function(){
-			_this.hideFinishedTodos(module);
+		inst.q(".completed").addEventListener("change", function(){
+			_this.hideFinishedTodos(inst);
 		});
 
 		//cancel edit when clicking on the background
-		module.q(".backgroundFade").addEventListener("click", function(){
-			_this.setSettingsHidden(module, true);
+		inst.q(".backgroundFade").addEventListener("click", function(){
+			_this.setSettingsHidden(inst, true);
 		});
 
 		//at the end of the move up and down buttons it saves, this is fine because any settings that have
 		// been entered into settings haven't been written to the DOM yet, so those will not be saved.
 		// This does mean that the move up and down options will not respect the save button despite
 		// everything else in the settings pane doing so.
-		module.q(".moveup").addEventListener("click", function(){
-			let editing = module.q(".settings").editing;
+		inst.q(".moveup").addEventListener("click", function(){
+			let editing = inst.q(".settings").editing;
 
 			//find the next non-hidden sibling
 			let sibling = editing;
@@ -71,11 +71,11 @@ dashboard.registerModule({
 			} while (sibling.hidden);
 
 			editing.parentNode.insertBefore(editing, sibling);
-			_this.saveTodos(module);
+			_this.saveTodos(inst);
 		});
 
-		module.q(".movedown").addEventListener("click", function(){
-			let editing = module.q(".settings").editing;
+		inst.q(".movedown").addEventListener("click", function(){
+			let editing = inst.q(".settings").editing;
 
 			//find the next non-hidden sibling
 			let sibling = editing;
@@ -84,95 +84,95 @@ dashboard.registerModule({
 
 				//make sure that we don't move it past the bottom
 				if (sibling == null || !sibling.classList.contains("todo_entry")) {
-					sibling = module.q(".bottomAnchor");
+					sibling = inst.q(".bottomAnchor");
 				}
 			} while (sibling.hidden);
 
 			//make sure we go after the last element, we don't to use after() here because of the bottomAnchor
 			sibling = sibling.nextElementSibling;
 			if (sibling == null || !sibling.classList.contains("todo_entry"))
-				sibling = module.q(".bottomAnchor");
+				sibling = inst.q(".bottomAnchor");
 
 			editing.parentNode.insertBefore(editing, sibling);
-			_this.saveTodos(module);
+			_this.saveTodos(inst);
 		});
 
 		//add an event listener to the body handle settings interaction
 		document.querySelector("body").addEventListener("keyup", function(e){
-			if(module.q(".settingsContainer").hidden)
+			if(inst.q(".settingsContainer").hidden)
 				return;
 
 			if (e.key == 'Escape') {
-				_this.setSettingsHidden(module, true);
+				_this.setSettingsHidden(inst, true);
 			} else if (e.key === "Enter" && !e.shiftKey) {
-				_this.saveSettings(module);
+				_this.saveSettings(inst);
 			}
 		});
 
 		//don't type an enter when hitting enter with no shift in the description
 		//	so that it bubbles and saves without having an enter character at the cursor
-		module.q(".settings").addEventListener("keypress", function(e){
+		inst.q(".settings").addEventListener("keypress", function(e){
 			if (e.key === "Enter" && !e.shiftKey) {
 				e.preventDefault();
 			}
 		});
 
 		//load todos
-		this.loadTodos(module);
-		this.hideFinishedTodos(module, true);
+		this.loadTodos(inst);
+		this.hideFinishedTodos(inst, true);
 
 		//the current element being dragged
-		module.getBaseModule().dragSrcElem = null;
+		inst.getInstanceRoot().dragSrcElem = null;
 
 		//apply labels
-		let completedId = "completed" + module.getId();
-		module.q(".completed").id = completedId;
-		module.q(".completedLabel").setAttribute("for", completedId);
+		let completedId = "completed" + inst.getId();
+		inst.q(".completed").id = completedId;
+		inst.q(".completedLabel").setAttribute("for", completedId);
 	},
 
 	//hides todos where none of the tasks are unchecked.
 	// The hide argument is whether to hide them or unhide then, leaving it blank checks the complete checkbox
-	hideFinishedTodos: function(module, hide){
+	hideFinishedTodos: function(inst, hide){
 		if (hide == undefined) {
-			hide = !module.q(".completed").checked;
+			hide = !inst.q(".completed").checked;
 		}
 
-		let list = module.q(".list");
+		let list = inst.q(".list");
 		let todos = list.querySelectorAll(":scope > .todo_entry");
 		for(let i=0; i<todos.length; i++) {
 			todos[i].hidden = (hide == (todos[i].querySelector(".checkbox:not(:checked)") == null));
 		}
 	},
 
-	saveSettings: function(module) {
+	saveSettings: function(inst) {
 		//save element being edited
-		let editing = module.q(".settings").editing;
+		let editing = inst.q(".settings").editing;
 		let entries = editing.querySelector(".listEntryContainer");
 
 		entries.innerHTML = "";
-		let js = this.todoEntryToJSON(module.q(".settings").querySelector(".listEntry"), true);
+		let js = this.todoEntryToJSON(inst.q(".settings").querySelector(".listEntry"), true);
 
-		this.refreshList(module, js, entries, false);
+		this.refreshList(inst, js, entries, false);
 
 		//save date
-		let selectedDate = module.q(".dueSetting").value;
+		let selectedDate = inst.q(".dueSetting").value;
 		editing.querySelector(".dueDate").innerHTML = selectedDate;
 
 		//save description
-		let description = module.q(".descriptionSetting").value;
+		let description = inst.q(".descriptionSetting").value;
 		editing.querySelector(".description").innerHTML = description;
 
 		this.setDateDisplay(editing.querySelector(".relativeDate"), selectedDate, editing.querySelector(".date"));
 
 		//check if the todo was completed in editing mode
 		this.updateCompleted(editing);
-		this.hideFinishedTodos(module);
+		this.hideFinishedTodos(inst);
 
 		//hide settings
-		this.setSettingsHidden(module, true);
+		this.setSettingsHidden(inst, true);
 
 		//save all todos to localStorage
-		this.saveTodos(module);
+		this.saveTodos(inst);
 	},
 
 	//set the relative days amount and add sets "due" class on colorElement
@@ -209,11 +209,11 @@ dashboard.registerModule({
 		return output;
 	},
 
-	setSettingsHidden: function(module, value){
-		module.q(".settingsContainer").hidden = value;
+	setSettingsHidden: function(inst, value){
+		inst.q(".settingsContainer").hidden = value;
 
 		if (!value) {
-			module.q(".settingsContainer").querySelector(".title").focus();
+			inst.q(".settingsContainer").querySelector(".title").focus();
 		}
 	},
 
@@ -249,9 +249,9 @@ dashboard.registerModule({
 	},
 
 	//save the todos to localStorage
-	saveTodos: function(module){
+	saveTodos: function(inst){
 		let obj = [];
-		let list = module.q(".list");
+		let list = inst.q(".list");
 		let todos = list.querySelectorAll(".todo_entry");
 		for(let i=0; i<todos.length; i++) {
 			//save the tasks
@@ -273,7 +273,7 @@ dashboard.registerModule({
 	},
 
 	//load the todos from localStorage
-	loadTodos: function(module){
+	loadTodos: function(inst){
 		let saved = localStorage.getItem("td_todos");
 
 		if (!saved)
@@ -295,12 +295,12 @@ dashboard.registerModule({
 				date = new Date(saved[i].date+"T00:00:00.000");
 			}
 			//the time needs to be appended to the date here to account for time zones
-			this.newTodo(module, true, saved[i].tasks, date, saved[i].completed, saved[i].description);
+			this.newTodo(inst, true, saved[i].tasks, date, saved[i].completed, saved[i].description);
 		}
 	},
 
 	//Add event listeners to element to make it draggable, used by both the settings modal and display list
-	makeDraggable: function(module, element) {
+	makeDraggable: function(inst, element) {
 		let _this = this;
 		element.draggable = true;
 		let editMode = element.classList.contains("editable"); //if we're in the settings modal
@@ -323,13 +323,13 @@ dashboard.registerModule({
 		//begin drag
 		element.addEventListener("dragstart", function(e){
 			e.stopPropagation();
-			module.getBaseModule().dragSrcElem = this;
+			inst.getInstanceRoot().dragSrcElem = this;
 		});
 
 		//start drag over other
 		element.addEventListener("dragover", function(e){
 			//element cannot be moved into itself or it's child
-			if (module.getBaseModule().dragSrcElem == this || module.getBaseModule().dragSrcElem.contains(this)) {
+			if (inst.getInstanceRoot().dragSrcElem == this || inst.getInstanceRoot().dragSrcElem.contains(this)) {
 				return;
 			}
 
@@ -363,7 +363,7 @@ dashboard.registerModule({
 
 		//end drag
 		element.addEventListener("drop", function(e){
-			let dragSource = module.getBaseModule().dragSrcElem;
+			let dragSource = inst.getInstanceRoot().dragSrcElem;
 
 			//abort the drag if you're trying to drag from the settings page outside of it or vice versa
 			if (this.classList.contains("editable") != dragSource.classList.contains("editable")) {
@@ -402,12 +402,12 @@ dashboard.registerModule({
 			}
 			removeDragClasses(this);
 			if (!editMode) {
-				_this.saveTodos(module);
+				_this.saveTodos(inst);
 			}
 		});
 	},
 
-	refreshList: function(module, todoList, parent, editing){
+	refreshList: function(inst, todoList, parent, editing){
 		for(let i=0; i<todoList.length; i++) {
 			let entry = document.createElement("div");
 			entry.classList.add("listEntry");
@@ -429,12 +429,12 @@ dashboard.registerModule({
 			if (!editing) {
 				checkbox.addEventListener("change", function(){
 					//rehide all the completed tasks
-					_this.hideFinishedTodos(module);
+					_this.hideFinishedTodos(inst);
 
 					_this.updateCompleted(checkbox);
 
 					//save
-					_this.saveTodos(module);
+					_this.saveTodos(inst);
 				});
 			}
 
@@ -455,12 +455,12 @@ dashboard.registerModule({
 					//allow navigation with ctrl+up/down
 					if (e.ctrlKey){
 						if (e.code === "ArrowDown") {
-							let titles = module.qAll(".listEntry.editable>.title");
+							let titles = inst.qAll(".listEntry.editable>.title");
 							let next = Array.from(titles).indexOf(document.activeElement) + 1;
 							next = clamp(next, 0, titles.length-1);
 							titles[next].focus();
 						} else if (e.code === "ArrowUp") {
-							let titles = module.qAll(".listEntry.editable>.title");
+							let titles = inst.qAll(".listEntry.editable>.title");
 							let next = Array.from(titles).indexOf(document.activeElement) - 1;
 							next = clamp(next, 0, titles.length-1);
 							titles[next].focus();
@@ -476,7 +476,7 @@ dashboard.registerModule({
 
 				//don't make root node draggable
 				if (!parent.classList.contains("listEntryContainer")) {
-					this.makeDraggable(module, entry);
+					this.makeDraggable(inst, entry);
 				}
 			}
 
@@ -489,7 +489,7 @@ dashboard.registerModule({
 				let _this = this;
 				addButton.addEventListener("click", function(){
 					let defTodo = [{"name":getSetting(_this.name, "defaultName"), "checked":false}];
-					_this.refreshList(module, defTodo, this.parentNode, editing);
+					_this.refreshList(inst, defTodo, this.parentNode, editing);
 				});
 				entry.appendChild(addButton);
 
@@ -503,7 +503,7 @@ dashboard.registerModule({
 					if (parent.classList.contains("listEntry")) {
 						this.parentNode.remove();
 					} else {
-						_this.deleteEditing(module);
+						_this.deleteEditing(inst);
 					}
 				});
 
@@ -512,7 +512,7 @@ dashboard.registerModule({
 
 			//iterate the children
 			if (todoList[i].children) {
-				this.refreshList(module, todoList[i].children, entry, editing);
+				this.refreshList(inst, todoList[i].children, entry, editing);
 			}
 
 			parent.appendChild(entry);
@@ -533,10 +533,10 @@ dashboard.registerModule({
 		}
 	},
 
-	newTodo: function(module, append, JSONTasks, date, completionDate, description){
+	newTodo: function(inst, append, JSONTasks, date, completionDate, description){
 		let _this = this;
 
-		let fragment = module.q(".todo_tmplt").content.cloneNode(true);
+		let fragment = inst.q(".todo_tmplt").content.cloneNode(true);
 		let element = fragment.children[0];
 
 		//set the default date
@@ -571,53 +571,53 @@ dashboard.registerModule({
 		} else {
 			tasks = [{"name":getSetting(_this.name, "defaultName"), "checked":false}];
 		}
-		this.refreshList(module, tasks, element.querySelector(".listEntryContainer"), false);
+		this.refreshList(inst, tasks, element.querySelector(".listEntryContainer"), false);
 
 		//setup settings trigger
 		element.addEventListener("click", function(e){
 			let classList = e.target.classList;
 			if (!classList.contains("checkbox"))
-				_this.editTodo(module, element);
+				_this.editTodo(inst, element);
 		});
 
-		this.makeDraggable(module, element);
+		this.makeDraggable(inst, element);
 
 		//put at the top or bottom of the list depending on append
-		let firstTodo = module.qAll(".todo_entry")[0];
+		let firstTodo = inst.qAll(".todo_entry")[0];
 		if (append || !firstTodo) {
-			module.q(".list").insertBefore(fragment, module.q(".bottomAnchor"));
+			inst.q(".list").insertBefore(fragment, inst.q(".bottomAnchor"));
 		} else {
-			module.q(".list").insertBefore(fragment, firstTodo);
+			inst.q(".list").insertBefore(fragment, firstTodo);
 		}
 	},
 
-	editTodo: function(module, todo){
+	editTodo: function(inst, todo){
 		//remember what is being edited
-		module.q(".settings").editing = todo;
+		inst.q(".settings").editing = todo;
 
 		//copy nested todo to settings
 		let json = this.todoEntryToJSON(todo.querySelector(".listEntry"), false);
-		let todoEditingElement = module.q(".settings").querySelector(".listEntryContainer");
+		let todoEditingElement = inst.q(".settings").querySelector(".listEntryContainer");
 		todoEditingElement.innerHTML = "";
-		this.refreshList(module, json, todoEditingElement, true);
+		this.refreshList(inst, json, todoEditingElement, true);
 
-		module.q(".dueSetting").value = todo.querySelector(".dueDate").innerHTML;
-		module.q(".descriptionSetting").value = todo.querySelector(".description").innerHTML;
+		inst.q(".dueSetting").value = todo.querySelector(".dueDate").innerHTML;
+		inst.q(".descriptionSetting").value = todo.querySelector(".description").innerHTML;
 
 
 		//close popup
-		this.setSettingsHidden(module, false);
+		this.setSettingsHidden(inst, false);
 	},
 
-	deleteEditing: function(module){
+	deleteEditing: function(inst){
 		let shouldContinue = db_confirm("Are you sure that you would like to delete this todo?");
 
 		if (!shouldContinue)
 			return;
 
-		module.q(".settings").editing.remove();
-		this.setSettingsHidden(module, true);
-		this.saveTodos(module);
+		inst.q(".settings").editing.remove();
+		this.setSettingsHidden(inst, true);
+		this.saveTodos(inst);
 	},
 
 	instantiate: function(where){

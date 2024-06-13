@@ -3,25 +3,25 @@ dashboard.tests.registerTester(
 	"todo",
 	[
 		//test adding todo
-		{name: "add", test: function(module){
-			let count = module.qAll(".todo_entry").length;
-			dashboard.tests.click(module.q(".insertButton"));
-			let newCount = module.qAll(".todo_entry").length;
+		{name: "add", test: function(inst){
+			let count = inst.qAll(".todo_entry").length;
+			dashboard.tests.click(inst.q(".insertButton"));
+			let newCount = inst.qAll(".todo_entry").length;
 			return (count+1 == newCount);
 		}},
 
 		//test editing todo (moving values from dialog -> DOM)
-		{name: "editSaving", test: function(module){
-			dashboard.tests.click(module.qAll(".listEntry")[0]);
+		{name: "editSaving", test: function(inst){
+			dashboard.tests.click(inst.qAll(".listEntry")[0]);
 			//use a random number [1000-9999] so the test can be accurately run multiple times
 			//	regardless of save data
 			let value = Math.floor(Math.random() * 9000 + 1000);
-			module.q(".dueSetting").value = value+"-01-01";
-			module.qAll(".title")[0].value = value+1;
-			module.q(".descriptionSetting").value = value+2;
-			dashboard.tests.click(module.q(".saveSetting"));
+			inst.q(".dueSetting").value = value+"-01-01";
+			inst.qAll(".title")[0].value = value+1;
+			inst.q(".descriptionSetting").value = value+2;
+			dashboard.tests.click(inst.q(".saveSetting"));
 
-			let todo = module.qAll(".todo_entry")[0];
+			let todo = inst.qAll(".todo_entry")[0];
 			if (todo.querySelector(".title").innerHTML !== ""+(value + 1))
 				return false;
 			if (todo.querySelector(".description").innerHTML !== ""+(value + 2))
@@ -32,29 +32,29 @@ dashboard.tests.registerTester(
 		}},
 
 		//test opening a todo for editing (moving values from DOM -> dialog)
-		{name: "editLoading", test: function(module){
+		{name: "editLoading", test: function(inst){
 			//reset selection values since
-			module.q(".dueSetting").value = "";
-			module.qAll(".title")[0].value = "";
-			module.q(".descriptionSetting").value = "";
+			inst.q(".dueSetting").value = "";
+			inst.qAll(".title")[0].value = "";
+			inst.q(".descriptionSetting").value = "";
 
-			dashboard.tests.click(module.qAll(".listEntry")[1]);
+			dashboard.tests.click(inst.qAll(".listEntry")[1]);
 
-			let todo = module.qAll(".todo_entry")[0];
+			let todo = inst.qAll(".todo_entry")[0];
 			let pass = true;
-			if (module.q(".dueSetting").value !== todo.querySelector(".dueDate").innerHTML)
+			if (inst.q(".dueSetting").value !== todo.querySelector(".dueDate").innerHTML)
 				pass = false;
-			if (module.qAll(".title")[0].value !== todo.querySelector(".title").innerHTML)
+			if (inst.qAll(".title")[0].value !== todo.querySelector(".title").innerHTML)
 				pass = false;
-			if (module.q(".descriptionSetting").value !== todo.querySelector(".description").innerHTML)
+			if (inst.q(".descriptionSetting").value !== todo.querySelector(".description").innerHTML)
 				pass = false;
-			dashboard.tests.click(module.q(".backgroundFade"));
+			dashboard.tests.click(inst.q(".backgroundFade"));
 			return pass;
 		}},
 
 		//test completing a todo
-		{name: "complete", test: function(module){
-			let todo = module.qAll(".todo_entry")[0];
+		{name: "complete", test: function(inst){
+			let todo = inst.qAll(".todo_entry")[0];
 
 			dashboard.tests.click(todo.querySelector(".checkbox"));
 
@@ -62,13 +62,13 @@ dashboard.tests.registerTester(
 		}},
 
 		//test removing todo
-		{name: "remove", test: function(module){
-			let count = module.qAll(".todo_entry").length;
+		{name: "remove", test: function(inst){
+			let count = inst.qAll(".todo_entry").length;
 
-			dashboard.tests.click(module.qAll(".listEntry")[1]);
-			dashboard.tests.click(module.q(".deleteSetting"));
+			dashboard.tests.click(inst.qAll(".listEntry")[1]);
+			dashboard.tests.click(inst.q(".deleteSetting"));
 
-			let newCount = module.qAll(".todo_entry").length;
+			let newCount = inst.qAll(".todo_entry").length;
 			return (count-1 == newCount);
 		}},
 	]

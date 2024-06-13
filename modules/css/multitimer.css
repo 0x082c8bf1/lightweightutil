@@ -1,4 +1,4 @@
-.multitimer.module {
+.multitimer .instance {
 	--timer_gap: 40px;
 }
 

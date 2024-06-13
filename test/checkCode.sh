@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
 testRegex(){
+	argOpts=""
 	if [ -n "$4" ]; then
 		argOpts=$4
 	fi

@@ -1,9 +1,4 @@
 'use strict';
-//returns the module of the passed element, or null if it is not in a module
-function getModule(element){
-	return element.closest(".module");
-}
-
 //this is used for intentional logging, as opposed to debug printing.
 function log(m){
 	console.log(m);
@@ -16,7 +11,6 @@ function error(e){
 function getSetting(module, setting){
 	//check input validity
 	if (typeof module !== "string"){
-		debugger;
 		error("getSetting module must be a string.");
 		return;
 	}
@@ -73,9 +67,9 @@ function getSettingFromStorage(module, setting) {
 	if (settings != null) {
 		settings = JSON.parse(settings);
 
-		let retrievedModule = settings[module];
-		if (retrievedModule != null)
-			retrievedValue = retrievedModule[setting];
+		let moduleSettings = settings[module];
+		if (moduleSettings != null)
+			retrievedValue = moduleSettings[setting];
 	}
 
 	return retrievedValue;
@@ -92,8 +86,9 @@ function db_alert(a){
 }
 
 function db_confirm(a) {
-	if (!dashboard.tests.enabled)
+	if (!dashboard.tests.enabled) {
 		return confirm(a);
-	else
+	} else {
 		return true;
+	}
 }

@@ -6,11 +6,11 @@ dashboard.registerModule({
 
 	//updates the character and word counts of the text area
 	//words are considered any string of non-whitespace separated by whitespace on either side
-	updateCharacterCounts: function(module){
-		let input = module.q(".textarea").value;
+	updateCharacterCounts: function(inst){
+		let input = inst.q(".textarea").value;
 
 		//character count
-		module.q(".characterCount").innerHTML = input.length;
+		inst.q(".characterCount").innerHTML = input.length;
 
 		//word count
 		let truncatedInput = input.trim();
@@ -20,15 +20,15 @@ dashboard.registerModule({
 		if(truncatedInput!="")
 			wordCount = words.length;
 
-		module.q(".wordCount").innerHTML = wordCount;
+		inst.q(".wordCount").innerHTML = wordCount;
 
 		let lines = input.split("\n").length;
-		module.q(".lineCount").innerHTML = lines;
+		inst.q(".lineCount").innerHTML = lines;
 	},
 
 	//sorts all of the lines in the textbox alphabetically (does not ignore case)
-	alphabetizeLines: function(module){
-		let input = module.q(".textarea");
+	alphabetizeLines: function(inst){
+		let input = inst.q(".textarea");
 		let lines = input.value.split("\n");
 		lines.sort();
 
@@ -43,19 +43,19 @@ dashboard.registerModule({
 		input.value = output;
 	},
 
-	toUpper: function(module){
-		let input = module.q(".textarea");
+	toUpper: function(inst){
+		let input = inst.q(".textarea");
 		input.value = input.value.toUpperCase();
 	},
 
-	toLower: function(module){
-		let input = module.q(".textarea");
+	toLower: function(inst){
+		let input = inst.q(".textarea");
 		input.value = input.value.toLowerCase();
 	},
 
-	toRandom: function(module){
+	toRandom: function(inst){
 		let output = "";
-		let input = module.q(".textarea");
+		let input = inst.q(".textarea");
 		let text = input.value;
 		for(let i=0; i<text.length; i++){
 			let number = Math.floor(Math.random() * 2);
@@ -64,9 +64,9 @@ dashboard.registerModule({
 		input.value = output;
 	},
 
-	toInvert: function(module){
+	toInvert: function(inst){
 		let output = "";
-		let input = module.q(".textarea");
+		let input = inst.q(".textarea");
 		let text = input.value;
 		for(let i=0; i<text.length; i++){
 			output += ((text[i] >= 'A' && text[i] <= 'Z') ? text[i].toLowerCase() : text[i].toUpperCase());
@@ -74,8 +74,8 @@ dashboard.registerModule({
 		input.value = output;
 	},
 
-	removeDuplicateLines: function(module){
-		let textbox = module.q(".textarea");
+	removeDuplicateLines: function(inst){
+		let textbox = inst.q(".textarea");
 		let lines = textbox.value.split("\n");
 		let outputArr = [];
 
@@ -95,18 +95,18 @@ dashboard.registerModule({
 			}
 		}
 		textbox.value = output;
-		this.updateCharacterCounts(module);
+		this.updateCharacterCounts(inst);
 	},
 
-	replace: function(module){
+	replace: function(inst){
 		let inputPattern, outputPattern;
-		let input = module.q(".textarea");
+		let input = inst.q(".textarea");
 
 		//regex matching
-		if (module.q(".regexSearch").checked) {
-			inputPattern = new RegExp(module.q(".replaceInputPattern").value, 'g');
+		if (inst.q(".regexSearch").checked) {
+			inputPattern = new RegExp(inst.q(".replaceInputPattern").value, 'g');
 			try {
-				let data ="[\"" + module.q(".replaceOutputPattern").value + "\"]";
+				let data ="[\"" + inst.q(".replaceOutputPattern").value + "\"]";
 				outputPattern = JSON.parse(data)[0];
 			} catch (e) {
 				return;
@@ -114,40 +114,40 @@ dashboard.registerModule({
 			input.value = input.value.replace(inputPattern, outputPattern);
 		} else {
 			//plaintext matching
-			inputPattern = module.q(".replaceInputPattern").value;
-			outputPattern = module.q(".replaceOutputPattern").value;
+			inputPattern = inst.q(".replaceInputPattern").value;
+			outputPattern = inst.q(".replaceOutputPattern").value;
 			input.value = input.value.replaceAll(inputPattern, outputPattern);
 		}
 	},
 
-	handleFind: function(module, e){
+	handleFind: function(inst, e){
 		if(e.key == 'f' && e.ctrlKey) {
 			e.preventDefault();
 
-			let fs = module.q(".findSpan");
+			let fs = inst.q(".findSpan");
 			let searching = document.activeElement.closest(".findSpan");
 
 			if (fs.hidden || searching)
 				fs.hidden = !fs.hidden;
 
 			if (!fs.hidden) {
-				module.q(".replaceInputPattern").focus();
+				inst.q(".replaceInputPattern").focus();
 			} else {
-				module.q(".textarea").focus();
+				inst.q(".textarea").focus();
 			}
 		}
 	},
 
-	init: function(module){
+	init: function(inst){
 		let _this = this;
-		module.q(".tb_sort").addEventListener("click",function(){
-			_this.alphabetizeLines(module);
+		inst.q(".tb_sort").addEventListener("click",function(){
+			_this.alphabetizeLines(inst);
 		});
-		let uc_button = module.q(".tb_toupper");
-		let lc_button = module.q(".tb_tolower");
-		let rc_button = module.q(".tb_torand");
-		let ic_button = module.q(".tb_toinvert");
-		let rd_button = module.q(".tb_removeDupes");
+		let uc_button = inst.q(".tb_toupper");
+		let lc_button = inst.q(".tb_tolower");
+		let rc_button = inst.q(".tb_torand");
+		let ic_button = inst.q(".tb_toinvert");
+		let rd_button = inst.q(".tb_removeDupes");
 
 		//apply hide settings
 		if (!getSetting(_this.name, "showUpperButton")){
@@ -168,39 +168,39 @@ dashboard.registerModule({
 
 		//add event listeners
 		uc_button.addEventListener("click",function(){
-			_this.toUpper(module);
+			_this.toUpper(inst);
 		});
 		lc_button.addEventListener("click",function(){
-			_this.toLower(module);
+			_this.toLower(inst);
 		});
 		rc_button.addEventListener("click",function(){
-			_this.toRandom(module);
+			_this.toRandom(inst);
 		});
 		ic_button.addEventListener("click",function(){
-			_this.toInvert(module);
+			_this.toInvert(inst);
 		});
 		rd_button.addEventListener("click",function(){
-			_this.removeDuplicateLines(module);
+			_this.removeDuplicateLines(inst);
 		});
-		module.q(".tb_repace").addEventListener("click",function(){
-			_this.replace(module);
+		inst.q(".tb_repace").addEventListener("click",function(){
+			_this.replace(inst);
 		});
-		module.q(".textarea").addEventListener("keyup",function(){
-			_this.updateCharacterCounts(module);
+		inst.q(".textarea").addEventListener("keyup",function(){
+			_this.updateCharacterCounts(inst);
 		});
 
-		module.getBaseModule().addEventListener("keydown",function(e){
-			_this.handleFind(module, e);
+		inst.getInstanceRoot().addEventListener("keydown",function(e){
+			_this.handleFind(inst, e);
 		});
-		module.q(".tb_replace").addEventListener("click",function(){
-			let fs = module.q(".findSpan");
+		inst.q(".tb_replace").addEventListener("click",function(){
+			let fs = inst.q(".findSpan");
 			fs.hidden = !fs.hidden;
 		});
 
 		//apply labels
-		let regexId = "regexSearch" + module.getId();
-		module.q(".regexSearch").id = regexId;
-		module.q(".regexLabel").setAttribute("for", regexId);
+		let regexId = "regexSearch" + inst.getId();
+		inst.q(".regexSearch").id = regexId;
+		inst.q(".regexLabel").setAttribute("for", regexId);
 	},
 
 	instantiate: function(where){

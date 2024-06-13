@@ -4,7 +4,7 @@ dashboard.tests.registerTester(
 	"dashboard",
 	[
 		//view settings
-		{name: "settings", test: function(module){
+		{name: "settings", test: function(){
 			dashboard.tests.click(document.querySelector("#settingsToggle"));
 			if (document.querySelector("#settingsPane").hidden)
 				return false;
@@ -16,7 +16,7 @@ dashboard.tests.registerTester(
 		}},
 
 		//change a setting
-		{name: "changeSetting", test: function(module){
+		{name: "changeSetting", test: function(){
 			dashboard.tests.click(document.querySelector("#settingsToggle"));
 
 			//set setting to oppisite of what it currently is
@@ -33,7 +33,7 @@ dashboard.tests.registerTester(
 		}},
 
 		//view documentation
-		{name: "documentation", test: function(module){
+		{name: "documentation", test: function(){
 			dashboard.tests.click(document.querySelector("#documentationToggle"));
 			if (document.querySelector("#documentationPane").hidden)
 				return false;
@@ -42,6 +42,5 @@ dashboard.tests.registerTester(
 				return false;
 			return true;
 		}},
-
 	]
 );

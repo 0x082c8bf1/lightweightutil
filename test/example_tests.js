@@ -2,29 +2,28 @@
 dashboard.tests.registerTester(
 	"example",
 	[
-
 		//generic test
-		{name: "test", test: function(module){
+		{name: "test", test: function(){
 			return (1 == 1);
 		}},
 
 		//test a function
-		{name: "functions", test: function(module, instance){
-			return (instance.return4() == 4);
+		{name: "functions", test: function(inst, module){
+			return (module.return4() == 4);
 		}},
 
 		//test interaction
-		{name: "interaction", test: function(module){
-			dashboard.tests.click(module.q(".click"));
-			dashboard.tests.click(module.q(".click"));
-			return module.q(".click").value === "2";
+		{name: "interaction", test: function(inst){
+			dashboard.tests.click(inst.q(".click"));
+			dashboard.tests.click(inst.q(".click"));
+			return inst.q(".click").value === "2";
 		}},
 
 		//test force settings
-		{name: "setting", test: function(module, instance){
+		{name: "setting", test: function(inst, module){
 			//anything after this (including future tests) will have exampleNumber = 2
-			dashboard.tests.forceSetting(instance.name, "exampleNumber", 2);
-			return getSetting(instance.name, "exampleNumber") == 2;
+			dashboard.tests.forceSetting(module.name, "exampleNumber", 2);
+			return getSetting(module.name, "exampleNumber") == 2;
 		}},
 	]
 );

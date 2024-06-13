@@ -26,19 +26,18 @@ dashboard.registerModule({
 	},
 
 	//updates all of the progress bar widths
-	processAllBars: function(module){
-		let entries = module.qAll(".entry");
+	processAllBars: function(inst){
+		let entries = inst.qAll(".entry");
 		for(let i=0; i<entries.length; i++){
 			this.updateBar(entries[i]);
 		}
 	},
 
-	addBar: function(obj){
+	addBar: function(inst){
 		let _this = this;
-		let mod = getModule(obj);
 
 		//create from template
-		let element = mod.querySelector(".tmplt").content.cloneNode(true);
+		let element = inst.q(".tmplt").content.cloneNode(true);
 		let created = element.querySelector(".entry");
 
 		element.querySelector(".label").value = getSetting(this.name, "defaultName");
@@ -60,19 +59,19 @@ dashboard.registerModule({
 				let input = bar.querySelector(".completedNumber");
 				input.value = +input.value + 1;
 				_this.updateBar(bar);
-				_this.saveBars(this);
+				_this.saveBars(inst);
 			} else if(e.key === "ArrowDown") {
 				e.preventDefault();
 				let bar = this.closest(".entry");
 				let input = bar.querySelector(".completedNumber");
 				input.value = +input.value - 1;
 				_this.updateBar(bar);
-				_this.saveBars(this);
+				_this.saveBars(inst);
 			}
 		});
 
 		//add element to dom
-		mod.querySelector(".bars").insertBefore(element, mod.querySelector(".insertButton"));
+		inst.q(".bars").insertBefore(element, inst.q(".insertButton"));
 
 		return created;
 	},
@@ -93,12 +92,10 @@ dashboard.registerModule({
 			bar.parentNode.removeChild(bar);
 	},
 
-	saveBars: function(obj){
-		let mod = getModule(obj);
-
+	saveBars: function(inst){
 		let saveObj = [];
 
-		let entries = mod.querySelectorAll(".entry");
+		let entries = inst.qAll(".entry");
 		for(let i=0; i<entries.length; i++){
 			let curBar = {};
 
@@ -112,46 +109,45 @@ dashboard.registerModule({
 		localStorage.setItem("pb_bars", JSON.stringify(saveObj));
 	},
 
-	loadBars: function(module, obj){
+	loadBars: function(inst){
 		let loadedObj = JSON.parse(localStorage.getItem("pb_bars"));
 
 		if (loadedObj == null)
 			return;
 
 		for(let i=0; i<loadedObj.length; i++){
-			let newBar = this.addBar(obj);
+			let newBar = this.addBar(inst);
 
 			newBar.querySelector(".completedNumber").value = loadedObj[i].done;
 			newBar.querySelector(".totalNumber").value = loadedObj[i].total;
 			newBar.querySelector(".label").value = loadedObj[i].name;
 		}
 
-		this.processAllBars(module);
+		this.processAllBars(inst);
 	},
 
 	//init the progress bars
-	init: function(module){
+	init: function(inst){
 		let _this = this;
 
+		let barContainer = inst.q(".bars");
 
-		let barContainer = module.q(".bars");
-
-		//create module event listeners
+		//create event listeners
 		barContainer.addEventListener("click", function(){
-			_this.saveBars(this);
+			_this.saveBars(inst);
 		});
 
 		barContainer.addEventListener("change", function(){
-			_this.saveBars(this);
+			_this.saveBars(inst);
 		});
 
-		module.q(".insertButton").addEventListener("click",function(){
-			let newBar = _this.addBar(this);
+		inst.q(".insertButton").addEventListener("click",function(){
+			let newBar = _this.addBar(inst);
 			_this.updateBar(newBar);
 		});
 
 		//load from localStorage
-		this.loadBars(module, module.q(".bars"));
+		this.loadBars(inst);
 	},
 
 	instantiate: function(where){

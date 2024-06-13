@@ -49,29 +49,29 @@ dashboard.registerModule({
 		return output;
 	},
 
-	setTimerStatus: function(module, timer, status) {
+	setTimerStatus: function(inst, timer, status) {
 		switch(status) {
-			case module.status.INACTIVE:
+			case inst.status.INACTIVE:
 				timer.querySelector(".time-display").hidden = true;
 				timer.querySelector(".time-input").hidden = false;
 				timer.querySelector(".start-button").value = "Start";
 				timer.querySelector(".time-display").style.color = "white";
 				break;
-			case module.status.ACTIVE:
+			case inst.status.ACTIVE:
 				timer.querySelector(".time-display").hidden = false;
 				timer.querySelector(".time-input").hidden = true;
 				timer.querySelector(".start-button").value = "Pause";
 				timer.querySelector(".time-display").style.color = "white";
-				this.checkStartTimerTickInterval(module);
+				this.checkStartTimerTickInterval(inst);
 				break;
-			case module.status.PAUSED:
+			case inst.status.PAUSED:
 				timer.querySelector(".time-display").hidden = false;
 				timer.querySelector(".time-input").hidden = true;
 				timer.querySelector(".start-button").value = "Resume";
 				timer.querySelector(".time-display").style.color = "grey";
-				this.checkStartTimerTickInterval(module);
+				this.checkStartTimerTickInterval(inst);
 				break;
-			case module.status.RINGING:
+			case inst.status.RINGING:
 				timer.querySelector(".time-display").hidden = false;
 				timer.querySelector(".time-input").hidden = true;
 				timer.querySelector(".start-button").value = "Reset";
@@ -81,13 +81,13 @@ dashboard.registerModule({
 		timer.status = status;
 	},
 
-	tick: function(module, timer) {
-		if (timer.status == module.status.INACTIVE)
+	tick: function(inst, timer) {
+		if (timer.status == inst.status.INACTIVE)
 			return;
 
 		//update time display
 		let difference = 0;
-		if (timer.status == module.status.ACTIVE || timer.status == module.status.RINGING) {
+		if (timer.status == inst.status.ACTIVE || timer.status == inst.status.RINGING) {
 			difference = new Date()-timer.startDate;
 		}
 		let timeRemaining = timer.duration-(difference+timer.msOffset);
@@ -96,7 +96,7 @@ dashboard.registerModule({
 			timer.querySelector(".time-display").innerHTML = displayTime;
 		}
 
-		if (timer.status != module.status.ACTIVE)
+		if (timer.status != inst.status.ACTIVE)
 			return;
 
 		//start ringing
@@ -106,38 +106,38 @@ dashboard.registerModule({
 				timer.notifSent = true;
 			}
 
-			if (module.numberOfRingingTimers == 0) {
-				if (module.usingAudio) {
-					module.loadedAudio.currentTime = 0;
-					let p = module.loadedAudio.play();
+			if (inst.numberOfRingingTimers == 0) {
+				if (inst.usingAudio) {
+					inst.loadedAudio.currentTime = 0;
+					let p = inst.loadedAudio.play();
 					p.catch(function(){
 						db_alert("Multitimer audio failed to play. This is likely because autoplay is disabled in your browser, please enable it or set the volume to 0 to disable audio.");
 					});
 				}
 			}
-			module.numberOfRingingTimers++;
+			inst.numberOfRingingTimers++;
 			timer.querySelector(".time-display").style.color = "red";
-			this.setTimerStatus(module, timer, module.status.RINGING);
+			this.setTimerStatus(inst, timer, inst.status.RINGING);
 		} else {
 			timer.notifSent = false;
 		}
 	},
 
-	resetTimer: function(module, timer){
-		if (timer.status == module.status.RINGING) {
-			module.numberOfRingingTimers--;
-			if (module.numberOfRingingTimers < 0) {
-				error("Invalid number of ringing timers: " + module.numberOfRingingTimers);
+	resetTimer: function(inst, timer){
+		if (timer.status == inst.status.RINGING) {
+			inst.numberOfRingingTimers--;
+			if (inst.numberOfRingingTimers < 0) {
+				error("Invalid number of ringing timers: " + inst.numberOfRingingTimers);
 			}
-			if (module.numberOfRingingTimers == 0) {
-				if (module.usingAudio) {
-					module.loadedAudio.currentTime = 0;
-					module.loadedAudio.pause();
+			if (inst.numberOfRingingTimers == 0) {
+				if (inst.usingAudio) {
+					inst.loadedAudio.currentTime = 0;
+					inst.loadedAudio.pause();
 				}
 			}
 		}
 
-		this.setTimerStatus(module, timer, module.status.INACTIVE);
+		this.setTimerStatus(inst, timer, inst.status.INACTIVE);
 
 		//reset msOffset so resetting a timer that has been paused doesn't resume when started again.
 		timer.msOffset = 0;
@@ -180,89 +180,89 @@ dashboard.registerModule({
 
 	},
 
-	startButtonEvent: function(module, timer) {
+	startButtonEvent: function(inst, timer) {
 		switch(timer.status) {
-			case module.status.INACTIVE:
+			case inst.status.INACTIVE:
 				{
 					//handle hour input
 					timer.duration = this.valuesToDuration(timer.querySelector(".h-input").value,
 						timer.querySelector(".m-input").value, timer.querySelector(".s-input").value);
 					timer.startDate = new Date();
-					this.setTimerStatus(module, timer, module.status.ACTIVE);
-					this.tick(module, timer);
+					this.setTimerStatus(inst, timer, inst.status.ACTIVE);
+					this.tick(inst, timer);
 					break;
 				}
-			case module.status.ACTIVE:
+			case inst.status.ACTIVE:
 				timer.msOffset += new Date()-timer.startDate;
 				timer.startDate = null;
-				this.setTimerStatus(module, timer, module.status.PAUSED);
+				this.setTimerStatus(inst, timer, inst.status.PAUSED);
 				break;
-			case module.status.PAUSED:
+			case inst.status.PAUSED:
 				timer.startDate = new Date();
-				this.setTimerStatus(module, timer, module.status.ACTIVE);
+				this.setTimerStatus(inst, timer, inst.status.ACTIVE);
 				break;
-			case module.status.RINGING:
-				this.resetTimer(module, timer);
+			case inst.status.RINGING:
+				this.resetTimer(inst, timer);
 				break;
 		}
-		this.saveAllTimers(module);
+		this.saveAllTimers(inst);
 	},
 
 	//start the timerTickInterval if it isn't already
-	checkStartTimerTickInterval: function(module) {
+	checkStartTimerTickInterval: function(inst) {
 		let _this = this;
 
-		if (module.timerTickInterval == null) {
-			module.timerTickInterval = setInterval(function(){
-				let timers = module.qAll(".timer");
+		if (inst.timerTickInterval == null) {
+			inst.timerTickInterval = setInterval(function(){
+				let timers = inst.qAll(".timer");
 				for(let i=0; i<timers.length; i++) {
-					_this.tick(module, timers[i]);
+					_this.tick(inst, timers[i]);
 				}
 			}, 100);
 		}
 	},
 
 	//setup a new timer element
-	initTimer: function(module, timer) {
+	initTimer: function(inst, timer) {
 		let _this = this;
 
 		timer.querySelector(".start-button").addEventListener("click", function(){
-			_this.startButtonEvent(module, timer);
+			_this.startButtonEvent(inst, timer);
 		});
 
 		timer.querySelector(".x-button").addEventListener("click", function(){
-			if (timer.status == module.status.INACTIVE) {
+			if (timer.status == inst.status.INACTIVE) {
 				timer.remove();
 			} else {
-				_this.resetTimer(module, timer);
+				_this.resetTimer(inst, timer);
 			}
-			_this.saveAllTimers(module);
+			_this.saveAllTimers(inst);
 		});
 
 		timer.querySelector(".time-input").addEventListener("keydown", function(e){
 			if(e.code === "Enter" || e.code === "NumpadEnter"){
-				_this.startButtonEvent(module, timer);
+				_this.startButtonEvent(inst, timer);
 			}
 		});
 		timer.querySelector(".name").addEventListener("keydown", function(e){
 			if(e.code === "Enter" || e.code === "NumpadEnter"){
-				_this.startButtonEvent(module, timer);
+				_this.startButtonEvent(inst, timer);
 			}
 		});
 
-		this.checkStartTimerTickInterval(module);
+		this.checkStartTimerTickInterval(inst);
 	},
 
 	//create a timer with specified arguments, and return the timer.
-	createTimer: function(module, msTime, name, status, startDate, msOffset){
+	createTimer: function(inst, msTime, name, status, startDate, msOffset){
 		//clone from template
-		let timerFrag = module.q(".timer_tmplt").content.cloneNode(true);
+		let timerFrag = inst.q(".timer_tmplt").content.cloneNode(true);
 		let timer = document.createElement("div");
 
 		//avoid document fragment shenanigans
 		timer.appendChild(timerFrag);
 		timer = timer.children[0];
-		module.q(".timers").insertBefore(timer, module.q(".trailingGroup"));
+		inst.q(".timers").insertBefore(timer, inst.q(".trailingGroup"));
 
 		timer.querySelector(".name").value = name;
 
@@ -276,52 +276,52 @@ dashboard.registerModule({
 
 		//set timer status
 		switch(status) {
-			case module.status.INACTIVE:
+			case inst.status.INACTIVE:
 				timer.msOffset = 0;
 				timer.duration = 0;
 				timer.startDate = null;
-				this.setTimerStatus(module, timer, status);
+				this.setTimerStatus(inst, timer, status);
 				break;
-			case module.status.ACTIVE:
+			case inst.status.ACTIVE:
 				timer.msOffset = msOffset ? msOffset : 0;
 				timer.duration = msTime;
 				timer.startDate = startDate ? new Date(startDate) : new Date();
-				this.setTimerStatus(module, timer, status);
-				this.tick(module, timer); //tick to avoid flash of incorrect numbers
+				this.setTimerStatus(inst, timer, status);
+				this.tick(inst, timer); //tick to avoid flash of incorrect numbers
 				break;
-			case module.status.PAUSED:
+			case inst.status.PAUSED:
 				timer.msOffset = msOffset ? msOffset : 0;
 				timer.duration = msTime;
 				timer.startDate = null;
 				timer.querySelector(".time-display").innerHTML = this.getDurationAsString(msTime);
-				this.setTimerStatus(module, timer, status);
+				this.setTimerStatus(inst, timer, status);
 				break;
 			//if creating a ringing timer, msTime is how long it has been ringing.
-			case module.status.RINGING:
+			case inst.status.RINGING:
 				timer.msOffset = msOffset ? msOffset : 0;
 				timer.duration = 0;
 				timer.startDate = new Date()-msTime;
 				//set to active then tick to make it ring.
-				this.setTimerStatus(module, timer, module.status.ACTIVE);
-				this.tick(module, timer);
+				this.setTimerStatus(inst, timer, inst.status.ACTIVE);
+				this.tick(inst, timer);
 				break;
 		}
-		this.initTimer(module, timer);
+		this.initTimer(inst, timer);
 
 		return timer;
 	},
 
 	//adds a new timer
-	addTimer: function(module){
+	addTimer: function(inst){
 		let defaultMs = getSetting(this.name, "defaultTime")*1000;
 		let name = getSetting(this.name, "defaultName");
-		this.createTimer(module, defaultMs, name, module.status.INACTIVE);
+		this.createTimer(inst, defaultMs, name, inst.status.INACTIVE);
 	},
 
 	//save all of the timers to localStorage
-	saveAllTimers: function(module){
+	saveAllTimers: function(inst){
 		let obj = [];
-		let timers = module.qAll(".timer");
+		let timers = inst.qAll(".timer");
 		for(let i=0; i<timers.length; i++) {
 			let oneTimer = {};
 			//save internal values
@@ -343,7 +343,7 @@ dashboard.registerModule({
 	},
 
 	//load all of the timers from localStorage
-	loadAllTimers: function(module){
+	loadAllTimers: function(inst){
 		//get saved timers
 		let obj = JSON.parse(localStorage.getItem("mt_timers"));
 
@@ -354,13 +354,13 @@ dashboard.registerModule({
 		for(let i=0; i<obj.length; i++) {
 			//load ringing timers as active, since they're basically the same thing
 			let tempStatus = obj[i].status;
-			if (tempStatus == module.status.RINGING) {
-				tempStatus = module.status.ACTIVE;
+			if (tempStatus == inst.status.RINGING) {
+				tempStatus = inst.status.ACTIVE;
 			}
 
-			let timer = this.createTimer(module, obj[i].duration, obj[i].name, tempStatus, obj[i].startDate, obj[i].msOffset);
-			if (obj[i].status == module.status.PAUSED) {
-				this.tick(module, timer);
+			let timer = this.createTimer(inst, obj[i].duration, obj[i].name, tempStatus, obj[i].startDate, obj[i].msOffset);
+			if (obj[i].status == inst.status.PAUSED) {
+				this.tick(inst, timer);
 			}
 			timer.querySelector(".h-input").value = obj[i].hh;
 			timer.querySelector(".m-input").value = obj[i].mm;
@@ -369,17 +369,17 @@ dashboard.registerModule({
 	},
 
 	//get the sort value given a status
-	statusToSortValue: function(module, status){
+	statusToSortValue: function(inst, status){
 		switch(status) {
-			case module.status.INACTIVE: return 2;
-			case module.status.ACTIVE: return 3;
-			case module.status.PAUSED: return 3;
-			case module.status.RINGING: return 1;
+			case inst.status.INACTIVE: return 2;
+			case inst.status.ACTIVE: return 3;
+			case inst.status.PAUSED: return 3;
+			case inst.status.RINGING: return 1;
 		}
 	},
 
-	init: function(module){
-		module.status = {
+	init: function(inst){
+		inst.status = {
 			INACTIVE: 1,
 			ACTIVE: 2,
 			PAUSED: 3,
@@ -390,26 +390,26 @@ dashboard.registerModule({
 		let volume = getSetting(this.name, "volume");
 		if (volume > 100) volume = 100;
 		if (volume < 0) volume = 0;
-		module.usingAudio = false;
+		inst.usingAudio = false;
 		if (volume > 0) {
-			module.loadedAudio = new Audio("pixbay-alarm-clock-short.mp3"); //the audio that is played when ringing
-			module.loadedAudio.loop = true;
-			module.loadedAudio.volume = volume/100;
-			module.usingAudio = true;
+			inst.loadedAudio = new Audio("pixbay-alarm-clock-short.mp3"); //the audio that is played when ringing
+			inst.loadedAudio.loop = true;
+			inst.loadedAudio.volume = volume/100;
+			inst.usingAudio = true;
 		}
 
-		module.timerTickInterval = null; //the interval set if any timers exist
-		module.numberOfRingingTimers = 0;
+		inst.timerTickInterval = null; //the interval set if any timers exist
+		inst.numberOfRingingTimers = 0;
 
 		//set timer gap css variable
-		let r = module.getBaseModule();
+		let r = inst.getInstanceRoot();
 		r.style.setProperty("--timer_gap", getSetting(this.name, "gap") + "px");
 
 
 		let _this = this;
-		module.q(".insertButton").addEventListener("click",function(){
-			_this.addTimer(module);
-			_this.saveAllTimers(module);
+		inst.q(".insertButton").addEventListener("click",function(){
+			_this.addTimer(inst);
+			_this.saveAllTimers(inst);
 		});
 
 		//show confirmation before reloading/closing the tab when there are active
@@ -418,9 +418,9 @@ dashboard.registerModule({
 				return;
 
 			//check for active timers
-			let timers = module.qAll(".timer");
+			let timers = inst.qAll(".timer");
 			for (let i=0; i<timers.length; i++) {
-				if (timers[i].status == module.status.ACTIVE || timers[i].status == module.status.RINGING) {
+				if (timers[i].status == inst.status.ACTIVE || timers[i].status == inst.status.RINGING) {
 					e.preventDefault();
 					return "There are currently timers running, are you sure you would like to exit?";
 				}
@@ -428,14 +428,14 @@ dashboard.registerModule({
 		}
 
 		//sort button
-		module.q(".sort").addEventListener("click", function(){
+		inst.q(".sort").addEventListener("click", function(){
 			//get timers
-			let timers = Array.from(module.qAll(".timer"));
+			let timers = Array.from(inst.qAll(".timer"));
 
 			//sort in order of ringing; lowest number first, inactive, active/paused; lowest number first
 			timers.sort(function(a,b){
-				let aSortVal = _this.statusToSortValue(module, a.status);
-				let bSortVal = _this.statusToSortValue(module, b.status);
+				let aSortVal = _this.statusToSortValue(inst, a.status);
+				let bSortVal = _this.statusToSortValue(inst, b.status);
 				if (aSortVal != bSortVal) return aSortVal - bSortVal;
 
 				let differenceA = new Date()-a.startDate;
@@ -446,22 +446,22 @@ dashboard.registerModule({
 			});
 
 			//insert sorted timers
-			let timerList = module.q(".timers");
-			let trailingGroup = module.q(".trailingGroup");
+			let timerList = inst.q(".timers");
+			let trailingGroup = inst.q(".trailingGroup");
 			for(let i=0; i<timers.length; i++) {
 				timerList.insertBefore(timers[i], trailingGroup);
 			}
 
-			_this.saveAllTimers(module);
+			_this.saveAllTimers(inst);
 		});
 
 		//save if any field on a timer changes
-		module.q(".timers").addEventListener("change", function(){
-			_this.saveAllTimers(module);
+		inst.q(".timers").addEventListener("change", function(){
+			_this.saveAllTimers(inst);
 		});
 
 		//notifications button
-		module.q(".notifButton").addEventListener("click", function(){
+		inst.q(".notifButton").addEventListener("click", function(){
 			Notification.requestPermission().then((permission) => {
 				if (permission != "granted") {
 					db_alert("Timer notifications will not displayed while notifications are not granted.");
@@ -474,19 +474,19 @@ dashboard.registerModule({
 		//check if notifications are enabled
 		if (getSetting(_this.name, "notifyOnRing") && "Notification" in window &&
 			Notification.permission != "granted"){
-			module.q(".notifButton").hidden = false;
+			inst.q(".notifButton").hidden = false;
 		}
 
-		this.loadAllTimers(module);
+		this.loadAllTimers(inst);
 	},
 
-	deconstructInstance: function(module){
-		if (module.usingAudio) {
-			module.loadedAudio.pause();
-			module.loadedAudio.currentTime = 0;
+	deconstructInstance: function(inst){
+		if (inst.usingAudio) {
+			inst.loadedAudio.pause();
+			inst.loadedAudio.currentTime = 0;
 		}
-		clearInterval(module.timerTickInterval);
-		module.timerTickInterval = null;
+		clearInterval(inst.timerTickInterval);
+		inst.timerTickInterval = null;
 	},
 
 	instantiate: function(where){

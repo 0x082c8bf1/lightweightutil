@@ -3,18 +3,18 @@ dashboard.tests.registerTester(
 	"keyCode",
 	[
 		//test keyboard event
-		{name: "event", test: function(module){
-			module.q(".focusBox").dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
+		{name: "event", test: function(inst){
+			inst.q(".focusBox").dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
 
-			return (module.q(".keycodeOutput").innerHTML.includes("key == 'a'"));
+			return (inst.q(".keycodeOutput").innerHTML.includes("key == 'a'"));
 		}},
 
 		//test resetting
-		{name: "reset", test: function(module){
-			module.q(".focusBox").dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
-			dashboard.tests.click(module.q(".resetKeyCodeOutput"));
+		{name: "reset", test: function(inst){
+			inst.q(".focusBox").dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
+			dashboard.tests.click(inst.q(".resetKeyCodeOutput"));
 
-			return (module.q(".keycodeOutput").innerHTML=="");
+			return (inst.q(".keycodeOutput").innerHTML=="");
 		}},
 	]
 );

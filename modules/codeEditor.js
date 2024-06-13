@@ -4,7 +4,7 @@ dashboard.registerModule({
 	displayName: "Code Editor",
 	version: "1.0.1",
 
-	evalTextBox: function(module){
+	evalTextBox: function(inst){
 		let shouldContinue = true;
 
 		if (getSetting(this.name, "evalWarn"))
@@ -12,13 +12,13 @@ dashboard.registerModule({
 
 		if(shouldContinue){
 			//define functions
-			let outputDiv = module.q(".codeEditorOutput");
+			let outputDiv = inst.q(".codeEditorOutput");
 			//output(str) - prints value below the textbox
 			var output = function(value){
 				outputDiv.innerHTML += value + "<br/>";
 			}
 
-			let input = module.q(".codeEditorTextarea").value;
+			let input = inst.q(".codeEditorTextarea").value;
 			//reset output span
 			outputDiv.innerHTML = "";
 			outputDiv.style.color = "white";
@@ -33,7 +33,7 @@ dashboard.registerModule({
 			}
 
 			//display the return value
-			let retValueSpan = module.q(".codeEditorReturnValue");
+			let retValueSpan = inst.q(".codeEditorReturnValue");
 			if(returnVal != undefined) {
 				retValueSpan.innerHTML = "Return value: " + returnVal;
 			} else {
@@ -42,19 +42,19 @@ dashboard.registerModule({
 		}
 	},
 
-	parenWrap: function(module){
-		let codeEditor = module.q(".codeEditorTextarea");
+	parenWrap: function(inst){
+		let codeEditor = inst.q(".codeEditorTextarea");
 		codeEditor.value = "(" + codeEditor.value + ")";
 	},
 
-	refreshSaves: function(module, selectNew){
+	refreshSaves: function(inst, selectNew){
 		//create the option elements
-		let selector = module.q(".ce_selector");
+		let selector = inst.q(".ce_selector");
 		let newSelValue;
 		if (selectNew){
 			newSelValue = "New Script";
 		} else {
-			newSelValue = module.q(".codeEditorSaveName").value;
+			newSelValue = inst.q(".codeEditorSaveName").value;
 		}
 
 		//delete any existing selection
@@ -80,15 +80,15 @@ dashboard.registerModule({
 	},
 
 	//saves the currently selected code to local storage
-	saveCode: function(module){
+	saveCode: function(inst){
 		//create the object
-		let name = module.q(".codeEditorSaveName").value;
+		let name = inst.q(".codeEditorSaveName").value;
 		if (name === "New Script"){
 			db_alert("\"New Script\" is not an allowed save name.");
 			return;
 		}
 		let output = {};
-		output[name] = module.q(".codeEditorTextarea").value;
+		output[name] = inst.q(".codeEditorTextarea").value;
 
 		//append output object to the existing one or create one
 		let saves = localStorage.getItem("CESaves");
@@ -103,11 +103,11 @@ dashboard.registerModule({
 		localStorage.setItem("CESaves", saves);
 
 		//refresh the selection box
-		this.refreshSaves(module, false);
+		this.refreshSaves(inst, false);
 	},
 
 	//loads the selected code from localStorage
-	loadCode: function(module, name){
+	loadCode: function(inst, name){
 		let obj;
 		if (name === "New Script"){
 			obj = "";
@@ -116,13 +116,13 @@ dashboard.registerModule({
 			obj = JSON.parse(save)[name];
 		}
 
-		module.q(".codeEditorSaveName").value = name;
-		module.q(".codeEditorTextarea").value = obj;
+		inst.q(".codeEditorSaveName").value = name;
+		inst.q(".codeEditorTextarea").value = obj;
 	},
 
-	jsonFormat: function(module, minify){
-		let codeEditor = module.q(".codeEditorTextarea");
-		let outputDiv = module.q(".codeEditorOutput");
+	jsonFormat: function(inst, minify){
+		let codeEditor = inst.q(".codeEditorTextarea");
+		let outputDiv = inst.q(".codeEditorOutput");
 		outputDiv.innerHTML = "";
 		outputDiv.style.color = "white";
 
@@ -162,10 +162,10 @@ dashboard.registerModule({
 		object.value += lines[lines.length-1];
 	},
 
-	init: function (module){
-		let codeEditor = module.q(".codeEditorTextarea");
+	init: function(inst){
+		let codeEditor = inst.q(".codeEditorTextarea");
 
-		this.refreshSaves(module, true);
+		this.refreshSaves(inst, true);
 
 		//add event listeners
 		let _this = this;
@@ -247,7 +247,7 @@ dashboard.registerModule({
 				codeEditor.selectionEnd = newCursorPos;
 			} else if((e.code === "Enter" || e.code === "NumpadEnter") && e.ctrlKey){
 				e.preventDefault();
-				_this.evalTextBox(module);
+				_this.evalTextBox(inst);
 			} else if(e.ctrlKey && e.shiftKey && (e.code === "ArrowUp" || e.code === "ArrowDown")){
 				e.preventDefault();
 
@@ -290,29 +290,29 @@ dashboard.registerModule({
 			}
 		});
 
-		module.q(".ce_eval").addEventListener("click", function(){
-			_this.evalTextBox(module);
+		inst.q(".ce_eval").addEventListener("click", function(){
+			_this.evalTextBox(inst);
 		});
-		module.q(".ce_pwrap").addEventListener("click", function(){
-			_this.parenWrap(module);
+		inst.q(".ce_pwrap").addEventListener("click", function(){
+			_this.parenWrap(inst);
 		});
-		module.q(".ce_beautify").addEventListener("click", function(){
-			_this.jsonFormat(module, false);
+		inst.q(".ce_beautify").addEventListener("click", function(){
+			_this.jsonFormat(inst, false);
 		});
-		module.q(".ce_minify").addEventListener("click", function(){
-			_this.jsonFormat(module, true);
+		inst.q(".ce_minify").addEventListener("click", function(){
+			_this.jsonFormat(inst, true);
 		});
 
-		module.q(".saveCode").addEventListener("click", function(){
-			_this.saveCode(module);
+		inst.q(".saveCode").addEventListener("click", function(){
+			_this.saveCode(inst);
 		});
-		module.q(".ce_selector").addEventListener("change", function(){
-			let name = module.q(".ce_selector").value;
-			_this.loadCode(module, name);
+		inst.q(".ce_selector").addEventListener("change", function(){
+			let name = inst.q(".ce_selector").value;
+			_this.loadCode(inst, name);
 		});
-		module.q(".deleteSelection").addEventListener("click", function(){
+		inst.q(".deleteSelection").addEventListener("click", function(){
 			//confirm deletion
-			let name = module.q(".ce_selector").value;
+			let name = inst.q(".ce_selector").value;
 			if (name === "New Script")
 				return;
 			let del = db_confirm("Would you like to delete \"" + name + "\"?");
@@ -324,7 +324,7 @@ dashboard.registerModule({
 			delete save[name];
 			localStorage.setItem("CESaves", JSON.stringify(save));
 
-			_this.refreshSaves(module, true);
+			_this.refreshSaves(inst, true);
 		});
 	},
 

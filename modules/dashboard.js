@@ -763,7 +763,7 @@ let dashboard = {
 					if (result) {
 						passCount++;
 					} else {
-						error("Failed " + tests[i].name);
+						error(name + ": Failed " + tests[i].name);
 						fails.push(tests[i].name);
 					}
 				}

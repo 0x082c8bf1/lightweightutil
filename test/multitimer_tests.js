@@ -12,21 +12,24 @@ dashboard.tests.registerTester(
 
 		//test starting timer
 		{name: "start", test: function(inst){
-			const timer = document.querySelector(".timer");
+			const timers = document.querySelectorAll(".timer");
+			const timer = timers[timers.length-1];
 			dashboard.tests.click(timer.querySelector(".start-button"));
 			return (timer.status == inst.status.ACTIVE);
 		}},
 
 		//test pausing timer
 		{name: "pause", test: function(inst){
-			const timer = document.querySelector(".timer");
+			const timers = document.querySelectorAll(".timer");
+			const timer = timers[timers.length-1];
 			dashboard.tests.click(timer.querySelector(".start-button"));
 			return (timer.status == inst.status.PAUSED);
 		}},
 
 		//test resetting timer
 		{name: "reset", test: function(inst){
-			const timer = document.querySelector(".timer");
+			const timers = document.querySelectorAll(".timer");
+			const timer = timers[timers.length-1];
 			dashboard.tests.click(timer.querySelector(".x-button"));
 			return (timer.status == inst.status.INACTIVE);
 		}},
@@ -34,7 +37,9 @@ dashboard.tests.registerTester(
 		//test deleting timer
 		{name: "delete", test: function(inst){
 			const count = inst.qAll(".timer").length;
-			dashboard.tests.click(inst.qAll(".x-button")[0]);
+			const timers = document.querySelectorAll(".timer");
+			const timer = timers[timers.length-1];
+			dashboard.tests.click(timer.querySelector(".x-button"));
 			const newCount = inst.qAll(".timer").length;
 			return (count-1 == newCount);
 		}},

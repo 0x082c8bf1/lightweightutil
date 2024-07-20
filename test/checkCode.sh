@@ -37,3 +37,4 @@ testRegex	"$src"	"\sif[\s(].*[^=^!^<^>]=[^=].*\)" \
 											"No assignments in ifs"
 testRegex	"$src"	"(\w+\s*==\s*\"(\w\s*)+\"|\"(\w\s*)+\"\s*==\s*\w+)" \
 											"Compare strings with ==="
+testRegex	"$src"	"\svar\s"				"Don't use var"

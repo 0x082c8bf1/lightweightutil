@@ -48,7 +48,7 @@ dashboard.tests.registerTester(
 			inst.q(".codeEditorTextarea").value = "-";
 			dashboard.tests.click(inst.q(".ce_eval"));
 
-			let outputDiv = inst.q(".codeEditorOutput");
+			const outputDiv = inst.q(".codeEditorOutput");
 			return (outputDiv.textContent.length > 0 && outputDiv.style.color === "red");
 		}},
 
@@ -61,11 +61,11 @@ dashboard.tests.registerTester(
 				return false;
 			}
 
-			let textArea = inst.q(".codeEditorTextarea");
-			let saveName = inst.q(".codeEditorSaveName");
-			let saveButton = inst.q(".saveCode");
-			let selector = inst.q(".ce_selector");
-			let deleteButton = inst.q(".deleteSelection");
+			const textArea = inst.q(".codeEditorTextarea");
+			const saveName = inst.q(".codeEditorSaveName");
+			const saveButton = inst.q(".saveCode");
+			const selector = inst.q(".ce_selector");
+			const deleteButton = inst.q(".deleteSelection");
 
 			//save a new script
 			textArea.value = "abcde";

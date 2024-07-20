@@ -71,7 +71,7 @@ dashboard.registerModule({
 		return [
 			{ver: "1.0.1", func: function(){
 				log("Updating data.");
-				let oldSave = localStorage.getItem("exampleData");
+				const oldSave = localStorage.getItem("exampleData");
 				localStorage.setItem("mt_timers", oldSave+"newData");
 			}},
 		];

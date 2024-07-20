@@ -12,13 +12,13 @@ dashboard.registerModule({
 
 		if(shouldContinue){
 			//define functions
-			let outputDiv = inst.q(".codeEditorOutput");
+			const outputDiv = inst.q(".codeEditorOutput");
 			//output(str) - prints value below the textbox
-			var output = function(value){
+			const output = function(value){
 				outputDiv.innerHTML += value + "<br/>";
 			}
 
-			let input = inst.q(".codeEditorTextarea").value;
+			const input = inst.q(".codeEditorTextarea").value;
 			//reset output span
 			outputDiv.innerHTML = "";
 			outputDiv.style.color = "white";
@@ -33,7 +33,7 @@ dashboard.registerModule({
 			}
 
 			//display the return value
-			let retValueSpan = inst.q(".codeEditorReturnValue");
+			const retValueSpan = inst.q(".codeEditorReturnValue");
 			if(returnVal != undefined) {
 				retValueSpan.innerHTML = "Return value: " + returnVal;
 			} else {
@@ -43,13 +43,13 @@ dashboard.registerModule({
 	},
 
 	parenWrap: function(inst){
-		let codeEditor = inst.q(".codeEditorTextarea");
+		const codeEditor = inst.q(".codeEditorTextarea");
 		codeEditor.value = "(" + codeEditor.value + ")";
 	},
 
 	refreshSaves: function(inst, selectNew){
 		//create the option elements
-		let selector = inst.q(".ce_selector");
+		const selector = inst.q(".ce_selector");
 		let newSelValue;
 		if (selectNew){
 			newSelValue = "New Script";
@@ -61,15 +61,15 @@ dashboard.registerModule({
 		selector.innerHTML = "";
 
 		//create the "new script" element
-		let option = document.createElement("option");
-		option.innerHTML = "New Script";
-		option.value = "New Script";
-		selector.appendChild(option);
+		const newOption = document.createElement("option");
+		newOption.innerHTML = "New Script";
+		newOption.value = "New Script";
+		selector.appendChild(newOption);
 
 		//create all the other elements
-		let saves = JSON.parse(localStorage.getItem("CESaves"));
+		const saves = JSON.parse(localStorage.getItem("CESaves"));
 		for (let save in saves){
-			option = document.createElement("option");
+			const option = document.createElement("option");
 			option.innerHTML = save;
 			option.value = save;
 			selector.appendChild(option);
@@ -82,12 +82,12 @@ dashboard.registerModule({
 	//saves the currently selected code to local storage
 	saveCode: function(inst){
 		//create the object
-		let name = inst.q(".codeEditorSaveName").value;
+		const name = inst.q(".codeEditorSaveName").value;
 		if (name === "New Script"){
 			db_alert("\"New Script\" is not an allowed save name.");
 			return;
 		}
-		let output = {};
+		const output = {};
 		output[name] = inst.q(".codeEditorTextarea").value;
 
 		//append output object to the existing one or create one
@@ -112,7 +112,7 @@ dashboard.registerModule({
 		if (name === "New Script"){
 			obj = "";
 		} else {
-			let save = localStorage.getItem("CESaves");
+			const save = localStorage.getItem("CESaves");
 			obj = JSON.parse(save)[name];
 		}
 
@@ -121,13 +121,13 @@ dashboard.registerModule({
 	},
 
 	jsonFormat: function(inst, minify){
-		let codeEditor = inst.q(".codeEditorTextarea");
-		let outputDiv = inst.q(".codeEditorOutput");
+		const codeEditor = inst.q(".codeEditorTextarea");
+		const outputDiv = inst.q(".codeEditorOutput");
 		outputDiv.innerHTML = "";
 		outputDiv.style.color = "white";
 
 		try{
-			let obj = JSON.parse(codeEditor.value);
+			const obj = JSON.parse(codeEditor.value);
 			if (minify) {
 				codeEditor.value = JSON.stringify(obj);
 			} else {
@@ -163,12 +163,12 @@ dashboard.registerModule({
 	},
 
 	init: function(inst){
-		let codeEditor = inst.q(".codeEditorTextarea");
+		const codeEditor = inst.q(".codeEditorTextarea");
 
 		this.refreshSaves(inst, true);
 
 		//add event listeners
-		let _this = this;
+		const _this = this;
 		codeEditor.addEventListener("keydown", function(e){
 			//allow typing tabs without changing the focus
 			if(e.code === "Tab"){
@@ -176,22 +176,22 @@ dashboard.registerModule({
 
 				if(codeEditor.selectionStart == codeEditor.selectionEnd && !e.shiftKey){
 					//inline tabbing
-					let selectionStart = codeEditor.selectionStart;
-					let selectionEnd = codeEditor.selectionEnd;
+					const selectionStart = codeEditor.selectionStart;
+					const selectionEnd = codeEditor.selectionEnd;
 
-					let start = codeEditor.value.substring(0, selectionStart);
-					let end = codeEditor.value.substring(selectionEnd, codeEditor.value.length);
+					const start = codeEditor.value.substring(0, selectionStart);
+					const end = codeEditor.value.substring(selectionEnd, codeEditor.value.length);
 
 					codeEditor.value = start + "\t" + end;
 					codeEditor.selectionEnd = selectionEnd + 1;
 				} else {
-					let lines = _this.getLines(codeEditor.value);
+					const lines = _this.getLines(codeEditor.value);
 
-					let start = codeEditor.selectionStart;
-					let end = codeEditor.selectionEnd;
+					const start = codeEditor.selectionStart;
+					const end = codeEditor.selectionEnd;
 
-					let sLine = _this.getLineFromPos(lines, start);
-					let eLine = _this.getLineFromPos(lines, end);
+					const sLine = _this.getLineFromPos(lines, start);
+					const eLine = _this.getLineFromPos(lines, end);
 
 					let startOffset = 0;
 					let endOffset = 0;
@@ -220,7 +220,7 @@ dashboard.registerModule({
 			} else if(e.code === "KeyD" && e.ctrlKey){ //allow ctrl+d to duplicate the currently selected lines
 				e.preventDefault();
 				//calculate the beginning and end of the line
-				let lastOffset = 0;//fixes issue where selecting the end of the line selects after the newline
+				let lastOffset = 0; //fixes issue where selecting the end of the line selects after the newline
 				if(codeEditor.value[codeEditor.selectionStart] === "\n"){
 					lastOffset = -1;
 				}
@@ -235,13 +235,13 @@ dashboard.registerModule({
 					nextNewLinePos++;
 				}
 
-				let startPos = lastNewLinePos;
-				let endPos = nextNewLinePos;
+				const startPos = lastNewLinePos;
+				const endPos = nextNewLinePos;
 
-				let start = codeEditor.value.substring(0,endPos);
-				let end = codeEditor.value.substring(endPos, codeEditor.value.length);
+				const start = codeEditor.value.substring(0,endPos);
+				const end = codeEditor.value.substring(endPos, codeEditor.value.length);
 
-				let newCursorPos = codeEditor.selectionStart;
+				const newCursorPos = codeEditor.selectionStart;
 
 				codeEditor.value = start + "\n" + codeEditor.value.substring(startPos, endPos) + end;
 				codeEditor.selectionEnd = newCursorPos;
@@ -251,12 +251,12 @@ dashboard.registerModule({
 			} else if(e.ctrlKey && e.shiftKey && (e.code === "ArrowUp" || e.code === "ArrowDown")){
 				e.preventDefault();
 
-				let lines = _this.getLines(codeEditor.value);
+				const lines = _this.getLines(codeEditor.value);
 
-				let start = codeEditor.selectionStart;
-				let end = codeEditor.selectionEnd;
-				let sLine = _this.getLineFromPos(lines, start);
-				let eLine = _this.getLineFromPos(lines, end);
+				const start = codeEditor.selectionStart;
+				const end = codeEditor.selectionEnd;
+				const sLine = _this.getLineFromPos(lines, start);
+				const eLine = _this.getLineFromPos(lines, end);
 
 				let selOffset = 0;
 
@@ -264,19 +264,19 @@ dashboard.registerModule({
 					let prefix = [];
 					if (sLine != 0)
 						prefix = lines.slice(0, sLine-1);
-					let moved = lines.slice(sLine-1, sLine);
-					let selected = lines.slice(sLine, eLine+1);
-					let suffix = lines.slice(eLine+1);
+					const moved = lines.slice(sLine-1, sLine);
+					const selected = lines.slice(sLine, eLine+1);
+					const suffix = lines.slice(eLine+1);
 
 					if (moved.length > 0)
 						selOffset -= moved[0].length+1;
 
 					lines = [].concat(prefix, selected, moved, suffix);
 				} else {
-					let prefix = lines.slice(0, sLine);
-					let selected = lines.slice(sLine, eLine+1);
-					let moved = lines.slice(eLine+1, eLine+2);
-					let suffix = lines.slice(eLine+2);
+					const prefix = lines.slice(0, sLine);
+					const selected = lines.slice(sLine, eLine+1);
+					const moved = lines.slice(eLine+1, eLine+2);
+					const suffix = lines.slice(eLine+2);
 
 					if (moved.length > 0)
 						selOffset += moved[0].length+1;
@@ -307,20 +307,20 @@ dashboard.registerModule({
 			_this.saveCode(inst);
 		});
 		inst.q(".ce_selector").addEventListener("change", function(){
-			let name = inst.q(".ce_selector").value;
+			const name = inst.q(".ce_selector").value;
 			_this.loadCode(inst, name);
 		});
 		inst.q(".deleteSelection").addEventListener("click", function(){
 			//confirm deletion
-			let name = inst.q(".ce_selector").value;
+			const name = inst.q(".ce_selector").value;
 			if (name === "New Script")
 				return;
-			let del = db_confirm("Would you like to delete \"" + name + "\"?");
+			const del = db_confirm("Would you like to delete \"" + name + "\"?");
 			if (!del)
 				return;
 
 			//delete the save
-			let save = JSON.parse(localStorage.getItem("CESaves"));
+			const save = JSON.parse(localStorage.getItem("CESaves"));
 			delete save[name];
 			localStorage.setItem("CESaves", JSON.stringify(save));
 

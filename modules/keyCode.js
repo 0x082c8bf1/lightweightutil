@@ -6,15 +6,15 @@ dashboard.registerModule({
 
 	init: function(inst){
 		//add the event listener
-		let input = inst.q(".focusBox");
-		let _this = this;
+		const input = inst.q(".focusBox");
+		const _this = this;
 
 		input.addEventListener("keydown", function(event){
 			input.value = "";
 			event.preventDefault();
 
-			let pre = getSetting(_this.name, "eventPrefix");
-			let post = getSetting(_this.name, "eventSuffix");
+			const pre = getSetting(_this.name, "eventPrefix");
+			const post = getSetting(_this.name, "eventSuffix");
 
 			let output = "";
 			output += pre + "code == \"" + event.code + "\"" + post + "<br/>";

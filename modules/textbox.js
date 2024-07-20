@@ -7,29 +7,29 @@ dashboard.registerModule({
 	//updates the character and word counts of the text area
 	//words are considered any string of non-whitespace separated by whitespace on either side
 	updateCharacterCounts: function(inst){
-		let input = inst.q(".textarea").value;
+		const input = inst.q(".textarea").value;
 
 		//character count
 		inst.q(".characterCount").innerHTML = input.length;
 
 		//word count
-		let truncatedInput = input.trim();
-		let words = truncatedInput.split(new RegExp(/\s+/));
+		const truncatedInput = input.trim();
+		const words = truncatedInput.split(new RegExp(/\s+/));
 
 		let wordCount = 0;
-		if(truncatedInput!="")
+		if(truncatedInput != "")
 			wordCount = words.length;
 
 		inst.q(".wordCount").innerHTML = wordCount;
 
-		let lines = input.split("\n").length;
+		const lines = input.split("\n").length;
 		inst.q(".lineCount").innerHTML = lines;
 	},
 
 	//sorts all of the lines in the textbox alphabetically (does not ignore case)
 	alphabetizeLines: function(inst){
-		let input = inst.q(".textarea");
-		let lines = input.value.split("\n");
+		const input = inst.q(".textarea");
+		const lines = input.value.split("\n");
 		lines.sort();
 
 		let output = "";
@@ -44,21 +44,21 @@ dashboard.registerModule({
 	},
 
 	toUpper: function(inst){
-		let input = inst.q(".textarea");
+		const input = inst.q(".textarea");
 		input.value = input.value.toUpperCase();
 	},
 
 	toLower: function(inst){
-		let input = inst.q(".textarea");
+		const input = inst.q(".textarea");
 		input.value = input.value.toLowerCase();
 	},
 
 	toRandom: function(inst){
 		let output = "";
-		let input = inst.q(".textarea");
-		let text = input.value;
+		const input = inst.q(".textarea");
+		const text = input.value;
 		for(let i=0; i<text.length; i++){
-			let number = Math.floor(Math.random() * 2);
+			const number = Math.floor(Math.random() * 2);
 			output += (number===0 ? text[i].toLowerCase() : text[i].toUpperCase());
 		}
 		input.value = output;
@@ -66,8 +66,8 @@ dashboard.registerModule({
 
 	toInvert: function(inst){
 		let output = "";
-		let input = inst.q(".textarea");
-		let text = input.value;
+		const input = inst.q(".textarea");
+		const text = input.value;
 		for(let i=0; i<text.length; i++){
 			output += ((text[i] >= 'A' && text[i] <= 'Z') ? text[i].toLowerCase() : text[i].toUpperCase());
 		}
@@ -75,9 +75,9 @@ dashboard.registerModule({
 	},
 
 	removeDuplicateLines: function(inst){
-		let textbox = inst.q(".textarea");
-		let lines = textbox.value.split("\n");
-		let outputArr = [];
+		const textbox = inst.q(".textarea");
+		const lines = textbox.value.split("\n");
+		const outputArr = [];
 
 		//create de-duplicated array
 		for(let i=0; i<lines.length; i++) {
@@ -100,13 +100,13 @@ dashboard.registerModule({
 
 	replace: function(inst){
 		let inputPattern, outputPattern;
-		let input = inst.q(".textarea");
+		const input = inst.q(".textarea");
 
 		//regex matching
 		if (inst.q(".regexSearch").checked) {
 			inputPattern = new RegExp(inst.q(".replaceInputPattern").value, 'g');
 			try {
-				let data ="[\"" + inst.q(".replaceOutputPattern").value + "\"]";
+				const data = "[\"" + inst.q(".replaceOutputPattern").value + "\"]";
 				outputPattern = JSON.parse(data)[0];
 			} catch (e) {
 				return;
@@ -124,8 +124,8 @@ dashboard.registerModule({
 		if(e.key == 'f' && e.ctrlKey) {
 			e.preventDefault();
 
-			let fs = inst.q(".findSpan");
-			let searching = document.activeElement.closest(".findSpan");
+			const fs = inst.q(".findSpan");
+			const searching = document.activeElement.closest(".findSpan");
 
 			if (fs.hidden || searching)
 				fs.hidden = !fs.hidden;
@@ -139,15 +139,15 @@ dashboard.registerModule({
 	},
 
 	init: function(inst){
-		let _this = this;
+		const _this = this;
 		inst.q(".tb_sort").addEventListener("click",function(){
 			_this.alphabetizeLines(inst);
 		});
-		let uc_button = inst.q(".tb_toupper");
-		let lc_button = inst.q(".tb_tolower");
-		let rc_button = inst.q(".tb_torand");
-		let ic_button = inst.q(".tb_toinvert");
-		let rd_button = inst.q(".tb_removeDupes");
+		const uc_button = inst.q(".tb_toupper");
+		const lc_button = inst.q(".tb_tolower");
+		const rc_button = inst.q(".tb_torand");
+		const ic_button = inst.q(".tb_toinvert");
+		const rd_button = inst.q(".tb_removeDupes");
 
 		//apply hide settings
 		if (!getSetting(_this.name, "showUpperButton")){
@@ -193,12 +193,12 @@ dashboard.registerModule({
 			_this.handleFind(inst, e);
 		});
 		inst.q(".tb_replace").addEventListener("click",function(){
-			let fs = inst.q(".findSpan");
+			const fs = inst.q(".findSpan");
 			fs.hidden = !fs.hidden;
 		});
 
 		//apply labels
-		let regexId = "regexSearch" + inst.getId();
+		const regexId = "regexSearch" + inst.getId();
 		inst.q(".regexSearch").id = regexId;
 		inst.q(".regexLabel").setAttribute("for", regexId);
 	},

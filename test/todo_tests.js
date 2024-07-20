@@ -4,9 +4,9 @@ dashboard.tests.registerTester(
 	[
 		//test adding todo
 		{name: "add", test: function(inst){
-			let count = inst.qAll(".todo_entry").length;
+			const count = inst.qAll(".todo_entry").length;
 			dashboard.tests.click(inst.q(".insertButton"));
-			let newCount = inst.qAll(".todo_entry").length;
+			const newCount = inst.qAll(".todo_entry").length;
 			return (count+1 == newCount);
 		}},
 
@@ -15,13 +15,13 @@ dashboard.tests.registerTester(
 			dashboard.tests.click(inst.qAll(".listEntry")[0]);
 			//use a random number [1000-9999] so the test can be accurately run multiple times
 			//	regardless of save data
-			let value = Math.floor(Math.random() * 9000 + 1000);
+			const value = Math.floor(Math.random() * 9000 + 1000);
 			inst.q(".dueSetting").value = value+"-01-01";
 			inst.qAll(".title")[0].value = value+1;
 			inst.q(".descriptionSetting").value = value+2;
 			dashboard.tests.click(inst.q(".saveSetting"));
 
-			let todo = inst.qAll(".todo_entry")[0];
+			const todo = inst.qAll(".todo_entry")[0];
 			if (todo.querySelector(".title").innerHTML !== ""+(value + 1))
 				return false;
 			if (todo.querySelector(".description").innerHTML !== ""+(value + 2))
@@ -40,7 +40,7 @@ dashboard.tests.registerTester(
 
 			dashboard.tests.click(inst.qAll(".listEntry")[1]);
 
-			let todo = inst.qAll(".todo_entry")[0];
+			const todo = inst.qAll(".todo_entry")[0];
 			let pass = true;
 			if (inst.q(".dueSetting").value !== todo.querySelector(".dueDate").innerHTML)
 				pass = false;
@@ -54,7 +54,7 @@ dashboard.tests.registerTester(
 
 		//test completing a todo
 		{name: "complete", test: function(inst){
-			let todo = inst.qAll(".todo_entry")[0];
+			const todo = inst.qAll(".todo_entry")[0];
 
 			dashboard.tests.click(todo.querySelector(".checkbox"));
 
@@ -63,12 +63,12 @@ dashboard.tests.registerTester(
 
 		//test removing todo
 		{name: "remove", test: function(inst){
-			let count = inst.qAll(".todo_entry").length;
+			const count = inst.qAll(".todo_entry").length;
 
 			dashboard.tests.click(inst.qAll(".listEntry")[1]);
 			dashboard.tests.click(inst.q(".deleteSetting"));
 
-			let newCount = inst.qAll(".todo_entry").length;
+			const newCount = inst.qAll(".todo_entry").length;
 			return (count-1 == newCount);
 		}},
 	]

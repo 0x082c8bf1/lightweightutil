@@ -20,7 +20,7 @@ dashboard.tests.registerTester(
 			dashboard.tests.click(document.querySelector("#settingsToggle"));
 
 			//set setting to oppisite of what it currently is
-			let setting = getSetting("dashboard", "displayFooterText");
+			const setting = getSetting("dashboard", "displayFooterText");
 			default_dashboard_displayFooterText.checked = false;
 			dashboard_displayFooterText.checked = !setting;
 

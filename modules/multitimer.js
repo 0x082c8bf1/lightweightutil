@@ -5,7 +5,7 @@ dashboard.registerModule({
 	version: "1.0.1",
 
 	createDuration: function(h,m,s){
-		let ms = s * 1000 + m * 1000*60 + h*1000*60*60;
+		const ms = s * 1000 + m * 1000*60 + h*1000*60*60;
 		return {hours: h, minutes: m, seconds: s, totalMS: ms};
 	},
 
@@ -15,13 +15,13 @@ dashboard.registerModule({
 		const MS_PER_MIN = MS_PER_SEC*60;
 		const MS_PER_HOUR = MS_PER_MIN*60;
 
-		let hours = Math.floor(ms / MS_PER_HOUR);
+		const hours = Math.floor(ms / MS_PER_HOUR);
 		ms %= MS_PER_HOUR;
 
-		let minutes = Math.floor(ms / MS_PER_MIN);
+		const minutes = Math.floor(ms / MS_PER_MIN);
 		ms %= MS_PER_MIN;
 
-		let seconds = Math.floor(ms / MS_PER_SEC);
+		const seconds = Math.floor(ms / MS_PER_SEC);
 		ms %= MS_PER_SEC;
 
 		return this.createDuration(hours, minutes, seconds);
@@ -38,7 +38,7 @@ dashboard.registerModule({
 				output += "-";
 		}
 
-		let dur = this.getDurationFromMS(ms);
+		const dur = this.getDurationFromMS(ms);
 
 		output += dur.hours.toString().padStart(2, "0");
 		output += ":";
@@ -90,8 +90,8 @@ dashboard.registerModule({
 		if (timer.status == inst.status.ACTIVE || timer.status == inst.status.RINGING) {
 			difference = new Date()-timer.startDate;
 		}
-		let timeRemaining = timer.duration-(difference+timer.msOffset);
-		let displayTime = this.getDurationAsString(timeRemaining);
+		const timeRemaining = timer.duration-(difference+timer.msOffset);
+		const displayTime = this.getDurationAsString(timeRemaining);
 		if (displayTime !== timer.querySelector(".time-display").innerHTML) {
 			timer.querySelector(".time-display").innerHTML = displayTime;
 		}
@@ -109,7 +109,7 @@ dashboard.registerModule({
 			if (inst.numberOfRingingTimers == 0) {
 				if (inst.usingAudio) {
 					inst.loadedAudio.currentTime = 0;
-					let p = inst.loadedAudio.play();
+					const p = inst.loadedAudio.play();
 					p.catch(function(){
 						db_alert("Multitimer audio failed to play. This is likely because autoplay is disabled in your browser, please enable it or set the volume to 0 to disable audio.");
 					});
@@ -145,7 +145,7 @@ dashboard.registerModule({
 
 	//takes a string and tries it's best to assume what was supposed to be typed in as a number
 	makeValidNumber: function(input){
-		let pattern = /[^\d|^\.]/g;
+		const pattern = /[^\d|^\.]/g;
 
 		return input.replace(pattern, "");
 	},
@@ -155,9 +155,9 @@ dashboard.registerModule({
 
 		if (hInput.includes("d")){
 			//get the left and right of "d"
-			let splitPos = hInput.indexOf("d");
-			let lStr = hInput.substring(0,splitPos);
-			let rStr = hInput.substring(splitPos+1);
+			const splitPos = hInput.indexOf("d");
+			const lStr = hInput.substring(0,splitPos);
+			const rStr = hInput.substring(splitPos+1);
 
 			//convert days and hours to number to numbers
 			let dNum = parseFloat(this.makeValidNumber(lStr));
@@ -173,8 +173,8 @@ dashboard.registerModule({
 			h = this.makeValidNumber(hInput);
 		}
 
-		let m = this.makeValidNumber(mInput);
-		let s = this.makeValidNumber(sInput);
+		const m = this.makeValidNumber(mInput);
+		const s = this.makeValidNumber(sInput);
 
 		return this.createDuration(h ? h : 0, m ? m : 0, s ? s : 0).totalMS;
 
@@ -210,11 +210,11 @@ dashboard.registerModule({
 
 	//start the timerTickInterval if it isn't already
 	checkStartTimerTickInterval: function(inst) {
-		let _this = this;
+		const _this = this;
 
 		if (inst.timerTickInterval == null) {
 			inst.timerTickInterval = setInterval(function(){
-				let timers = inst.qAll(".timer");
+				const timers = inst.qAll(".timer");
 				for(let i=0; i<timers.length; i++) {
 					_this.tick(inst, timers[i]);
 				}
@@ -224,7 +224,7 @@ dashboard.registerModule({
 
 	//setup a new timer element
 	initTimer: function(inst, timer) {
-		let _this = this;
+		const _this = this;
 
 		timer.querySelector(".start-button").addEventListener("click", function(){
 			_this.startButtonEvent(inst, timer);
@@ -256,18 +256,18 @@ dashboard.registerModule({
 	//create a timer with specified arguments, and return the timer.
 	createTimer: function(inst, msTime, name, status, startDate, msOffset){
 		//clone from template
-		let timerFrag = inst.q(".timer_tmplt").content.cloneNode(true);
+		const timeFragment = inst.q(".timer_tmplt").content.cloneNode(true);
 		let timer = document.createElement("div");
 
 		//avoid document fragment shenanigans
-		timer.appendChild(timerFrag);
+		timer.appendChild(timeFragment);
 		timer = timer.children[0];
 		inst.q(".timers").insertBefore(timer, inst.q(".trailingGroup"));
 
 		timer.querySelector(".name").value = name;
 
 		//set hhmmss
-		let duration = this.getDurationFromMS(msTime);
+		const duration = this.getDurationFromMS(msTime);
 		timer.querySelector(".h-input").value = duration.hours ? duration.hours : "";
 		timer.querySelector(".m-input").value = duration.minutes ? duration.minutes : "";
 		timer.querySelector(".s-input").value = duration.seconds ? duration.seconds : "";
@@ -313,17 +313,17 @@ dashboard.registerModule({
 
 	//adds a new timer
 	addTimer: function(inst){
-		let defaultMs = getSetting(this.name, "defaultTime")*1000;
-		let name = getSetting(this.name, "defaultName");
+		const defaultMs = getSetting(this.name, "defaultTime")*1000;
+		const name = getSetting(this.name, "defaultName");
 		this.createTimer(inst, defaultMs, name, inst.status.INACTIVE);
 	},
 
 	//save all of the timers to localStorage
 	saveAllTimers: function(inst){
-		let obj = [];
-		let timers = inst.qAll(".timer");
+		const obj = [];
+		const timers = inst.qAll(".timer");
 		for(let i=0; i<timers.length; i++) {
-			let oneTimer = {};
+			const oneTimer = {};
 			//save internal values
 			oneTimer.status = timers[i].status;
 			oneTimer.msOffset = timers[i].msOffset;
@@ -345,7 +345,7 @@ dashboard.registerModule({
 	//load all of the timers from localStorage
 	loadAllTimers: function(inst){
 		//get saved timers
-		let obj = JSON.parse(localStorage.getItem("mt_timers"));
+		const obj = JSON.parse(localStorage.getItem("mt_timers"));
 
 		//don't try to load if there aren't any timers
 		if (obj == null)
@@ -353,12 +353,12 @@ dashboard.registerModule({
 
 		for(let i=0; i<obj.length; i++) {
 			//load ringing timers as active, since they're basically the same thing
-			let tempStatus = obj[i].status;
+			const tempStatus = obj[i].status;
 			if (tempStatus == inst.status.RINGING) {
 				tempStatus = inst.status.ACTIVE;
 			}
 
-			let timer = this.createTimer(inst, obj[i].duration, obj[i].name, tempStatus, obj[i].startDate, obj[i].msOffset);
+			const timer = this.createTimer(inst, obj[i].duration, obj[i].name, tempStatus, obj[i].startDate, obj[i].msOffset);
 			if (obj[i].status == inst.status.PAUSED) {
 				this.tick(inst, timer);
 			}
@@ -402,11 +402,11 @@ dashboard.registerModule({
 		inst.numberOfRingingTimers = 0;
 
 		//set timer gap css variable
-		let r = inst.getInstanceRoot();
-		r.style.setProperty("--timer_gap", getSetting(this.name, "gap") + "px");
+		const root = inst.getInstanceRoot();
+		root.style.setProperty("--timer_gap", getSetting(this.name, "gap") + "px");
 
 
-		let _this = this;
+		const _this = this;
 		inst.q(".insertButton").addEventListener("click",function(){
 			_this.addTimer(inst);
 			_this.saveAllTimers(inst);
@@ -418,7 +418,7 @@ dashboard.registerModule({
 				return;
 
 			//check for active timers
-			let timers = inst.qAll(".timer");
+			const timers = inst.qAll(".timer");
 			for (let i=0; i<timers.length; i++) {
 				if (timers[i].status == inst.status.ACTIVE || timers[i].status == inst.status.RINGING) {
 					e.preventDefault();
@@ -430,24 +430,24 @@ dashboard.registerModule({
 		//sort button
 		inst.q(".sort").addEventListener("click", function(){
 			//get timers
-			let timers = Array.from(inst.qAll(".timer"));
+			const timers = Array.from(inst.qAll(".timer"));
 
 			//sort in order of ringing; lowest number first, inactive, active/paused; lowest number first
 			timers.sort(function(a,b){
-				let aSortVal = _this.statusToSortValue(inst, a.status);
-				let bSortVal = _this.statusToSortValue(inst, b.status);
+				const aSortVal = _this.statusToSortValue(inst, a.status);
+				const bSortVal = _this.statusToSortValue(inst, b.status);
 				if (aSortVal != bSortVal) return aSortVal - bSortVal;
 
-				let differenceA = new Date()-a.startDate;
-				let timeA = a.duration-(differenceA+a.msOffset);
-				let differenceB = new Date()-b.startDate;
-				let timeB = b.duration-(differenceB+b.msOffset);
+				const differenceA = new Date()-a.startDate;
+				const timeA = a.duration-(differenceA+a.msOffset);
+				const differenceB = new Date()-b.startDate;
+				const timeB = b.duration-(differenceB+b.msOffset);
 				return timeA - timeB;
 			});
 
 			//insert sorted timers
-			let timerList = inst.q(".timers");
-			let trailingGroup = inst.q(".trailingGroup");
+			const timerList = inst.q(".timers");
+			const trailingGroup = inst.q(".trailingGroup");
 			for(let i=0; i<timers.length; i++) {
 				timerList.insertBefore(timers[i], trailingGroup);
 			}
@@ -523,10 +523,10 @@ dashboard.registerModule({
 		return [
 			{ver: "0.9.0", func: function(){
 				log("Converting mt_timers to less excessive escaping.");
-				let oldSave = localStorage.getItem("mt_timers");
+				const oldSave = localStorage.getItem("mt_timers");
 				if (!oldSave) return;
-				let firstParse = JSON.parse(oldSave);
-				let obj = [];
+				const firstParse = JSON.parse(oldSave);
+				const obj = [];
 				for(let i=0; i<firstParse.length; i++){
 					obj[i] = JSON.parse(firstParse[i]);
 				}
@@ -534,9 +534,9 @@ dashboard.registerModule({
 			}},
 			{ver: "1.0.0", func: function(){
 				log("Converting status to new save format.");
-				let oldSave = localStorage.getItem("mt_timers");
+				const oldSave = localStorage.getItem("mt_timers");
 				if (!oldSave) return;
-				let obj = JSON.parse(oldSave);
+				const obj = JSON.parse(oldSave);
 
 				for(let i=0; i<obj.length; i++) {
 					switch(obj[i].state) {

@@ -7,7 +7,7 @@ dashboard.registerModule({
 
 	updateBar: function(obj){
 		//get the progress bar entry
-		let progressBarEntry = obj.closest(".entry");
+		const progressBarEntry = obj.closest(".entry");
 
 		//calculate the percent
 		let percent = progressBarEntry.querySelector(".completedNumber").value;
@@ -27,18 +27,18 @@ dashboard.registerModule({
 
 	//updates all of the progress bar widths
 	processAllBars: function(inst){
-		let entries = inst.qAll(".entry");
+		const entries = inst.qAll(".entry");
 		for(let i=0; i<entries.length; i++){
 			this.updateBar(entries[i]);
 		}
 	},
 
 	addBar: function(inst){
-		let _this = this;
+		const _this = this;
 
 		//create from template
-		let element = inst.q(".tmplt").content.cloneNode(true);
-		let created = element.querySelector(".entry");
+		const element = inst.q(".tmplt").content.cloneNode(true);
+		const created = element.querySelector(".entry");
 
 		element.querySelector(".label").value = getSetting(this.name, "defaultName");
 
@@ -55,15 +55,15 @@ dashboard.registerModule({
 		created.querySelector(".label").addEventListener("keydown", function(e){
 			if(e.key === "ArrowUp") {
 				e.preventDefault();
-				let bar = this.closest(".entry");
-				let input = bar.querySelector(".completedNumber");
+				const bar = this.closest(".entry");
+				const input = bar.querySelector(".completedNumber");
 				input.value = +input.value + 1;
 				_this.updateBar(bar);
 				_this.saveBars(inst);
 			} else if(e.key === "ArrowDown") {
 				e.preventDefault();
-				let bar = this.closest(".entry");
-				let input = bar.querySelector(".completedNumber");
+				const bar = this.closest(".entry");
+				const input = bar.querySelector(".completedNumber");
 				input.value = +input.value - 1;
 				_this.updateBar(bar);
 				_this.saveBars(inst);
@@ -77,13 +77,13 @@ dashboard.registerModule({
 	},
 
 	deleteBar: function(element, _this){
-		let bar = element.closest(".entry");
+		const bar = element.closest(".entry");
 
 		let shouldDelete = true;
 
-		let completed = bar.querySelector(".completedNumber").value;
-		let total = bar.querySelector(".totalNumber").value;
-		let label = bar.querySelector(".label").value;
+		const completed = bar.querySelector(".completedNumber").value;
+		const total = bar.querySelector(".totalNumber").value;
+		const label = bar.querySelector(".label").value;
 		if (completed < total && getSetting(_this.name,"AskOnDeleteUnfinished")){
 			shouldDelete = db_confirm("This progress bar (" + label + ") is not completed. Are you sure you would like to delete it?");
 		}
@@ -93,11 +93,11 @@ dashboard.registerModule({
 	},
 
 	saveBars: function(inst){
-		let saveObj = [];
+		const saveObj = [];
 
-		let entries = inst.qAll(".entry");
+		const entries = inst.qAll(".entry");
 		for(let i=0; i<entries.length; i++){
-			let curBar = {};
+			const curBar = {};
 
 			curBar.done = entries[i].querySelector(".completedNumber").value;
 			curBar.total = entries[i].querySelector(".totalNumber").value;
@@ -110,13 +110,13 @@ dashboard.registerModule({
 	},
 
 	loadBars: function(inst){
-		let loadedObj = JSON.parse(localStorage.getItem("pb_bars"));
+		const loadedObj = JSON.parse(localStorage.getItem("pb_bars"));
 
 		if (loadedObj == null)
 			return;
 
 		for(let i=0; i<loadedObj.length; i++){
-			let newBar = this.addBar(inst);
+			const newBar = this.addBar(inst);
 
 			newBar.querySelector(".completedNumber").value = loadedObj[i].done;
 			newBar.querySelector(".totalNumber").value = loadedObj[i].total;
@@ -128,9 +128,9 @@ dashboard.registerModule({
 
 	//init the progress bars
 	init: function(inst){
-		let _this = this;
+		const _this = this;
 
-		let barContainer = inst.q(".bars");
+		const barContainer = inst.q(".bars");
 
 		//create event listeners
 		barContainer.addEventListener("click", function(){
@@ -142,7 +142,7 @@ dashboard.registerModule({
 		});
 
 		inst.q(".insertButton").addEventListener("click",function(){
-			let newBar = _this.addBar(inst);
+			const newBar = _this.addBar(inst);
 			_this.updateBar(newBar);
 		});
 

@@ -1,5 +1,5 @@
 'use strict';
-var dashboard = {
+let dashboard = {
 	modules: [],
 	includes: [],
 
@@ -48,7 +48,7 @@ var dashboard = {
 
 	//dashboard.togglePane(toPane)
 	togglePane: function(toPane){
-		let panes = {
+		const panes = {
 			settings: {pane: document.querySelector("#settingsPane"), funcs: dashboard.settings},
 			layout: {pane: document.querySelector("#layout")},
 			documentation: {pane: document.querySelector("#documentationPane"), funcs: dashboard.documentation}
@@ -85,7 +85,7 @@ var dashboard = {
 
 	//dashboard.makeExport()
 	makeExport: function(){
-		let obj = {"storage" : {},"jsonFields" : []};
+		const obj = {"storage" : {},"jsonFields" : []};
 		for(let i = 0, key = localStorage.key(i); i < localStorage.length; i++, key=localStorage.key(i)){
 			let value = localStorage.getItem(key);
 
@@ -98,13 +98,13 @@ var dashboard = {
 			obj.storage[key] = value;
 		}
 
-		let seperator = getSetting("dashboard", "exportPrettified") ? "\t" : "";
-		let string = JSON.stringify(obj, null, seperator) + "\n";
+		const seperator = getSetting("dashboard", "exportPrettified") ? "\t" : "";
+		const string = JSON.stringify(obj, null, seperator) + "\n";
 
 		//download the file
-		let downloadAnchor = document.createElement("a");
+		const downloadAnchor = document.createElement("a");
 
-		let date = new Date();
+		const date = new Date();
 		let dateStr = date.getFullYear();
 		dateStr += "-" + ((date.getMonth()+1) + "").padStart(2,0);
 		dateStr += "-" + ((date.getDate() + "").padStart(2,0));
@@ -119,9 +119,7 @@ var dashboard = {
 
 	//dashboard.setSingleLayout(moduleName)
 	setSingleLayout(moduleName){
-		let layout;
-		//don't set layout if we want to load from settings
-		layout = "[[{\"name\": \"" + moduleName + "\"}]]";
+		const layout = "[[{\"name\": \"" + moduleName + "\"}]]";
 		dashboard.layout.reload(layout);
 	},
 
@@ -143,7 +141,7 @@ var dashboard = {
 			if (!file)
 				return;
 
-			let doRead = db_confirm("Importing data will wipe all currently saved data. Would you like to continue?");
+			const doRead = db_confirm("Importing data will wipe all currently saved data. Would you like to continue?");
 			if (!doRead)
 				return;
 
@@ -151,26 +149,25 @@ var dashboard = {
 			localStorage.clear();
 
 			//load new data
-			let fileReader = new FileReader();
+			const fileReader = new FileReader();
 			fileReader.readAsText(file);
-			fileReader.addEventListener("load", function(){
-			let file = JSON.parse(fileReader.result);
-			let storage = file.storage;
-			let jsonFields = file.jsonFields;
+			fileReader.addEventListener("load", function() {
+				const file = JSON.parse(fileReader.result);
+				const storage = file.storage;
+				const jsonFields = file.jsonFields;
 
-			for(let k in storage){
-				let data = storage[k];
-				if (jsonFields.includes(k))
-					data = JSON.stringify(data);
+				for(let k in storage){
+					let data = storage[k];
+					if (jsonFields.includes(k))
+						data = JSON.stringify(data);
 
-				localStorage.setItem(k, data);
-			}
+					localStorage.setItem(k, data);
+				}
 
-			dashboard.layout.reload();
+				dashboard.layout.reload();
 
-			document.querySelector("#importFile").value = "";
-		});
-
+				document.querySelector("#importFile").value = "";
+			});
 		});
 		document.querySelector("#saveSettings").addEventListener("click", function(){
 			dashboard.settings.saveSettings();
@@ -181,14 +178,13 @@ var dashboard = {
 		dashboard.layout.create();
 
 		//init layout dropdown
-		let layouts = document.querySelector("#layoutDropdown");
+		const layouts = document.querySelector("#layoutDropdown");
 		layouts.addEventListener("input", function(){
-			let layout;
 			//don't set layout if we want to load from settings
 			if (this.value != "default") {
 				dashboard.setSingleLayout(this.value);
 			} else {
-				dashboard.layout.reload(layout);
+				dashboard.layout.reload();
 			}
 		});
 
@@ -196,10 +192,10 @@ var dashboard = {
 			if (moduleName === "dashboard")
 				continue;
 
-			let module = dashboard.modules[moduleName];
+			const module = dashboard.modules[moduleName];
 
 			//add to layout dropdown
-			let e = document.createElement("option");
+			const e = document.createElement("option");
 			e.value = module.name;
 			e.innerHTML = module.displayName;
 			layouts.appendChild(e);
@@ -246,7 +242,7 @@ var dashboard = {
 		//dashboard.layout.appendNewContainer(location)
 		//create a new instance in the DOM
 		appendNewContainer: function(location){
-			let c = document.createElement("div");
+			const c = document.createElement("div");
 			c.classList.add("container");
 			location.appendChild(c);
 			return c;
@@ -255,7 +251,7 @@ var dashboard = {
 		//dashboard.layout.appendInstanceToContainer(container)
 		//add a module to a container
 		appendInstanceToContainer: function(container){
-			let m = document.createElement("div");
+			const m = document.createElement("div");
 			m.classList.add("instance");
 			container.appendChild(m);
 			return m;
@@ -313,19 +309,19 @@ var dashboard = {
 			}
 
 			//if lastVersion is undefined, that means a module previously didn't have an update function
-			let currentVersion = dashboard.modules[name].version;
+			const currentVersion = dashboard.modules[name].version;
 			//if the version has increased, or loading save from before update functions existed/had a saved version
 			if (currentVersion > lastVersion || (!lastVersion && localStorage.length > 0)){
-				let updateFunc = dashboard.modules[name].updates;
+				const updateFunc = dashboard.modules[name].updates;
 				if (updateFunc){
-					let updates = updateFunc();
+					const updates = updateFunc();
 					for(let i=0; i<updates.length; i++){
 						//if the update function is needed for this update
 						if (!lastVersion || (lastVersion <= updates[i].ver && updates[i].ver < currentVersion)){
 							if (!dashboard.layout.exportWarning) {
 								dashboard.layout.exportWarning = true;
-								let shouldExprt = db_confirm("The save format of some modules have been changed and are about to be updated, would you like to make an export of your data first? (highly recommended)");
-								if (shouldExprt) {
+								const shouldExport = db_confirm("The save format of some modules have been changed and are about to be updated, would you like to make an export of your data first? (highly recommended)");
+								if (shouldExport) {
 									dashboard.makeExport();
 								}
 							}
@@ -374,13 +370,13 @@ var dashboard = {
 			//create containers
 			dashboard.layout.nextInstanceId = 0;
 			for(let cPos = 0; cPos<config.length; cPos++){
-				let container = this.appendNewContainer(document.querySelector("#layout"));
+				const container = this.appendNewContainer(document.querySelector("#layout"));
 
 				//create instances
 				for(let mPos = 0; mPos<config[cPos].length; mPos++){
 
 					//container settings
-					let mConfig = config[cPos][mPos];
+					const mConfig = config[cPos][mPos];
 					if (!mConfig.name) {
 						if (mConfig.hasOwnProperty("maxHeight")){
 							container.style.maxHeight = mConfig.maxHeight;
@@ -395,7 +391,7 @@ var dashboard = {
 						continue;
 					}
 
-					let instRoot = this.appendInstanceToContainer(container);
+					const instRoot = this.appendInstanceToContainer(container);
 					instRoot.classList.add(mConfig.name);
 
 					//apply instance settings
@@ -407,10 +403,10 @@ var dashboard = {
 					dashboard.layout.updateModule(mConfig.name);
 
 					//process module includes
-					let mObj = dashboard.modules[mConfig.name];
+					const mObj = dashboard.modules[mConfig.name];
 					if (mObj.include) {
 						for(let inc=0; inc<mObj.include.length; inc++) {
-							let include = dashboard.includes[mObj.include[inc]];
+							const include = dashboard.includes[mObj.include[inc]];
 							if (!include) {
 								error(mObj.name + ", " + mObj.include[inc] + " - include not found.");
 								continue;
@@ -420,7 +416,7 @@ var dashboard = {
 					}
 
 					//call instantiate for the instance
-					let instFunc = dashboard.modules[mConfig.name].instantiate;
+					const instFunc = dashboard.modules[mConfig.name].instantiate;
 					if (instFunc){
 						try {
 							instFunc(instRoot);
@@ -430,16 +426,16 @@ var dashboard = {
 					}
 
 					//create the instance
-					let instanceId = dashboard.layout.nextInstanceId;
+					const instanceId = dashboard.layout.nextInstanceId;
 					dashboard.layout.nextInstanceId++;
 
-					let instance = {
+					const instance = {
 						//queries for a single element that matches selector
 						q: function(selector){
 							if (selector.includes("#")){
 								log(mConfig.name + " is using an id q, this is not recommended.");
 							}
-							let results = instRoot.querySelectorAll(selector);
+							const results = instRoot.querySelectorAll(selector);
 							if (results.length > 1){
 								error("q(\"" + selector+ "\") found multiple results. Did you mean to use qAll()?");
 							}
@@ -469,7 +465,7 @@ var dashboard = {
 						},
 					};
 
-					let imodule = dashboard.modules[mConfig.name];
+					const imodule = dashboard.modules[mConfig.name];
 					//save the instance on the module
 					if (!imodule.instances)
 						imodule.instances = [];
@@ -503,8 +499,8 @@ var dashboard = {
 
 		//dashboard.documentation.createDocumentationInstance(name)
 		createDocumentationInstance: function(name){
-			let module = dashboard.modules[name];
-			let mDocsFunc = module.registerDocumentation;
+			const module = dashboard.modules[name];
+			const mDocsFunc = module.registerDocumentation;
 			if (!mDocsFunc)
 				return;
 
@@ -517,24 +513,24 @@ var dashboard = {
 			}
 
 			//if the module has a docs function, we create a documentation instance for it
-			let container = dashboard.layout.appendNewContainer(document.querySelector("#docs"));
-			let element = dashboard.layout.appendInstanceToContainer(container);
+			const container = dashboard.layout.appendNewContainer(document.querySelector("#docs"));
+			const element = dashboard.layout.appendInstanceToContainer(container);
 
 			//add the element to the index
-			let entry = document.createElement("li");
-			let a = document.createElement("a");
-			a.href = "";
-			a.addEventListener("click", function(e){
+			const entry = document.createElement("li");
+			const anchor = document.createElement("a");
+			anchor.href = "";
+			anchor.addEventListener("click", function(e){
 				e.preventDefault();
 				document.querySelector("#" + module.name).scrollIntoView();
 			});
-			a.innerHTML = module.displayName;
-			entry.appendChild(a);
+			anchor.innerHTML = module.displayName;
+			entry.appendChild(anchor);
 			document.querySelector("#docIndex").appendChild(entry);
 
 			//add the header element
-			let title = document.createElement("div");
-			let displayName = module.displayName;
+			const title = document.createElement("div");
+			const displayName = module.displayName;
 			title.innerHTML = displayName ? displayName : name;
 			title.classList.add("fs30b");
 			title.id = module.name;
@@ -542,9 +538,9 @@ var dashboard = {
 
 			//create p elements for every mDoc[i]
 			for(let i=0; i<mDocs.length; i++){
-				let p = document.createElement("p");
-				p.innerHTML = mDocs[i];
-				element.appendChild(p);
+				const paragraph = document.createElement("p");
+				paragraph.innerHTML = mDocs[i];
+				element.appendChild(paragraph);
 			}
 		},
 	},
@@ -564,8 +560,8 @@ var dashboard = {
 		checkLeave: function(){
 			let discard = true;
 			if (!document.querySelector("#settingsPane").hidden){
-				let unsavedSettings = JSON.stringify(dashboard.settings.getNewSettings());
-				let savedSettings = localStorage.getItem("settings");
+				const unsavedSettings = JSON.stringify(dashboard.settings.getNewSettings());
+				const savedSettings = localStorage.getItem("settings");
 
 				//if the user has unsaved settings
 				if (savedSettings != unsavedSettings){
@@ -577,8 +573,8 @@ var dashboard = {
 
 		//dashboard.settings.getNewSettings()
 		getNewSettings: function(){
-			let settings = document.querySelectorAll(".settingInput");
-			let newSettings = {};
+			const settings = document.querySelectorAll(".settingInput");
+			const newSettings = {};
 			for(let i=0; i<settings.length; i++){
 				//skip if defaulting
 				if(document.querySelector("#default_" + settings[i].id).checked)
@@ -608,14 +604,14 @@ var dashboard = {
 
 		//dashboard.settings.saveSettings()
 		saveSettings: function(){
-			let newSettings = dashboard.settings.getNewSettings();
+			const newSettings = dashboard.settings.getNewSettings();
 			localStorage.setItem("settings", JSON.stringify(newSettings));
 		},
 
 		//dashboard.settings.createInstance(name)
 		createInstance: function(moduleName){
-			let module = dashboard.modules[moduleName];
-			let mSettingsFunc = module.registerSettings;
+			const module = dashboard.modules[moduleName];
+			const mSettingsFunc = module.registerSettings;
 			if (!mSettingsFunc)
 				return;
 
@@ -628,21 +624,21 @@ var dashboard = {
 			}
 
 			//if the module has a settings function, we create an instance for it
-			let container = dashboard.layout.appendNewContainer(document.querySelector("#settingsPane"));
-			let element = dashboard.layout.appendInstanceToContainer(container);
+			const container = dashboard.layout.appendNewContainer(document.querySelector("#settingsPane"));
+			const element = dashboard.layout.appendInstanceToContainer(container);
 
-			let title = document.createElement("div");
-			let displayName = dashboard.modules[moduleName].displayName;
+			const title = document.createElement("div");
+			const displayName = dashboard.modules[moduleName].displayName;
 			title.innerHTML = displayName ? displayName : moduleName;
 			title.classList.add("fs30b");
 			element.appendChild(title);
 
 			//go through the settings and create the entries for them
 			for(let i=0; i<mSettings.length; i++){
-				let tempId = moduleName + "_" + mSettings[i].name;
+				const tempId = moduleName + "_" + mSettings[i].name;
 
 				//default checkbox
-				let defaultInput = document.createElement("input");
+				const defaultInput = document.createElement("input");
 				defaultInput.type = "checkbox";
 				defaultInput.checked = getSettingFromStorage(moduleName, mSettings[i].name) == null;
 				defaultInput.id = "default_" + moduleName + "_" + mSettings[i].name;
@@ -655,7 +651,7 @@ var dashboard = {
 
 				//append input
 				let input;
-				let value = getSetting(moduleName, mSettings[i].name);
+				const value = getSetting(moduleName, mSettings[i].name);
 
 				switch(mSettings[i].type){
 					case "bool":
@@ -682,7 +678,7 @@ var dashboard = {
 
 				//setup label and input ID
 				input.id = tempId;
-				let desc = document.createElement("label");
+				const desc = document.createElement("label");
 				desc.setAttribute("for", input.id);
 
 				//tell the element what it is
@@ -698,7 +694,7 @@ var dashboard = {
 				element.appendChild(desc);
 
 				//append line break
-				let br = document.createElement("br");
+				const br = document.createElement("br");
 				element.appendChild(br);
 			}
 
@@ -721,8 +717,8 @@ var dashboard = {
 
 		//dashboard.tests.loadTests(moduleName, testCount)
 		loadTests: function(moduleName, testCount) {
-			let _this = this;
-			let script = document.createElement("script");
+			const _this = this;
+			const script = document.createElement("script");
 			script.src = "test/" + moduleName + "_tests.js";
 			script.addEventListener("error", function(){
 				_this.loadedTests++;
@@ -747,16 +743,16 @@ var dashboard = {
 
 		//dashboard.test.runTests
 		runTests(){
-			let output = [];
+			const output = [];
 			for(let name in dashboard.tests.testers){
 				dashboard.setSingleLayout(name);
-				let fails = [];
+				const fails = [];
 
-				let tests = this.testers[name];
+				const tests = this.testers[name];
 				let passCount = 0;
 				for(let i=0; i<tests.length; i++) {
-					let module = dashboard.modules[name];
-					let instance = module.instances[0];
+					const module = dashboard.modules[name];
+					const instance = module.instances[0];
 					let result;
 					try {
 						result = tests[i].test(instance, module);
@@ -838,7 +834,7 @@ dashboard.registerModule({
 	},
 
 	init: function(){
-		let display = !getSetting(this.name, "displayFooterText") ? "none" : "block";
+		const display = !getSetting(this.name, "displayFooterText") ? "none" : "block";
 		document.querySelector("#footerText").style.display = display;
 	},
 
@@ -847,8 +843,8 @@ dashboard.registerModule({
 			{ver: "1.0.0", func: function(){
 				//This function relies on overrideLayouts running their update functions before other modules
 				log("Splitting version numbers into a per module basis");
-				let version = localStorage.getItem("lastVersion");
-				let moduleVersions = {};
+				const version = localStorage.getItem("lastVersion");
+				const moduleVersions = {};
 				for(let moduleName in dashboard.modules) {
 					if(dashboard.modules[moduleName].updates) {
 						moduleVersions[moduleName] = version;

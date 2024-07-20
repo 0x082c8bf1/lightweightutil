@@ -5,7 +5,7 @@ dashboard.registerInclude({
 	//The apply function is called with the module for the element that it's being included in
 	// So adding testFunc to
 	apply: function(module) {
-		let _this = this;
+		const _this = this;
 
 		module.includeFunction = function() {
 			_this.privateFunction();

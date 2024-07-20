@@ -5,12 +5,12 @@ dashboard.registerModule({
 	version: "1.0.1",
 
 	init: function(inst){
-		let _this = this;
+		const _this = this;
 
 		//due now button
 		inst.q(".dueNow").addEventListener("click", function(){
-			let today = new Date();
-			let now = _this.getFormattedDate(today);
+			const today = new Date();
+			const now = _this.getFormattedDate(today);
 
 			inst.q(".dueSetting").value = now;
 		});
@@ -58,7 +58,7 @@ dashboard.registerModule({
 		// This does mean that the move up and down options will not respect the save button despite
 		// everything else in the settings pane doing so.
 		inst.q(".moveup").addEventListener("click", function(){
-			let editing = inst.q(".settings").editing;
+			const editing = inst.q(".settings").editing;
 
 			//find the next non-hidden sibling
 			let sibling = editing;
@@ -75,7 +75,7 @@ dashboard.registerModule({
 		});
 
 		inst.q(".movedown").addEventListener("click", function(){
-			let editing = inst.q(".settings").editing;
+			const editing = inst.q(".settings").editing;
 
 			//find the next non-hidden sibling
 			let sibling = editing;
@@ -125,7 +125,7 @@ dashboard.registerModule({
 		inst.getInstanceRoot().dragSrcElem = null;
 
 		//apply labels
-		let completedId = "completed" + inst.getId();
+		const completedId = "completed" + inst.getId();
 		inst.q(".completed").id = completedId;
 		inst.q(".completedLabel").setAttribute("for", completedId);
 	},
@@ -137,8 +137,8 @@ dashboard.registerModule({
 			hide = !inst.q(".completed").checked;
 		}
 
-		let list = inst.q(".list");
-		let todos = list.querySelectorAll(":scope > .todo_entry");
+		const list = inst.q(".list");
+		const todos = list.querySelectorAll(":scope > .todo_entry");
 		for(let i=0; i<todos.length; i++) {
 			todos[i].hidden = (hide == (todos[i].querySelector(".checkbox:not(:checked)") == null));
 		}
@@ -146,20 +146,20 @@ dashboard.registerModule({
 
 	saveSettings: function(inst) {
 		//save element being edited
-		let editing = inst.q(".settings").editing;
-		let entries = editing.querySelector(".listEntryContainer");
+		const editing = inst.q(".settings").editing;
+		const entries = editing.querySelector(".listEntryContainer");
 
 		entries.innerHTML = "";
-		let js = this.todoEntryToJSON(inst.q(".settings").querySelector(".listEntry"), true);
+		const js = this.todoEntryToJSON(inst.q(".settings").querySelector(".listEntry"), true);
 
 		this.refreshList(inst, js, entries, false);
 
 		//save date
-		let selectedDate = inst.q(".dueSetting").value;
+		const selectedDate = inst.q(".dueSetting").value;
 		editing.querySelector(".dueDate").innerHTML = selectedDate;
 
 		//save description
-		let description = inst.q(".descriptionSetting").value;
+		const description = inst.q(".descriptionSetting").value;
 		editing.querySelector(".description").innerHTML = description;
 
 		this.setDateDisplay(editing.querySelector(".relativeDate"), selectedDate, editing.querySelector(".date"));
@@ -194,9 +194,9 @@ dashboard.registerModule({
 	},
 
 	getRelativeDate: function(date){
-		let msPerDay = 1000*60*60*24;
-		let currentDay = new Date(this.getFormattedDate(new Date()));
-		let days = (date/msPerDay - Math.floor(currentDay/msPerDay));
+		const msPerDay = 1000*60*60*24;
+		const currentDay = new Date(this.getFormattedDate(new Date()));
+		const days = (date/msPerDay - Math.floor(currentDay/msPerDay));
 		return days;
 	},
 
@@ -220,8 +220,8 @@ dashboard.registerModule({
 	//given the task container, convert it to a JSON object, need to pass in if we are in editing mode or not
 	todoEntryToJSON: function(task, editing) {
 		//get values
-		let checked = task.querySelector(".checkbox").checked;
-		let children = task.querySelectorAll(":scope > .listEntry");
+		const checked = task.querySelector(".checkbox").checked;
+		const children = task.querySelectorAll(":scope > .listEntry");
 
 		let name;
 		if (editing) {
@@ -235,13 +235,13 @@ dashboard.registerModule({
 		if (children.length > 0) {
 			JSONChildren = [];
 			for(let i=0; i<children.length; i++) {
-				let newChild = this.todoEntryToJSON(children[i], editing);
+				const newChild = this.todoEntryToJSON(children[i], editing);
 				JSONChildren = JSONChildren.concat(newChild);
 			}
 		}
 
 		//build object
-		let obj = [{"name": name, "checked": checked}];
+		const obj = [{"name": name, "checked": checked}];
 		if (JSONChildren)
 			obj[0].children = JSONChildren;
 
@@ -250,21 +250,21 @@ dashboard.registerModule({
 
 	//save the todos to localStorage
 	saveTodos: function(inst){
-		let obj = [];
-		let list = inst.q(".list");
-		let todos = list.querySelectorAll(".todo_entry");
+		const obj = [];
+		const list = inst.q(".list");
+		const todos = list.querySelectorAll(".todo_entry");
 		for(let i=0; i<todos.length; i++) {
 			//save the tasks
-			let json = this.todoEntryToJSON(todos[i].querySelector(".listEntryContainer > .listEntry"), false);
+			const json = this.todoEntryToJSON(todos[i].querySelector(".listEntryContainer > .listEntry"), false);
 
 			//save the description
-			let description = todos[i].querySelector(".description").innerHTML;
+			const description = todos[i].querySelector(".description").innerHTML;
 
 			//save the dates
-			let date = todos[i].querySelector(".dueDate").innerHTML;
-			let completionDate = todos[i].querySelector(".completedDate").value;
+			const date = todos[i].querySelector(".dueDate").innerHTML;
+			const completionDate = todos[i].querySelector(".completedDate").value;
 
-			let todo = {"date": date, "tasks": json, "description": description,"completed": completionDate};
+			const todo = {"date": date, "tasks": json, "description": description,"completed": completionDate};
 			obj.push(todo);
 		}
 
@@ -274,17 +274,15 @@ dashboard.registerModule({
 
 	//load the todos from localStorage
 	loadTodos: function(inst){
-		let saved = localStorage.getItem("td_todos");
+		const saved = JSON.parse(localStorage.getItem("td_todos"));
 
 		if (!saved)
 			return;
 
-		saved = JSON.parse(saved);
-
 		for(let i=0; i<saved.length; i++) {
 			//don't load any todos that need to be purged
-			let purgeDays = getSetting(this.name,"purgeCompleted");
-			let dontLoadBefore = Date.now() - purgeDays*1000*60*60*24;
+			const purgeDays = getSetting(this.name,"purgeCompleted");
+			const dontLoadBefore = Date.now() - purgeDays*1000*60*60*24;
 
 			if (purgeDays >= 0 && saved[i].completed != 0 && dontLoadBefore > saved[i].completed) {
 				continue;
@@ -301,9 +299,9 @@ dashboard.registerModule({
 
 	//Add event listeners to element to make it draggable, used by both the settings modal and display list
 	makeDraggable: function(inst, element) {
-		let _this = this;
+		const _this = this;
 		element.draggable = true;
-		let editMode = element.classList.contains("editable"); //if we're in the settings modal
+		const editMode = element.classList.contains("editable"); //if we're in the settings modal
 
 		function removeDragClasses(e) {
 			e.classList.remove("over-top");
@@ -312,7 +310,7 @@ dashboard.registerModule({
 		}
 
 		//don't let a drag start when dragging on the textbox
-		let title = element.querySelector(".title");
+		const title = element.querySelector(".title");
 		title.addEventListener("mousedown", function(){
 			element.draggable=false;
 		});
@@ -363,7 +361,7 @@ dashboard.registerModule({
 
 		//end drag
 		element.addEventListener("drop", function(e){
-			let dragSource = inst.getInstanceRoot().dragSrcElem;
+			const dragSource = inst.getInstanceRoot().dragSrcElem;
 
 			//abort the drag if you're trying to drag from the settings page outside of it or vice versa
 			if (this.classList.contains("editable") != dragSource.classList.contains("editable")) {
@@ -409,23 +407,23 @@ dashboard.registerModule({
 
 	refreshList: function(inst, todoList, parent, editing){
 		for(let i=0; i<todoList.length; i++) {
-			let entry = document.createElement("div");
+			const entry = document.createElement("div");
 			entry.classList.add("listEntry");
 			if (editing) {
-				let dragArea = document.createElement("span");
+				const dragArea = document.createElement("span");
 				dragArea.innerHTML = '=';
 				dragArea.classList.add("drag-handle");
 				entry.appendChild(dragArea);
 			}
 
-			let checkbox = document.createElement("input");
+			const checkbox = document.createElement("input");
 			checkbox.type = "checkbox";
 			checkbox.checked = todoList[i].checked;
 			checkbox.classList.add("checkbox");
 			checkbox.setAttribute("autocomplete", "off");
 			entry.appendChild(checkbox);
 
-			let _this = this;
+			const _this = this;
 
 			if (!editing) {
 				checkbox.addEventListener("change", function(){
@@ -457,12 +455,12 @@ dashboard.registerModule({
 					//allow navigation with ctrl+up/down
 					if (e.ctrlKey){
 						if (e.code === "ArrowDown") {
-							let titles = inst.qAll(".listEntry.editable>.title");
+							const titles = inst.qAll(".listEntry.editable>.title");
 							let next = Array.from(titles).indexOf(document.activeElement) + 1;
 							next = clamp(next, 0, titles.length-1);
 							titles[next].focus();
 						} else if (e.code === "ArrowUp") {
-							let titles = inst.qAll(".listEntry.editable>.title");
+							const titles = inst.qAll(".listEntry.editable>.title");
 							let next = Array.from(titles).indexOf(document.activeElement) - 1;
 							next = clamp(next, 0, titles.length-1);
 							titles[next].focus();
@@ -483,20 +481,20 @@ dashboard.registerModule({
 			}
 
 			if (editing) {
-				let addButton = document.createElement("input");
+				const addButton = document.createElement("input");
 				addButton.type = "button";
 				addButton.value = "+";
 				addButton.classList.add("spaced");
 				addButton.setAttribute("autocomplete", "off");
 
-				let _this = this;
+				const _this = this;
 				addButton.addEventListener("click", function(){
-					let defTodo = [{"name":getSetting(_this.name, "defaultName"), "checked":false}];
+					const defTodo = [{"name":getSetting(_this.name, "defaultName"), "checked":false}];
 					_this.refreshList(inst, defTodo, this.parentNode, editing);
 				});
 				entry.appendChild(addButton);
 
-				let removeButton = document.createElement("input");
+				const removeButton = document.createElement("input");
 				removeButton.type = "button";
 				removeButton.value = "X";
 				removeButton.classList.add("spaced");
@@ -524,9 +522,9 @@ dashboard.registerModule({
 	},
 
 	updateCompleted: function(child){
-		let todo = child.closest(".todo_entry");
-		let unchecked = todo.querySelector(".checkbox:not(:checked)");
-		let dateElement = todo.querySelector(".completedDate");
+		const todo = child.closest(".todo_entry");
+		const unchecked = todo.querySelector(".checkbox:not(:checked)");
+		const dateElement = todo.querySelector(".completedDate");
 		if (!unchecked) {
 			//set the datetime that it was completed
 			dateElement.value = Date.now();
@@ -538,10 +536,10 @@ dashboard.registerModule({
 	},
 
 	newTodo: function(inst, append, JSONTasks, date, completionDate, description){
-		let _this = this;
+		const _this = this;
 
-		let fragment = inst.q(".todo_tmplt").content.cloneNode(true);
-		let element = fragment.children[0];
+		const fragment = inst.q(".todo_tmplt").content.cloneNode(true);
+		const element = fragment.children[0];
 
 		//set the default date
 		let todoDate;
@@ -579,7 +577,7 @@ dashboard.registerModule({
 
 		//setup settings trigger
 		element.addEventListener("click", function(e){
-			let classList = e.target.classList;
+			const classList = e.target.classList;
 			if (!classList.contains("checkbox"))
 				_this.editTodo(inst, element);
 		});
@@ -587,7 +585,7 @@ dashboard.registerModule({
 		this.makeDraggable(inst, element);
 
 		//put at the top or bottom of the list depending on append
-		let firstTodo = inst.qAll(".todo_entry")[0];
+		const firstTodo = inst.qAll(".todo_entry")[0];
 		if (append || !firstTodo) {
 			inst.q(".list").insertBefore(fragment, inst.q(".bottomAnchor"));
 		} else {
@@ -600,8 +598,8 @@ dashboard.registerModule({
 		inst.q(".settings").editing = todo;
 
 		//copy nested todo to settings
-		let json = this.todoEntryToJSON(todo.querySelector(".listEntry"), false);
-		let todoEditingElement = inst.q(".settings").querySelector(".listEntryContainer");
+		const json = this.todoEntryToJSON(todo.querySelector(".listEntry"), false);
+		const todoEditingElement = inst.q(".settings").querySelector(".listEntryContainer");
 		todoEditingElement.innerHTML = "";
 		this.refreshList(inst, json, todoEditingElement, true);
 
@@ -614,7 +612,7 @@ dashboard.registerModule({
 	},
 
 	deleteEditing: function(inst){
-		let shouldContinue = db_confirm("Are you sure that you would like to delete this todo?");
+		const shouldContinue = db_confirm("Are you sure that you would like to delete this todo?");
 
 		if (!shouldContinue)
 			return;
@@ -701,4 +699,3 @@ dashboard.registerModule({
 		]
 	},
 });
-

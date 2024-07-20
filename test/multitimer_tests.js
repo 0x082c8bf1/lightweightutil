@@ -4,38 +4,38 @@ dashboard.tests.registerTester(
 	[
 		//test adding timer
 		{name: "add", test: function(inst){
-			let count = inst.qAll(".timer").length;
+			const count = inst.qAll(".timer").length;
 			dashboard.tests.click(inst.q(".insertButton"));
-			let newCount = inst.qAll(".timer").length;
+			const newCount = inst.qAll(".timer").length;
 			return (count+1 == newCount);
 		}},
 
 		//test starting timer
 		{name: "start", test: function(inst){
-			let timer = document.querySelector(".timer");
+			const timer = document.querySelector(".timer");
 			dashboard.tests.click(timer.querySelector(".start-button"));
 			return (timer.status == inst.status.ACTIVE);
 		}},
 
 		//test pausing timer
 		{name: "pause", test: function(inst){
-			let timer = document.querySelector(".timer");
+			const timer = document.querySelector(".timer");
 			dashboard.tests.click(timer.querySelector(".start-button"));
 			return (timer.status == inst.status.PAUSED);
 		}},
 
 		//test resetting timer
 		{name: "reset", test: function(inst){
-			let timer = document.querySelector(".timer");
+			const timer = document.querySelector(".timer");
 			dashboard.tests.click(timer.querySelector(".x-button"));
 			return (timer.status == inst.status.INACTIVE);
 		}},
 
 		//test deleting timer
 		{name: "delete", test: function(inst){
-			let count = inst.qAll(".timer").length;
+			const count = inst.qAll(".timer").length;
 			dashboard.tests.click(inst.qAll(".x-button")[0]);
-			let newCount = inst.qAll(".timer").length;
+			const newCount = inst.qAll(".timer").length;
 			return (count-1 == newCount);
 		}},
 

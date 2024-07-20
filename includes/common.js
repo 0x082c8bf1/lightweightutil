@@ -20,18 +20,18 @@ function getSetting(module, setting){
 		if (dashboard.tests.overrideSettings[module]) {
 			// using hasOwnProperty here so that we can check if it exists even if it's false
 			if (dashboard.tests.overrideSettings[module].hasOwnProperty(setting)) {
-				let override = dashboard.tests.overrideSettings[module][setting];
+				const override = dashboard.tests.overrideSettings[module][setting];
 				return override;
 			}
 		}
 	}
 
 	//check if the setting is saved
-	let retrievedValue = getSettingFromStorage(module, setting);
+	const retrievedValue = getSettingFromStorage(module, setting);
 
 	//if the setting is not saved, get the default value
 	if (retrievedValue == null) {
-		let settings = dashboard.modules[module].registerSettings();
+		const settings = dashboard.modules[module].registerSettings();
 		for(let i=0; i<settings.length; i++){
 			if (settings[i].name == setting){
 				return settings[i].default;
@@ -45,7 +45,7 @@ function getSetting(module, setting){
 
 // returns true or false if the setting exists or not
 function settingExists(module, setting){
-	let settings = dashboard.modules[module]?.registerSettings();
+	const settings = dashboard.modules[module]?.registerSettings();
 	if (!settings) {
 		error("Module " + module + " could not be found.");
 		return false;
@@ -67,7 +67,7 @@ function getSettingFromStorage(module, setting) {
 	if (settings != null) {
 		settings = JSON.parse(settings);
 
-		let moduleSettings = settings[module];
+		const moduleSettings = settings[module];
 		if (moduleSettings != null)
 			retrievedValue = moduleSettings[setting];
 	}

@@ -646,6 +646,7 @@ var dashboard = {
 				defaultInput.type = "checkbox";
 				defaultInput.checked = getSettingFromStorage(moduleName, mSettings[i].name) == null;
 				defaultInput.id = "default_" + moduleName + "_" + mSettings[i].name;
+				defaultInput.setAttribute("autocomplete", "off");
 				defaultInput.managing = tempId;
 				element.appendChild(defaultInput);
 				defaultInput.addEventListener("change", function(){
@@ -672,6 +673,7 @@ var dashboard = {
 						input.type = "number";
 						input.value = value;
 				}
+				input.setAttribute("autocomplete", "off");
 
 				//disable if defaulted
 				if (document.querySelector("#default_"+tempId).checked) {

@@ -37,7 +37,7 @@
 		<!-- settings -->
 		<div id="settingsPane" hidden>
 			<div id="settings"></div>
-			<input type="button" value="Save" id="saveSettings">
+			<input type="button" value="Save" id="saveSettings" autocomplete="off"/>
 		</div>
 
 		<!-- documentation -->
@@ -55,10 +55,10 @@
 					<div>Information</div>
 					<ul class="footerList">
 						<li>
-							<input id="settingsToggle" type="button" value="Toggle settings">
+							<input id="settingsToggle" type="button" value="Toggle settings" autocomplete="off"/>
 						</li>
 						<li>
-							<input id="documentationToggle" type="button" value="Toggle documentation">
+							<input id="documentationToggle" type="button" value="Toggle documentation" autocomplete="off"/>
 						</li>
 						<li>
 							<a href="https://github.com/0x082c8bf1/lightweightutil" target="_blank">[Source code]</a>
@@ -74,11 +74,11 @@
 							</select>
 						</li>
 						<li>
-							<input type="button" id="export" value="Export">
+							<input type="button" id="export" value="Export" autocomplete="off"/>
 						</li>
 						<li>
 							<label for="importFile" class="fileUpload button">Load file</label>
-							<input type="file" class="file" id="importFile" accept=".json" hidden/>
+							<input type="file" class="file" id="importFile" accept=".json" hidden autocomplete="off"/>
 						</li>
 					</ul>
 				</span>

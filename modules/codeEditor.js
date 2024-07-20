@@ -334,17 +334,17 @@ dashboard.registerModule({
 			<textarea class="codeEditorTextarea" tabIndex="-1" placeholder="Your code here." style="white-space: pre; tab-size: 4;" spellcheck="false"></textarea>
 			<br/>
 			<abbr title="Use output('value') to write to the output. The return value is the return value of the last executed statement.">
-				<input type="button" class="ce_eval" value="JS eval"/>
+				<input type="button" class="ce_eval" value="JS eval" autocomplete="off"/>
 			</abbr>
-			<input type="button" class="ce_pwrap" value="Wrap in ()"/>
-			<input type="button" class="ce_beautify" value="JSON beautify"/>
-			<input type="button" class="ce_minify" value="JSON minify"/>
+			<input type="button" class="ce_pwrap" value="Wrap in ()" autocomplete="off"/>
+			<input type="button" class="ce_beautify" value="JSON beautify" autocomplete="off"/>
+			<input type="button" class="ce_minify" value="JSON minify" autocomplete="off"/>
 			<br/>
 			<span class="codeEditorOutput"></span>
-			<input type="button" class="saveCode" value="Save"/>
-			<input type="text" class="codeEditorSaveName"/>
+			<input type="button" class="saveCode" value="Save" autocomplete="off"/>
+			<input type="text" class="codeEditorSaveName" autocomplete="off"/>
 			<select class="ce_selector"></select>
-			<input type="button" class="deleteSelection" value="Delete selected">
+			<input type="button" class="deleteSelection" value="Delete selected" autocomplete="off"/>
 			<br/>
 			<span class="codeEditorReturnValue"></span>
 		`

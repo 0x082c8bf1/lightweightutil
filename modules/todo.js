@@ -422,6 +422,7 @@ dashboard.registerModule({
 			checkbox.type = "checkbox";
 			checkbox.checked = todoList[i].checked;
 			checkbox.classList.add("checkbox");
+			checkbox.setAttribute("autocomplete", "off");
 			entry.appendChild(checkbox);
 
 			let _this = this;
@@ -442,6 +443,7 @@ dashboard.registerModule({
 			if (editing) {
 				name = document.createElement("input");
 				name.type = "text";
+				name.setAttribute("autocomplete", "off");
 				name.value = todoList[i].name;
 			} else {
 				name = document.createElement("span");
@@ -485,6 +487,7 @@ dashboard.registerModule({
 				addButton.type = "button";
 				addButton.value = "+";
 				addButton.classList.add("spaced");
+				addButton.setAttribute("autocomplete", "off");
 
 				let _this = this;
 				addButton.addEventListener("click", function(){
@@ -497,6 +500,7 @@ dashboard.registerModule({
 				removeButton.type = "button";
 				removeButton.value = "X";
 				removeButton.classList.add("spaced");
+				removeButton.setAttribute("autocomplete", "off");
 
 				removeButton.addEventListener("click", function(){
 					//delete the task or the whole todo if it's the root task
@@ -625,25 +629,25 @@ dashboard.registerModule({
 			<div class="fs30b">Todo List</div>
 			<div class="settingsContainer" hidden>
 				<div class="settings">
-					<input type="button" class="saveSetting" value="Save">
-					<input type="button" class="cancelSetting" value="Cancel">
-					<input type="button" class="deleteSetting" value="Delete">
+					<input type="button" class="saveSetting" value="Save" autocomplete="off"/>
+					<input type="button" class="cancelSetting" value="Cancel" autocomplete="off"/>
+					<input type="button" class="deleteSetting" value="Delete" autocomplete="off"/>
 					<br/>
-					<input type="button" class="moveup" value="Move up">
-					<input type="button" class="movedown" value="Move down">
+					<input type="button" class="moveup" value="Move up" autocomplete="off"/>
+					<input type="button" class="movedown" value="Move down" autocomplete="off"/>
 					<br/><br/>
 					<div class="listEntryContainer"></div>
 					<br/>
 					<textarea class="descriptionSetting" placeholder="Description"></textarea>
 					<br/><br/>
-					<input type="date" class="dueSetting">
-					<input type="button" class="dueNow" value="Today">
-					<input type="button" class="clearDate" value="Clear">
+					<input type="date" class="dueSetting" autocomplete="off"/>
+					<input type="button" class="dueNow" value="Today" autocomplete="off"/>
+					<input type="button" class="clearDate" value="Clear" autocomplete="off"/>
 				</div>
 				<div class="backgroundFade"></div>
 			</div>
-			<input type="button" class="insertButton" value="+">
-			<input type="checkbox" class="completed">
+			<input type="button" class="insertButton" value="+" autocomplete="off"/>
+			<input type="checkbox" class="completed" autocomplete="off"/>
 			<label class="completedLabel">Complete</label>
 			<br/>
 			<div class="list">
@@ -655,10 +659,10 @@ dashboard.registerModule({
 							<span class="dueDate colorOverride"></span><span class="relativeDate colorOverride"></span>
 						</div>
 						<span class="completedDisplay colorOverride"></span>
-						<input type="hidden" class="completedDate" value="0">
+						<input type="hidden" class="completedDate" value="0" autocomplete="off"/>
 					</div>
 				</template>
-				<input type="hidden" class="bottomAnchor">
+				<input type="hidden" class="bottomAnchor" autocomplete="off"/>
 			</div>
 		`;
 	},

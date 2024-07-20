@@ -156,19 +156,19 @@ dashboard.registerModule({
 			<div class="bars">
 				<template class="tmplt">
 					<span class="entry">
-						<input type="number" min=0 class="width6 completedNumber" value=0>
+						<input type="number" min=0 class="width6 completedNumber" value=0 autocomplete="off"/>
 						<span>/</span>
-						<input type="number" min=1 class="width6 totalNumber" value=1>
+						<input type="number" min=1 class="width6 totalNumber" value=1 autocomplete="off"/>
 						<span class="fullBar">
-							<input type="text" class="label">
+							<input type="text" class="label" autocomplete="off"/>
 							<span class="bar"></span>
 						</span>
 						<span class="completionPercent"></span>
-						<input type="button" class="deleteButton" value="X">
+						<input type="button" class="deleteButton" value="X" autocomplete="off"/>
 						<br/>
 					</span>
 				</template>
-				<input type="button" class="insertButton" value="+">
+				<input type="button" class="insertButton" value="+" autocomplete="off"/>
 			</div>
 		`
 	},

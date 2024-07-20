@@ -210,21 +210,21 @@ dashboard.registerModule({
 			<br/>
 			<span><span class="characterCount">0</span> characters, <span class="wordCount">0</span> words, <span class="lineCount">1</span> lines.</span>
 			<br/>
-			<input type="button" class="tb_sort" value="Sort lines">
-			<input type="button" class="tb_removeDupes" value="Remove duplicate lines">
-			<input type="button" class="tb_replace" value="Replace">
-			<input type="button" class="tb_toupper" value="Uppercase">
-			<input type="button" class="tb_tolower" value="Lowercase">
-			<input type="button" class="tb_torand" value="Randomcase">
-			<input type="button" class="tb_toinvert" value="Invertcase">
+			<input type="button" class="tb_sort" value="Sort lines" autocomplete="off"/>
+			<input type="button" class="tb_removeDupes" value="Remove duplicate lines" autocomplete="off"/>
+			<input type="button" class="tb_replace" value="Replace" autocomplete="off"/>
+			<input type="button" class="tb_toupper" value="Uppercase" autocomplete="off"/>
+			<input type="button" class="tb_tolower" value="Lowercase" autocomplete="off"/>
+			<input type="button" class="tb_torand" value="Randomcase" autocomplete="off"/>
+			<input type="button" class="tb_toinvert" value="Invertcase" autocomplete="off"/>
 			<br/>
 			<span class="findSpan" hidden>
 				<span>Replace </span>
-				<input type="text" class="replaceInputPattern">
+				<input type="text" class="replaceInputPattern" autocomplete="off"/>
 				<span> with </span>
-				<input type="text" class="replaceOutputPattern">
-				<input type="button" class="tb_repace" value="Go">
-				<input type="checkbox" class="regexSearch" checked=true>
+				<input type="text" class="replaceOutputPattern" autocomplete="off"/>
+				<input type="button" class="tb_repace" value="Go" autocomplete="off"/>
+				<input type="checkbox" class="regexSearch" checked=true autocomplete="off"/>
 				<label class="regexLabel">Regex</label>
 			</span>
 		`

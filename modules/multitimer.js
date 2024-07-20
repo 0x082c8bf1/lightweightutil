@@ -495,24 +495,24 @@ dashboard.registerModule({
 			<div class="flex-container timers">
 				<template class="timer_tmplt">
 					<span class="timer">
-						<input type="text" class="name"/>
-						<input class="x-button" type="button" value="X">
+						<input type="text" class="name" autocomplete="off"/>
+						<input class="x-button" type="button" value="X" autocomplete="off"/>
 						<br/>
-						<input type="button" class="start-button" value="Start"/>
+						<input type="button" class="start-button" value="Start" autocomplete="off"/>
 						<span hidden class="time-display"></span>
 						<span class="time-input">
-							<input class="h-input width2" type="text" placeholder="HH">
+							<input class="h-input width2" type="text" placeholder="HH" autocomplete="off"/>
 							<span>:</span>
-							<input class="m-input width2" type="text" placeholder="MM">
+							<input class="m-input width2" type="text" placeholder="MM" autocomplete="off"/>
 							<span>:</span>
-							<input class="s-input width2" type="text" placeholder="SS">
+							<input class="s-input width2" type="text" placeholder="SS" autocomplete="off"/>
 						</span>
 					</span>
 				</template>
-				<input type="button" class="notifButton" value="Enable notifications" hidden>
+				<input type="button" class="notifButton" value="Enable notifications" autocomplete="off" hidden/>
 				<span class="trailingGroup">
-					<input type="button" class="insertButton" value="+">
-					<input type="button" class="sort" value="Sort">
+					<input type="button" class="insertButton" value="+" autocomplete="off"/>
+					<input type="button" class="sort" value="Sort" autocomplete="off"/>
 				<span>
 				</div>
 		`

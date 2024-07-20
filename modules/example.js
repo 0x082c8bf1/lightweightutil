@@ -28,7 +28,7 @@ dashboard.registerModule({
 	instantiate: function(where){
 		where.innerHTML = /*html*/`
 			<div class="fs30b">Example</div>
-			<input type="button" class="click" value="0"/>
+			<input type="button" class="click" value="0" autocomplete="off"/>
 			<div>This is what the example module adds to the DOM.</div>
 		`
 	},

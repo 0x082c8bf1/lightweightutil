@@ -1,5 +1,5 @@
 'use strict';
-let dashboard = {
+const dashboard = {
 	modules: [],
 	includes: [],
 
@@ -174,6 +174,11 @@ let dashboard = {
 		});
 
 		document.querySelector("#importFile").value = "";
+
+		//handle updates
+		for(let name in dashboard.modules) {
+			dashboard.layout.updateModule(name);
+		}
 
 		dashboard.layout.create();
 
@@ -364,7 +369,6 @@ let dashboard = {
 					error(e);
 					error("Error running init for " + m + "\n", e);
 				}
-				dashboard.layout.updateModule(dashboard.modules[m].name);
 			}
 
 			//create containers
@@ -398,9 +402,6 @@ let dashboard = {
 					if (mConfig.width){
 						instRoot.style.maxWidth = mConfig.width;
 					}
-
-					//handle updates
-					dashboard.layout.updateModule(mConfig.name);
 
 					//process module includes
 					const mObj = dashboard.modules[mConfig.name];

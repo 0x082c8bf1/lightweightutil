@@ -353,7 +353,7 @@ dashboard.registerModule({
 
 		for(let i=0; i<obj.length; i++) {
 			//load ringing timers as active, since they're basically the same thing
-			const tempStatus = obj[i].status;
+			let tempStatus = obj[i].status;
 			if (tempStatus == inst.status.RINGING) {
 				tempStatus = inst.status.ACTIVE;
 			}

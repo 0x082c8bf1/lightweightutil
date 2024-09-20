@@ -345,6 +345,52 @@ const dashboard = {
 			dashboard.layout.updateSaveCurrentVersion(name, versions);
 		},
 
+		//dashboard.layout.getContainerSettings()
+		//	returns an array of all of the settings that can be applied to containers
+		getContainerSettings: function(){
+			return [
+				{
+					displayName: "Max Height",
+					name: "maxHeight",
+					validationString: "\\d{1,}(px|%)",
+					apply: function (container, value) {
+						container.style.maxHeight = value;
+					},
+				},
+			]
+		},
+
+		//dashboard.layout.getModuleSettings()
+		//	returns an array of all of the settings that can be applied to modules
+		getModuleSettings: function(){
+			return [
+				{
+					displayName: "Width",
+					name: "width",
+					validationString: "\\d{1,}(px|%)",
+					apply: function (module, value) {
+						module.style.maxWidth = value;
+					}
+				},
+			];
+		},
+
+		//dashboard.layout.getSettings()
+		//	returns an array of all settings that can be applied to containers and modules
+		getSettings(){
+			let cSettings = dashboard.layout.getContainerSettings();
+			cSettings.forEach(setting => {
+				setting.type = "container";
+			});
+
+			let mSettings = dashboard.layout.getModuleSettings();
+			mSettings.forEach(setting => {
+				setting.type = "module";
+			});
+
+			return cSettings.concat(mSettings);
+		},
+
 		//dashboard.layout.create(overrideConfig)
 		create: function(overrideConfig){
 			log("Creating layout");
@@ -356,7 +402,14 @@ const dashboard = {
 			} else {
 				config = overrideConfig;
 			}
-			config = JSON.parse(config);
+
+			try {
+				config = JSON.parse(config);
+			} catch(e) {
+				error(e);
+				db_alert("Invalid config loaded, please go to the settings, turn on the default, and reload.");
+				return;
+			}
 
 			//search for override modules
 			for (let m in dashboard.modules){
@@ -378,15 +431,13 @@ const dashboard = {
 
 				//create instances
 				for(let mPos = 0; mPos<config[cPos].length; mPos++){
-
-					//container settings
 					const mConfig = config[cPos][mPos];
-					if (!mConfig.name) {
-						if (mConfig.hasOwnProperty("maxHeight")){
-							container.style.maxHeight = mConfig.maxHeight;
-						}
 
-						//don't parse the setting as an instance
+					//apply container settings
+					const cSettings = dashboard.layout.getContainerSettings();
+					const setting = cSettings.find(setting => setting.name === mConfig.name);
+					if (setting) {
+						setting.apply(container, mConfig.value);
 						continue;
 					}
 
@@ -399,9 +450,15 @@ const dashboard = {
 					instRoot.classList.add(mConfig.name);
 
 					//apply instance settings
-					if (mConfig.width){
-						instRoot.style.maxWidth = mConfig.width;
+					let mSettings = dashboard.layout.getModuleSettings();
+					for(const mSetting of mSettings) {
+						if (mConfig[mSetting.name]) {
+							mSetting.apply(instRoot, mConfig[mSetting.name]);
+						}
 					}
+
+					//handle updates
+					dashboard.layout.updateModule(mConfig.name);
 
 					//process module includes
 					const mObj = dashboard.modules[mConfig.name];
@@ -592,6 +649,9 @@ const dashboard = {
 					case "number":
 						value = parseInt(settings[i].value);
 						if (!value) value = 0;
+					case "custom":
+						value = settings[i].value;
+						break;
 				}
 
 				if (newSettings[settings[i].module] == null)
@@ -669,6 +729,12 @@ const dashboard = {
 						input = document.createElement("input");
 						input.type = "number";
 						input.value = value;
+						break;
+					case "custom":
+						input = document.createElement("input");
+						input.type = "hidden";
+						input.value = value;
+						break;
 				}
 				input.setAttribute("autocomplete", "off");
 
@@ -689,10 +755,17 @@ const dashboard = {
 				input.classList.add("settingInput");
 
 				element.appendChild(input);
-
-				//append description
-				desc.innerHTML = mSettings[i].description;
-				element.appendChild(desc);
+				if (mSettings[i].type === "custom") {
+					//call custom type
+					element.appendChild(input);
+					let span = document.createElement("span");
+					mSettings[i].customDefinition(span);
+					element.appendChild(span);
+				} else {
+					//append description
+					desc.innerHTML = mSettings[i].description;
+					element.appendChild(desc);
+				}
 
 				//append line break
 				const br = document.createElement("br");
@@ -705,7 +778,7 @@ const dashboard = {
 	},
 
 	//dashboard.tests
-	tests : {
+	tests: {
 		//set this to true to run the tests on page load
 		//dashboard.tests.enabled
 		enabled: false,
@@ -808,7 +881,7 @@ const dashboard = {
 dashboard.registerModule({
 	name: "dashboard",
 	displayName: "Dashboard",
-	version: "1.1.0",
+	version: "1.1.1",
 	overrideLayout: true,
 
 	registerSettings: function(){
@@ -827,9 +900,426 @@ dashboard.registerModule({
 			},
 			{
 				"name": "config",
-				"description": "Config JSON object",
-				"type": "text",
-				"default": '[[{"maxHeight": "350px"},{"name": "todo", "width": "300px"},{"name": "multitimer"}],[{"name": "textbox"}],[{"name": "codeEditor"}, {"name": "keyCode", "width": "250px"}],[{"name": "progressBar"}]]',
+				"description": "Config editor object",
+				"type": "custom",
+				"customDefinition": function (parent) {
+					function loadLayout() {
+						function changeSelection(newSelection) {
+							//update selection variables/classes
+							if (newSelection) {
+								if (newSelection.classList.contains("selected")) {
+									newSelection.classList.remove("selected");
+									dialog.selection = null;
+								} else {
+									if (dialog.selection)
+										dialog.selection.classList.remove("selected");
+									dialog.selection = newSelection;
+									newSelection.classList.add("selected");
+								}
+							}
+
+							//update display of selection
+							if (dialog.selection) {
+								let type;
+								if (dialog.selection.classList.contains("row")) {
+
+									type = "container";
+									dialog.querySelector(".rowEdit").hidden = false;
+									dialog.querySelector(".instEdit").hidden = true;
+								} else if (dialog.selection.classList.contains("config_instance")) {
+									type = "module";
+									dialog.querySelector(".rowEdit").hidden = true;
+									dialog.querySelector(".instEdit").hidden = false;
+
+									filterModuleSelections();
+
+									//instances -> settings
+									const selection = dialog.selection.querySelector(".config_module_name").value;
+									dialog.querySelector(".moduleSelect").value = selection;
+								}
+
+								for(const setting of dashboard.layout.getSettings()) {
+									if (setting.type !== type) {
+										continue;
+									}
+
+									//update settings values
+									const element = dialog.querySelector("." + setting.name + "Setting");
+									element.value = dialog.selection.querySelector("." + setting.name).innerHTML;
+
+									//update settings validations
+									procValidation(element, setting);
+								}
+							} else {
+								dialog.querySelector(".rowEdit").hidden = true;
+								dialog.querySelector(".instEdit").hidden = true;
+							}
+						}
+
+						function createRow() {
+							const rowFrag = dialog.querySelector(".row_tmplt").content.cloneNode(true);
+
+							const row = rowFrag.children[0];
+							dialog.querySelector(".editableTable").appendChild(rowFrag);
+
+							row.addEventListener("click", function() {
+								changeSelection(this);
+							});
+
+							return row;
+						}
+
+						function createInstance(row) {
+							const instFrag = dialog.querySelector(".inst_tmplt").content.cloneNode(true);
+							const inst = instFrag.children[0];
+
+							row.appendChild(instFrag);
+							inst.addEventListener("click", function(e) {
+								e.stopPropagation();
+								changeSelection(this);
+							});
+
+							return inst;
+						}
+
+						//filter out modules that are already on the config
+						function filterModuleSelections() {
+							const configModules = dialog.querySelectorAll(".config_module_name");
+							const selections = [];
+							for (let i=0; i<configModules.length; i++) {
+								selections.push(configModules[i].value);
+							}
+
+							const modules = dialog.querySelectorAll(".moduleSelect > option");
+							for (let i=0; i<modules.length; i++) {
+								modules[i].hidden = selections.includes(modules[i].value);
+							}
+						}
+
+						function loadConfig(config) {
+							let cSettings = dashboard.layout.getContainerSettings();
+							let mSettings = dashboard.layout.getModuleSettings();
+							for (let rows = 0; rows < config.length; rows++) {
+								const row = createRow();
+								for (let instances = 0; instances < config[rows].length; instances++) {
+									const moduleName = config[rows][instances].name;
+									if (moduleName) {
+										//check if row is actually a setting
+										const setting = cSettings.find(setting => setting.name === moduleName);
+										if (setting) {
+											row.querySelector("." + moduleName).innerHTML = config[rows][instances].value;
+											row.querySelector("." + moduleName + "Display").hidden = false;
+											row.querySelector("." + moduleName).hidden = false;
+											continue;
+										}
+
+										const inst = createInstance(row);
+
+										for(let mSetting of mSettings) {
+											//process instance settings
+											const value = config[rows][instances][mSetting.name];
+											if (value) {
+												inst.querySelector("." + mSetting.name).innerHTML = value;
+												inst.querySelector("." + mSetting.name + "Display").hidden = false;
+												inst.querySelector("." + mSetting.name).hidden = false;
+											}
+										}
+
+										inst.querySelector(".config_module").innerHTML = dashboard.modules[moduleName].displayName;
+										inst.querySelector(".config_module_name").value = moduleName;
+									}
+								}
+							}
+						}
+
+						function getGuiString() {
+							const newConfig = [];
+
+							const rows = document.querySelectorAll(".row");
+							let mSettings = dashboard.layout.getModuleSettings();
+							for (let i = 0; i < rows.length; i++) {
+								const instances = rows[i].querySelectorAll(".config_instance");
+								if (instances.length > 0) { //only add a row if there's really an instance in it
+									const row = [];
+									for(const setting of dashboard.layout.getContainerSettings()) {
+										const value = rows[i].querySelector("." + setting.name).innerHTML;
+										if (value) {
+											row.push(
+												{
+													name: setting.name,
+													value: value,
+												}
+											);
+										}
+									}
+
+									for (let o = 0; o < instances.length; o++) {
+										const inst = {
+											name: instances[o].querySelector(".config_module_name").value,
+										}
+
+										for(const setting of mSettings) {
+											const value = instances[o].querySelector("." + setting.name).innerHTML;
+											if (value) {
+												inst[setting.name] = value;
+											}
+										}
+
+										row.push(inst);
+									}
+
+									newConfig.push(row);
+								}
+							}
+							return JSON.stringify(newConfig);
+						}
+
+						function procValidation(input, setting) {
+							if (input.validity.patternMismatch) {
+								input.style.border = "2px dashed red";
+								return;
+							} else {
+								input.style.border = "";
+							}
+
+							if (input.value === "") {
+								dialog.selection.querySelector("." + setting.name + "Display").hidden = true;
+							} else {
+								dialog.selection.querySelector("." + setting.name + "Display").hidden = false;
+							}
+							dialog.selection.querySelector("." + setting.name).innerHTML = input.value;
+						}
+
+						dialog.selection = null;
+						dialog.innerHTML = /*html*/`
+							<div class="guiEditor">
+								<table class="editableTable"></table>
+								<div class="rowEdit" hidden=true>
+									<input type="button" class="rowAddCell" value="Add cell"><br/>
+									<input type="button" class="rowAdd" value="Add row"><br/>
+									<input type="button" class="rowDelete" value="Delete row">
+								</div>
+								<div class="instEdit" hidden=true>
+									<br/>
+									<span>Module: </span><select class="moduleSelect"></select><br/>
+									<input type="button" class="cellDelete" value="Delete cell">
+								</div>
+								<br/>
+								<template class="row_tmplt">
+									<tr class="row">
+										<td class="rowHeader">
+											<span>Row</span>
+										</td>
+									</tr>
+								</template>
+								<template class="inst_tmplt">
+									<td class="config_instance">
+										<input type="hidden" class="config_module_name"></span>
+										<span class="config_module"></span>
+									</td>
+								</template>
+							</div>
+							<div class="textEditor" hidden=true>
+								<textarea class="textareaEditor"></textarea>
+							</div>
+							<input type="button" class="toggleEditMode" value="Toggle edit mode" ><br/>
+							<input type="button" class="apply" value="Apply" />
+							<input type="button" class="cancel" value="Cancel" />
+						`;
+
+						//add dynamic settings to templates
+						for (const setting of dashboard.layout.getSettings()) {
+							//display
+							const div = document.createElement("div");
+							const displaySpan = document.createElement("span");
+							displaySpan.classList.add(setting.name + "Display");
+							displaySpan.innerHTML = setting.displayName + ": ";
+							displaySpan.hidden = true;
+
+							const valueSpan = document.createElement("span");
+							valueSpan.classList.add(setting.name);
+
+							let inst;
+							if (setting.type === "module") {
+								inst = dialog.querySelector(".inst_tmplt").content.querySelector(".config_instance");
+							} else if (setting.type === "container") {
+								inst = dialog.querySelector(".row_tmplt").content.querySelector(".rowHeader");
+							}
+
+							div.appendChild(displaySpan);
+							div.appendChild(valueSpan);
+							inst.appendChild(div);
+
+							//edit
+							const editDisplay = document.createElement("span");
+							editDisplay.innerHTML = setting.displayName + ": ";
+							const editInput = document.createElement("input");
+							editInput.type = "text";
+							editInput.classList.add(setting.name + "Setting");
+							editInput.pattern = setting.validationString;
+
+							editInput.addEventListener("change", function(){
+								procValidation(this, setting);
+							});
+							const br = document.createElement("br");
+							if (setting.type === "module") {
+								const rEdit = dialog.querySelector(".instEdit");
+								const deleteButton = dialog.querySelector(".cellDelete");
+
+								rEdit.insertBefore(editDisplay, deleteButton);
+								rEdit.insertBefore(editInput, deleteButton);
+								rEdit.insertBefore(br, deleteButton);
+							} else if (setting.type === "container") {
+								const br2 = document.createElement("br");
+
+								const rEdit = dialog.querySelector(".rowEdit");
+								rEdit.prepend(br2);
+								rEdit.prepend(editInput);
+								rEdit.prepend(editDisplay);
+								rEdit.prepend(br);
+							}
+						}
+
+						//add cell button
+						dialog.querySelector(".rowAddCell").addEventListener("click", function() {
+							createInstance(dialog.selection);
+						});
+
+						//add row button
+						dialog.querySelector(".rowAdd").addEventListener("click", function() {
+							const row = createRow();
+							createInstance(row);
+						});
+
+						//delete row button
+						dialog.querySelector(".rowDelete").addEventListener("click", function() {
+							const rows = dialog.querySelector(".editableTable").rows;
+
+							//can't delete last row
+							if (rows.length <= 1)
+								return;
+
+							//get selection before the deleted one, or the first one if it is the first one
+							let newSelection = Array.from(rows).indexOf(dialog.selection)-1;
+							newSelection = newSelection >= 0 ? newSelection : 0;
+
+							dialog.selection.remove();
+							dialog.selection = null;
+							changeSelection(dialog.querySelectorAll(".row")[newSelection]);
+						});
+
+						//delete cell button
+						dialog.querySelector(".cellDelete").addEventListener("click", function() {
+							const cells = dialog.selection.parentNode.cells;
+
+							//can't delete last cell (not including the row header)
+							if (cells.length <= 2)
+								return;
+
+							//get selection before the deleted one, or the first one if it is the first one
+							let newSelection = Array.from(cells).indexOf(dialog.selection) - 1;
+							newSelection = newSelection >= 1 ? newSelection : 1;
+
+							dialog.selection.remove();
+							dialog.selection = null;
+							changeSelection(cells[newSelection]);
+						});
+
+						//Add module select options
+						for (const moduleName in dashboard.modules) {
+							const module = dashboard.modules[moduleName];
+							//don't let the user select overrideLayout modules
+							if (module.overrideLayout)
+								continue;
+
+							const option = document.createElement("option");
+							option.innerHTML = module.displayName;
+							option.value = module.name;
+							dialog.querySelector(".moduleSelect").appendChild(option);
+						}
+
+						//settings -> instances
+						dialog.querySelector(".moduleSelect").addEventListener("change", function() {
+							dialog.selection.querySelector(".config_module").innerHTML = dashboard.modules[this.value].displayName;
+							dialog.selection.querySelector(".config_module_name").value = this.value;
+						});
+
+						dialog.querySelector(".toggleEditMode").addEventListener("click", function (e) {
+							const guiEditor = dialog.querySelector(".guiEditor");
+							dialog.querySelector(".textEditor").hidden = guiEditor.hidden;
+							guiEditor.hidden = !guiEditor.hidden;
+
+							if (guiEditor.hidden) {
+								dialog.querySelector(".textareaEditor").value = getGuiString();
+							} else {
+								changeSelection(null);
+
+								dialog.querySelector(".editableTable").innerHTML = "";
+								loadConfig(JSON.parse(dialog.querySelector(".textareaEditor").value));
+
+							}
+						});
+						dialog.querySelector(".textareaEditor").style.width = "90vw";
+
+						dialog.querySelector(".cancel").addEventListener("click", function() {
+							realDialog.close();
+						});
+
+						dialog.querySelector(".apply").addEventListener("click", function() {
+							let output;
+
+							if (!dialog.querySelector(".guiEditor").hidden) {
+								output = getGuiString();
+							} else {
+								output = document.querySelector(".textareaEditor").value;
+							}
+
+							document.querySelector("#dashboard_config").value = output;
+							realDialog.close();
+						});
+
+						//load config
+						loadConfig(JSON.parse(document.querySelector("#dashboard_config").value));
+					}
+
+					const title = document.createElement("span");
+					title.innerHTML = "Layout ";
+					parent.appendChild(title);
+
+					const button = document.createElement("input");
+					button.type = "button";
+					button.value = "Edit";
+
+					const realDialog = document.createElement("dialog");
+					realDialog.classList.add("configEditor");
+
+					//stop all click propagation to realDialog
+					const dialog = document.createElement("div");
+					dialog.addEventListener("click", function (e) {
+						e.stopPropagation();
+					});
+					dialog.classList.add("fake-dialog");
+					realDialog.appendChild(dialog);
+
+					realDialog.addEventListener("click", function (e) {
+						this.close();
+					});
+
+					parent.appendChild(realDialog);
+
+					button.addEventListener("click", function() {
+						if (document.querySelector("#default_dashboard_config").checked) {
+							db_alert("Please disable the default checkbox to edit the config.");
+							return;
+						}
+
+						loadLayout();
+						realDialog.showModal();
+					});
+					parent.appendChild(button);
+				},
+
+				"default": '[[{"name":"maxHeight","value":"350px"},{"name":"todo","width":"300px"},{"name":"multitimer"}],[{"name":"textbox"}],[{"name":"codeEditor"},{"name":"keyCode","width":"250px"}],[{"name":"progressBar"}]]',
 			}
 		]
 	},
@@ -842,19 +1332,48 @@ dashboard.registerModule({
 	updates: function(){
 		return[
 			{ver: "1.0.0", func: function(){
-				//This function relies on overrideLayouts running their update functions before other modules
-				log("Splitting version numbers into a per module basis");
-				const version = localStorage.getItem("lastVersion");
-				const moduleVersions = {};
+					//This function relies on overrideLayouts running their update functions before other modules
+					log("Splitting version numbers into a per module basis");
+					const version = localStorage.getItem("lastVersion");
+					const moduleVersions = {};
 				for(let moduleName in dashboard.modules) {
 					if(dashboard.modules[moduleName].updates) {
-						moduleVersions[moduleName] = version;
+							moduleVersions[moduleName] = version;
+						}
+					}
+
+					localStorage.setItem("db_versions", JSON.stringify(moduleVersions));
+					localStorage.removeItem("lastVersion");
+				}
+			},
+			{
+				ver: "1.1.0", func: function() {
+					log("Updating maxHeight to name/value.");
+					let config = getSetting("dashboard", "config");
+					if (!config)
+						return;
+
+					config = JSON.parse(config);
+					let changed = false;
+					for (let c = 0; c < config.length; c++) {
+						for (let m = 0; m < config[c].length; m++) {
+							if (!config[c][m].maxHeight)
+								continue;
+
+							config[c][m].module = "maxHeight";
+							config[c][m].value = config[c][m].maxHeight;
+
+							delete config[c][m].maxHeight;
+							changed = true;
+						}
+					}
+					if (changed) {
+						let settings = JSON.parse(localStorage.getItem("settings"));
+						settings.dashboard.config = JSON.stringify(config);
+						localStorage.setItem("settings", JSON.stringify(settings));
 					}
 				}
-
-				localStorage.setItem("db_versions", JSON.stringify(moduleVersions));
-				localStorage.removeItem("lastVersion");
-			}},
+			},
 		];
 	}
 });

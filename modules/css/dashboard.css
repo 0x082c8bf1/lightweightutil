@@ -145,3 +145,37 @@ label:hover {
 #docs {
 	margin-left: 200px;
 }
+
+dialog {
+	background-color: black;
+	border: 1px solid grey;
+	padding: 0px;
+}
+
+dialog::backdrop {
+	background: rgba(0, 0, 0, 0.8);
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+td {
+	border: 1px solid white;
+	padding: 8px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.configEditor :not(.selected) > .rowHeader {
+	background-color: #292929;
+}
+
+.configEditor .selected {
+	background-color: #535353;
+}
+
+.fake-dialog {
+	padding: 1em;
+}

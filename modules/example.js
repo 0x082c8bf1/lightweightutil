@@ -33,13 +33,21 @@ dashboard.registerModule({
 		setInnerHTML(where, /*html*/`
 			<div class="fs30b">Example</div>
 			<input type="button" class="click" value="0"/>
-			<div>This is what the example module adds to the DOM.</div>
+			<div class="exampleText">This is what the example module adds to the DOM.</div>
 		`);
 	},
 
 	//this is uses in example_tests to show accessing module functions
 	return4: function(){
 		return 4;
+	},
+
+	getStyle: function(){
+		return /*css*/`
+			.exampleText {
+				color: yellow;
+			}
+		`;
 	},
 
 	//this is where you can add settings

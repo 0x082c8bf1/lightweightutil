@@ -466,6 +466,18 @@ const dashboard = {
 						}
 					}
 
+					//apply module style
+					const styleName = mConfig.name + "Style";
+					if (!document.querySelector("#" + styleName)) {
+						const styleFunc = dashboard.modules[mConfig.name].getStyle;
+						if (styleFunc){
+							const style = styleFunc();
+
+							const styleParent = document.querySelector("#moduleStyles");
+							gimme("style").id(styleName).innerHTML(style).appendTo(styleParent);
+						}
+					}
+
 					//call instantiate for the instance
 					const instFunc = dashboard.modules[mConfig.name].instantiate;
 					if (instFunc){

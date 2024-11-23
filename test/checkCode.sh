@@ -23,7 +23,7 @@ testRegex	"$src"	"(\}else|else\{)"		"Use spaces between else and braces"
 testRegex	"$src"	"[\t ]$"				"No trailing whitespace"
 testRegex	"$src"	"(^\s*else|else$)"		"Elses must have braces"
 testRegex	"$src"	"debugger"				"Remove all debugger calls"
-testRegex	"$src"	"/\*(?!html)"			"No block comments (except html specifier and css)"	"--exclude="*.css""
+testRegex	"$src"	"/\*(?!html|css)"			"No block comments (except html specifier and css)"	"--exclude="*.css""
 testRegex	"$src"	"[!=]=\s*(true|false)"	"Don't check equality on true/false"
 testRegex	"$src"	"\r$"					"Line endings should be LF"
 testRegex	"$src"	"^(?!.*//)(?!\r)(?!.*\sif[\s(])(?!\s*$)(?!.*[{};,[\]:>\`(/]$)" \

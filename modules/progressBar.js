@@ -179,7 +179,7 @@ dashboard.registerModule({
 				width: calc(100% - 16rem);
 				max-width: 45rem;
 				height: 20px;
-				background-color: white;
+				background-color: var(--lw-white);
 				display: inline-block;
 				vertical-align: bottom;
 				margin-top: 5px;

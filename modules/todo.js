@@ -646,7 +646,7 @@ dashboard.registerModule({
 		return /*css*/`
 			.todo .settings {
 				z-index: 9;
-				background-color: black;
+				background-color: var(--lw-black);
 
 				position: fixed;
 				top: 50%;
@@ -666,7 +666,7 @@ dashboard.registerModule({
 				position: fixed;
 				width: 100vw;
 				height: 100vh;
-				background-color: black;
+				background-color: var(--lw-black);
 				opacity: 80%;
 			}
 
@@ -685,7 +685,7 @@ dashboard.registerModule({
 
 			.todo .todo_entry {
 				margin-bottom: 3px;
-				background-color: rgb(32,32,32);
+				background-color: #202020;
 				cursor: pointer;
 			}
 
@@ -700,11 +700,11 @@ dashboard.registerModule({
 
 			.todo .date,
 			.todo .completedDisplay {
-				color: rgb(120, 120, 120);
+				color: #787878;
 			}
 
 			.todo .due {
-				color: red;
+				color: var(--lw-important);
 			}
 
 			.todo .spaced {

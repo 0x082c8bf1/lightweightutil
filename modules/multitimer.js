@@ -116,7 +116,7 @@ dashboard.registerModule({
 				}
 			}
 			inst.numberOfRingingTimers++;
-			timer.querySelector(".time-display").style.color = "red";
+			timer.querySelector(".time-display").style.color = "var(--lw-important)";
 			this.setTimerStatus(inst, timer, inst.status.RINGING);
 		} else {
 			timer.notifSent = false;

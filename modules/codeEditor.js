@@ -24,12 +24,12 @@ dashboard.registerModule({
 			elementEditor(outputDiv).textContent("");
 			outputDiv.style.color = "white";
 
-			//eval, catch errors and set output to red
+			//eval, catch errors and set output color
 			let returnVal;
 			try{
 				returnVal = eval(input);
 			}catch(error){
-				outputDiv.style.color = "red";
+				outputDiv.style.color = "var(--lw-important)";
 				output(error);
 			}
 
@@ -125,7 +125,7 @@ dashboard.registerModule({
 			}
 			outputDivEditor.textContent("");
 		}catch(error){
-			outputDiv.style.color = "red";
+			outputDiv.style.color = "var(--lw-important)";
 			outputDivEditor.textContent(outputDiv.textContent + error);
 			gimme("br").appendTo(outputDiv);
 		}

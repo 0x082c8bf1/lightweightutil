@@ -1053,7 +1053,7 @@ dashboard.registerModule({
 
 						function procValidation(input, setting) {
 							if (input.validity.patternMismatch) {
-								input.style.border = "2px dashed red";
+								input.style.border = "2px dashed var(--lw-important)";
 								return;
 							} else {
 								input.style.border = "";

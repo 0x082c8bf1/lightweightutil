@@ -49,7 +49,7 @@ dashboard.tests.registerTester(
 			dashboard.tests.click(inst.q(".ce_eval"));
 
 			const outputDiv = inst.q(".codeEditorOutput");
-			return (outputDiv.textContent.length > 0 && outputDiv.style.color === "red");
+			return (outputDiv.textContent.length > 0 && outputDiv.style.color === "var(--lw-important)");
 		}},
 
 		//test saving, loading, and deleting

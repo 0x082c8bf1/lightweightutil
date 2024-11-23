@@ -1,5 +1,5 @@
 'use strict';
-//currently if you are adding a module, it will also need to be added as a script in index.html and added to the default config in dashboard.js
+//currently if are adding a module, the module and any includes will need to be added as scripts in index.html
 dashboard.registerModule({
 	name: "example",
 	displayName: "Example",
@@ -13,7 +13,7 @@ dashboard.registerModule({
 
 		//using the elementEditor to create elements
 		gimme("br").appendTo(div);
-		gimme("span").textContent("This was added in the init function").appendTo("div");
+		gimme("span").textContent("This was added in the init function").appendTo(div);
 
 		//this is how you can use settings to affect your module
 		if (getSetting(this.name,"exampleBool"))
@@ -84,7 +84,7 @@ dashboard.registerModule({
 			{ver: "1.0.1", func: function(){
 				log("Updating data.");
 				const oldSave = localStorage.getItem("exampleData");
-				localStorage.setItem("mt_timers", oldSave+"newData");
+				localStorage.setItem("exampleData", oldSave+"newData");
 			}},
 		];
 	},

@@ -156,9 +156,9 @@ dashboard.registerModule({
 			<div class="bars">
 				<template class="tmplt">
 					<span class="entry">
-						<input type="number" min=0 class="width6 completedNumber" value=0/>
+						<input type="number" min=0 class="width6 completedNumber" value=0 />
 						<span>/</span>
-						<input type="number" min=1 class="width6 totalNumber" value=1/>
+						<input type="number" min=1 class="width6 totalNumber" value=1 />
 						<span class="fullBar">
 							<input type="text" class="label"/>
 							<span class="bar"></span>

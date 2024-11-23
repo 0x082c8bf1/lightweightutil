@@ -26,7 +26,7 @@ dashboard.tests.registerTester(
 			inst.q(".codeEditorTextarea").value = "1+2;";
 			dashboard.tests.click(inst.q(".ce_eval"));
 
-			return (inst.q(".codeEditorReturnValue").innerHTML === "Return value: 3");
+			return (inst.q(".codeEditorReturnValue").textContent === "Return value: 3");
 		}},
 
 		//test js eval output

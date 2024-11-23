@@ -149,18 +149,18 @@ dashboard.registerModule({
 		const editing = inst.q(".settings").editing;
 		const entries = editing.querySelector(".listEntryContainer");
 
-		entries.innerHTML = "";
+		entries.textContent = "";
 		const js = this.todoEntryToJSON(inst.q(".settings").querySelector(".listEntry"), true);
 
 		this.refreshList(inst, js, entries, false);
 
 		//save date
 		const selectedDate = inst.q(".dueSetting").value;
-		editing.querySelector(".dueDate").innerHTML = selectedDate;
+		editing.querySelector(".dueDate").textContent = selectedDate;
 
 		//save description
 		const description = inst.q(".descriptionSetting").value;
-		editing.querySelector(".description").innerHTML = description;
+		editing.querySelector(".description").textContent = description;
 
 		this.setDateDisplay(editing.querySelector(".relativeDate"), selectedDate, editing.querySelector(".date"));
 
@@ -184,7 +184,7 @@ dashboard.registerModule({
 			text = ", " + days + " days";
 		}
 
-		element.innerHTML = text;
+		element.textContent = text;
 
 		if (days <= 0) {
 			colorElement.classList.add("due");
@@ -227,7 +227,7 @@ dashboard.registerModule({
 		if (editing) {
 			name = task.querySelector(".title").value;
 		} else {
-			name = task.querySelector(".title").innerHTML;
+			name = task.querySelector(".title").textContent;
 		}
 
 		//build children
@@ -258,10 +258,10 @@ dashboard.registerModule({
 			const json = this.todoEntryToJSON(todos[i].querySelector(".listEntryContainer > .listEntry"), false);
 
 			//save the description
-			const description = todos[i].querySelector(".description").innerHTML;
+			const description = todos[i].querySelector(".description").textContent;
 
 			//save the dates
-			const date = todos[i].querySelector(".dueDate").innerHTML;
+			const date = todos[i].querySelector(".dueDate").textContent;
 			const completionDate = todos[i].querySelector(".completedDate").value;
 
 			const todo = {"date": date, "tasks": json, "description": description,"completed": completionDate};
@@ -407,21 +407,12 @@ dashboard.registerModule({
 
 	refreshList: function(inst, todoList, parent, editing){
 		for(let i=0; i<todoList.length; i++) {
-			const entry = document.createElement("div");
-			entry.classList.add("listEntry");
+			const entry = gimme("div").class("listEntry").build();
 			if (editing) {
-				const dragArea = document.createElement("span");
-				dragArea.innerHTML = '=';
-				dragArea.classList.add("drag-handle");
-				entry.appendChild(dragArea);
+				gimme("span").textContent("=").class("drag-handle").appendTo(entry);
 			}
 
-			const checkbox = document.createElement("input");
-			checkbox.type = "checkbox";
-			checkbox.checked = todoList[i].checked;
-			checkbox.classList.add("checkbox");
-			checkbox.setAttribute("autocomplete", "off");
-			entry.appendChild(checkbox);
+			const checkbox = gimme("input").type("checkbox").value(todoList[i].checked).class("checkbox").appendTo(entry);
 
 			const _this = this;
 
@@ -439,16 +430,11 @@ dashboard.registerModule({
 
 			let name;
 			if (editing) {
-				name = document.createElement("input");
-				name.type = "text";
-				name.setAttribute("autocomplete", "off");
-				name.value = todoList[i].name;
+				name = gimme("input").type("text").value(todoList[i].name);
 			} else {
-				name = document.createElement("span");
-				name.innerHTML = todoList[i].name;
+				name = gimme("span").textContent(todoList[i].name);
 			}
-			name.classList.add("title");
-			entry.appendChild(name);
+			name = name.class("title").appendTo(entry);
 
 			if (editing) {
 				name.addEventListener("keydown",function(e){
@@ -481,12 +467,7 @@ dashboard.registerModule({
 			}
 
 			if (editing) {
-				const addButton = document.createElement("input");
-				addButton.type = "button";
-				addButton.value = "+";
-				addButton.classList.add("spaced");
-				addButton.setAttribute("autocomplete", "off");
-
+				const addButton = gimme("input").type("button").value("+").class("spaced").build();
 				const _this = this;
 				addButton.addEventListener("click", function(){
 					const defTodo = [{"name":getSetting(_this.name, "defaultName"), "checked":false}];
@@ -494,11 +475,7 @@ dashboard.registerModule({
 				});
 				entry.appendChild(addButton);
 
-				const removeButton = document.createElement("input");
-				removeButton.type = "button";
-				removeButton.value = "X";
-				removeButton.classList.add("spaced");
-				removeButton.setAttribute("autocomplete", "off");
+				const removeButton = gimme("input").type("button").value("X").class("spaced").build();
 
 				removeButton.addEventListener("click", function(){
 					//delete the task or the whole todo if it's the root task
@@ -528,10 +505,10 @@ dashboard.registerModule({
 		if (!unchecked) {
 			//set the datetime that it was completed
 			dateElement.value = Date.now();
-			todo.querySelector(".completedDisplay").innerHTML = "Completed: " + this.getFormattedDate(new Date(+dateElement.value));
+			todo.querySelector(".completedDisplay").textContent = "Completed: " + this.getFormattedDate(new Date(+dateElement.value));
 		} else {
 			dateElement.value = 0;
-			todo.querySelector(".completedDisplay").innerHTML = "";
+			todo.querySelector(".completedDisplay").textContent = "";
 		}
 	},
 
@@ -550,19 +527,19 @@ dashboard.registerModule({
 		}
 
 		if (todoDate != ""){
-			element.querySelector(".dueDate").innerHTML = _this.getFormattedDate(todoDate);
+			element.querySelector(".dueDate").textContent = _this.getFormattedDate(todoDate);
 			this.setDateDisplay(element.querySelector(".relativeDate"), new Date(_this.getFormattedDate(todoDate)), element.querySelector(".date"));
 		}
 
 		//set the description
 		if (description)
-			element.querySelector(".description").innerHTML = description;
+			element.querySelector(".description").textContent = description;
 
 		//set the completion date
 		if (!completionDate) {
 			completionDate = 0;
 		} else if (completionDate !== "0") {
-			element.querySelector(".completedDisplay").innerHTML = "Completed: " + this.getFormattedDate(new Date(+completionDate));
+			element.querySelector(".completedDisplay").textContent = "Completed: " + this.getFormattedDate(new Date(+completionDate));
 		}
 		element.querySelector(".completedDate").value = completionDate;
 
@@ -600,11 +577,11 @@ dashboard.registerModule({
 		//copy nested todo to settings
 		const json = this.todoEntryToJSON(todo.querySelector(".listEntry"), false);
 		const todoEditingElement = inst.q(".settings").querySelector(".listEntryContainer");
-		todoEditingElement.innerHTML = "";
+		todoEditingElement.textContent = "";
 		this.refreshList(inst, json, todoEditingElement, true);
 
-		inst.q(".dueSetting").value = todo.querySelector(".dueDate").innerHTML;
-		inst.q(".descriptionSetting").value = todo.querySelector(".description").innerHTML;
+		inst.q(".dueSetting").value = todo.querySelector(".dueDate").textContent;
+		inst.q(".descriptionSetting").value = todo.querySelector(".description").textContent;
 
 
 		//close popup
@@ -623,29 +600,29 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-		where.innerHTML = /*html*/`
+		setInnerHTML(where, /*html*/`
 			<div class="fs30b">Todo List</div>
 			<div class="settingsContainer" hidden>
 				<div class="settings">
-					<input type="button" class="saveSetting" value="Save" autocomplete="off"/>
-					<input type="button" class="cancelSetting" value="Cancel" autocomplete="off"/>
-					<input type="button" class="deleteSetting" value="Delete" autocomplete="off"/>
+					<input type="button" class="saveSetting" value="Save"/>
+					<input type="button" class="cancelSetting" value="Cancel"/>
+					<input type="button" class="deleteSetting" value="Delete"/>
 					<br/>
-					<input type="button" class="moveup" value="Move up" autocomplete="off"/>
-					<input type="button" class="movedown" value="Move down" autocomplete="off"/>
+					<input type="button" class="moveup" value="Move up"/>
+					<input type="button" class="movedown" value="Move down"/>
 					<br/><br/>
 					<div class="listEntryContainer"></div>
 					<br/>
 					<textarea class="descriptionSetting" placeholder="Description"></textarea>
 					<br/><br/>
-					<input type="date" class="dueSetting" autocomplete="off"/>
-					<input type="button" class="dueNow" value="Today" autocomplete="off"/>
-					<input type="button" class="clearDate" value="Clear" autocomplete="off"/>
+					<input type="date" class="dueSetting"/>
+					<input type="button" class="dueNow" value="Today"/>
+					<input type="button" class="clearDate" value="Clear"/>
 				</div>
 				<div class="backgroundFade"></div>
 			</div>
-			<input type="button" class="insertButton" value="+" autocomplete="off"/>
-			<input type="checkbox" class="completed" autocomplete="off"/>
+			<input type="button" class="insertButton" value="+"/>
+			<input type="checkbox" class="completed"/>
 			<label class="completedLabel">Complete</label>
 			<br/>
 			<div class="list">
@@ -657,12 +634,12 @@ dashboard.registerModule({
 							<span class="dueDate colorOverride"></span><span class="relativeDate colorOverride"></span>
 						</div>
 						<span class="completedDisplay colorOverride"></span>
-						<input type="hidden" class="completedDate" value="0" autocomplete="off"/>
+						<input type="hidden" class="completedDate" value="0"/>
 					</div>
 				</template>
-				<input type="hidden" class="bottomAnchor" autocomplete="off"/>
+				<input type="hidden" class="bottomAnchor"/>
 			</div>
-		`;
+		`);
 	},
 
 	registerSettings: function(){

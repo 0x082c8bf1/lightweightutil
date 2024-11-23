@@ -25,7 +25,7 @@ dashboard.registerModule({
 			output += pre + "<s>keyCode == " + event.keyCode + post + "</s><br/>";
 			output += pre + "<s>which == " + event.which + post + "</s><br/>";
 
-			inst.q(".keycodeOutput").innerHTML = output;
+			setInnerHTML(inst.q(".keycodeOutput"), output);
 			inst.q(".resetKeyCodeOutput").hidden = false;
 		});
 
@@ -35,16 +35,16 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-		where.innerHTML = /*html*/`
+		setInnerHTML(where, /*html*/`
 			<div class="fs30b">KeyCode Reader</div>
-			<input type="text" class="focusBox" placeholder="Click here" tabindex="-1" autocomplete="off"/>
+			<input type="text" class="focusBox" placeholder="Click here" tabindex="-1"/>
 			<div class="keycodeOutput"></div>
-			<input type="button" class="resetKeyCodeOutput" value="Reset" autocomplete="off" hidden/>
-		`
+			<input type="button" class="resetKeyCodeOutput" value="Reset" hidden/>
+		`);
 	},
 
 	resetKeyCodeOutput: function(inst){
-		inst.q(".keycodeOutput").innerHTML = "";
+		inst.q(".keycodeOutput").textContent = "";
 		inst.q(".focusBox").value = "";
 		inst.q(".resetKeyCodeOutput").hidden = true;
 	},

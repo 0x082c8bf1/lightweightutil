@@ -6,7 +6,7 @@ dashboard.tests.registerTester(
 		{name: "event", test: function(inst){
 			inst.q(".focusBox").dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
 
-			return (inst.q(".keycodeOutput").innerHTML.includes("key == 'a'"));
+			return (inst.q(".keycodeOutput").textContent.includes("key == 'a'"));
 		}},
 
 		//test resetting
@@ -14,7 +14,7 @@ dashboard.tests.registerTester(
 			inst.q(".focusBox").dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
 			dashboard.tests.click(inst.q(".resetKeyCodeOutput"));
 
-			return (inst.q(".keycodeOutput").innerHTML=="");
+			return (inst.q(".keycodeOutput").textContent==="");
 		}},
 	]
 );

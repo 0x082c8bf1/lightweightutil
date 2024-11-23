@@ -22,11 +22,11 @@ dashboard.tests.registerTester(
 			dashboard.tests.click(inst.q(".saveSetting"));
 
 			const todo = inst.qAll(".todo_entry")[0];
-			if (todo.querySelector(".title").innerHTML !== ""+(value + 1))
+			if (todo.querySelector(".title").textContent !== ""+(value + 1))
 				return false;
-			if (todo.querySelector(".description").innerHTML !== ""+(value + 2))
+			if (todo.querySelector(".description").textContent !== ""+(value + 2))
 				return false;
-			if (todo.querySelector(".dueDate").innerHTML !== value + "-01-01")
+			if (todo.querySelector(".dueDate").textContent !== value + "-01-01")
 				return false;
 			return true;
 		}},
@@ -42,11 +42,11 @@ dashboard.tests.registerTester(
 
 			const todo = inst.qAll(".todo_entry")[0];
 			let pass = true;
-			if (inst.q(".dueSetting").value !== todo.querySelector(".dueDate").innerHTML)
+			if (inst.q(".dueSetting").value !== todo.querySelector(".dueDate").textContent)
 				pass = false;
-			if (inst.qAll(".title")[0].value !== todo.querySelector(".title").innerHTML)
+			if (inst.qAll(".title")[0].value !== todo.querySelector(".title").textContent)
 				pass = false;
-			if (inst.q(".descriptionSetting").value !== todo.querySelector(".description").innerHTML)
+			if (inst.q(".descriptionSetting").value !== todo.querySelector(".description").textContent)
 				pass = false;
 			dashboard.tests.click(inst.q(".backgroundFade"));
 			return pass;

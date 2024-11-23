@@ -102,15 +102,15 @@ const dashboard = {
 		const string = JSON.stringify(obj, null, seperator) + "\n";
 
 		//download the file
-		const downloadAnchor = document.createElement("a");
 
 		const date = new Date();
 		let dateStr = date.getFullYear();
 		dateStr += "-" + ((date.getMonth()+1) + "").padStart(2,0);
 		dateStr += "-" + ((date.getDate() + "").padStart(2,0));
 
+		const ref = 'data:text/plain;charset=utf-8,' + encodeURIComponent(string);
+		const downloadAnchor = gimme("a").href(ref).build();
 		downloadAnchor.setAttribute("download","lwutilExport-" + dateStr + ".json");
-		downloadAnchor.setAttribute("href", 'data:text/plain;charset=utf-8,' + encodeURIComponent(string));
 		downloadAnchor.style.display = "none";
 		document.body.appendChild(downloadAnchor);
 		downloadAnchor.click();
@@ -200,10 +200,7 @@ const dashboard = {
 			const module = dashboard.modules[moduleName];
 
 			//add to layout dropdown
-			const e = document.createElement("option");
-			e.value = module.name;
-			e.innerHTML = module.displayName;
-			layouts.appendChild(e);
+			elementEditor(layouts).option(module.name, module.displayName);
 		}
 
 		if (dashboard.tests.enabled) {
@@ -241,24 +238,20 @@ const dashboard = {
 				}
 				dashboard.modules[m].instances = null;
 			}
-			document.querySelector("#layout").innerHTML = "";
+			document.querySelector("#layout").textContent = "";
 		},
 
 		//dashboard.layout.appendNewContainer(location)
 		//create a new instance in the DOM
 		appendNewContainer: function(location){
-			const c = document.createElement("div");
-			c.classList.add("container");
-			location.appendChild(c);
+			const c = gimme("div").class("container").appendTo(location);
 			return c;
 		},
 
 		//dashboard.layout.appendInstanceToContainer(container)
 		//add a module to a container
 		appendInstanceToContainer: function(container){
-			const m = document.createElement("div");
-			m.classList.add("instance");
-			container.appendChild(m);
+			const m = gimme("div").class("instance").appendTo(container);
 			return m;
 		},
 
@@ -547,7 +540,7 @@ const dashboard = {
 	documentation: {
 		//dashboard.documentation.createPane()
 		createPane: function(){
-			document.querySelector("#docs").innerHTML = "";
+			document.querySelector("#docs").textContent = "";
 			document.querySelector("#docIndex").innerHTML = /*html*/`<span class="fs30b">Index</span>`;
 
 			for(let moduleName in dashboard.modules){
@@ -575,30 +568,22 @@ const dashboard = {
 			const element = dashboard.layout.appendInstanceToContainer(container);
 
 			//add the element to the index
-			const entry = document.createElement("li");
-			const anchor = document.createElement("a");
-			anchor.href = "";
+			const entry = gimme("li").build();
+			const anchor = gimme("a").href("").textContent(module.displayName).build();
 			anchor.addEventListener("click", function(e){
 				e.preventDefault();
 				document.querySelector("#" + module.name).scrollIntoView();
 			});
-			anchor.innerHTML = module.displayName;
 			entry.appendChild(anchor);
 			document.querySelector("#docIndex").appendChild(entry);
 
 			//add the header element
-			const title = document.createElement("div");
 			const displayName = module.displayName;
-			title.innerHTML = displayName ? displayName : name;
-			title.classList.add("fs30b");
-			title.id = module.name;
-			element.appendChild(title);
+			gimme("div").textContent(displayName ? displayName : name).class("fs30b").id(module.name).appendTo(element);
 
 			//create p elements for every mDoc[i]
 			for(let i=0; i<mDocs.length; i++){
-				const paragraph = document.createElement("p");
-				paragraph.innerHTML = mDocs[i];
-				element.appendChild(paragraph);
+				gimme("p").textContent(mDocs[i]).appendTo(element);
 			}
 		},
 	},
@@ -607,7 +592,7 @@ const dashboard = {
 	settings: {
 		//dashboard.settings.createPane()
 		createPane: function(){
-			document.querySelector("#settings").innerHTML = "";
+			document.querySelector("#settings").textContent = "";
 
 			for(let moduleName in dashboard.modules){
 				dashboard.settings.createInstance(moduleName);
@@ -688,22 +673,17 @@ const dashboard = {
 			const container = dashboard.layout.appendNewContainer(document.querySelector("#settingsPane"));
 			const element = dashboard.layout.appendInstanceToContainer(container);
 
-			const title = document.createElement("div");
 			const displayName = dashboard.modules[moduleName].displayName;
-			title.innerHTML = displayName ? displayName : moduleName;
-			title.classList.add("fs30b");
-			element.appendChild(title);
+			gimme("div").textContent(displayName ? displayName : moduleName).class("fs30b").appendTo(element);
 
 			//go through the settings and create the entries for them
 			for(let i=0; i<mSettings.length; i++){
 				const tempId = moduleName + "_" + mSettings[i].name;
 
 				//default checkbox
-				const defaultInput = document.createElement("input");
-				defaultInput.type = "checkbox";
-				defaultInput.checked = getSettingFromStorage(moduleName, mSettings[i].name) == null;
-				defaultInput.id = "default_" + moduleName + "_" + mSettings[i].name;
-				defaultInput.setAttribute("autocomplete", "off");
+				const checked = getSettingFromStorage(moduleName, mSettings[i].name) == null;
+				const id = "default_" + moduleName + "_" + mSettings[i].name;
+				const defaultInput = gimme("input").type("checkbox").value(checked).id(id).build();
 				defaultInput.managing = tempId;
 				element.appendChild(defaultInput);
 				defaultInput.addEventListener("change", function(){
@@ -711,65 +691,50 @@ const dashboard = {
 				});
 
 				//append input
-				let input;
+				let input = gimme("input");
 				const value = getSetting(moduleName, mSettings[i].name);
 
 				switch(mSettings[i].type){
 					case "bool":
-						input = document.createElement("input");
-						input.type = "checkbox";
-						input.checked = value ? true : false;
+						input = input.type("checkbox").value(value ? true : false);
 						break;
 					case "text":
-						input = document.createElement("input");
-						input.type = "text";
-						input.value = value;
+						input = input.type("text").value(value);
 						break;
 					case "number":
-						input = document.createElement("input");
-						input.type = "number";
-						input.value = value;
+						input = input.type("number").value(value);
 						break;
 					case "custom":
-						input = document.createElement("input");
-						input.type = "hidden";
-						input.value = value;
+						input = input.type("hidden").value(value);
 						break;
 				}
-				input.setAttribute("autocomplete", "off");
 
 				//disable if defaulted
 				if (document.querySelector("#default_"+tempId).checked) {
 					input.disabled = true;
 				}
+				input = input.id(tempId).class("settingInput").build();
 
-				//setup label and input ID
-				input.id = tempId;
-				const desc = document.createElement("label");
-				desc.setAttribute("for", input.id);
 
 				//tell the element what it is
 				input.dataType = mSettings[i].type;
 				input.name = mSettings[i].name;
 				input.module = moduleName;
-				input.classList.add("settingInput");
 
 				element.appendChild(input);
 				if (mSettings[i].type === "custom") {
 					//call custom type
 					element.appendChild(input);
-					let span = document.createElement("span");
+					let span = gimme("span").build();
 					mSettings[i].customDefinition(span);
 					element.appendChild(span);
 				} else {
-					//append description
-					desc.innerHTML = mSettings[i].description;
-					element.appendChild(desc);
+					//setup label and input ID
+					gimme("label").for(input.id).textContent(mSettings[i].description).appendTo(element);
 				}
 
 				//append line break
-				const br = document.createElement("br");
-				element.appendChild(br);
+				gimme("br").appendTo(element);
 			}
 
 			document.querySelector("#settings").appendChild(element);
@@ -792,7 +757,7 @@ const dashboard = {
 		//dashboard.tests.loadTests(moduleName, testCount)
 		loadTests: function(moduleName, testCount) {
 			const _this = this;
-			const script = document.createElement("script");
+			const script = gimme("script").build();
 			script.src = "test/" + moduleName + "_tests.js";
 			script.addEventListener("error", function(){
 				_this.loadedTests++;
@@ -945,7 +910,7 @@ dashboard.registerModule({
 
 									//update settings values
 									const element = dialog.querySelector("." + setting.name + "Setting");
-									element.value = dialog.selection.querySelector("." + setting.name).innerHTML;
+									element.value = dialog.selection.querySelector("." + setting.name).textContent;
 
 									//update settings validations
 									procValidation(element, setting);
@@ -1007,7 +972,7 @@ dashboard.registerModule({
 										//check if row is actually a setting
 										const setting = cSettings.find(setting => setting.name === moduleName);
 										if (setting) {
-											row.querySelector("." + moduleName).innerHTML = config[rows][instances].value;
+											row.querySelector("." + moduleName).textContent = config[rows][instances].value;
 											row.querySelector("." + moduleName + "Display").hidden = false;
 											row.querySelector("." + moduleName).hidden = false;
 											continue;
@@ -1019,13 +984,13 @@ dashboard.registerModule({
 											//process instance settings
 											const value = config[rows][instances][mSetting.name];
 											if (value) {
-												inst.querySelector("." + mSetting.name).innerHTML = value;
+												inst.querySelector("." + mSetting.name).textContent = value;
 												inst.querySelector("." + mSetting.name + "Display").hidden = false;
 												inst.querySelector("." + mSetting.name).hidden = false;
 											}
 										}
 
-										inst.querySelector(".config_module").innerHTML = dashboard.modules[moduleName].displayName;
+										inst.querySelector(".config_module").textContent = dashboard.modules[moduleName].displayName;
 										inst.querySelector(".config_module_name").value = moduleName;
 									}
 								}
@@ -1042,7 +1007,7 @@ dashboard.registerModule({
 								if (instances.length > 0) { //only add a row if there's really an instance in it
 									const row = [];
 									for(const setting of dashboard.layout.getContainerSettings()) {
-										const value = rows[i].querySelector("." + setting.name).innerHTML;
+										const value = rows[i].querySelector("." + setting.name).textContent;
 										if (value) {
 											row.push(
 												{
@@ -1059,7 +1024,7 @@ dashboard.registerModule({
 										}
 
 										for(const setting of mSettings) {
-											const value = instances[o].querySelector("." + setting.name).innerHTML;
+											const value = instances[o].querySelector("." + setting.name).textContent;
 											if (value) {
 												inst[setting.name] = value;
 											}
@@ -1087,11 +1052,11 @@ dashboard.registerModule({
 							} else {
 								dialog.selection.querySelector("." + setting.name + "Display").hidden = false;
 							}
-							dialog.selection.querySelector("." + setting.name).innerHTML = input.value;
+							dialog.selection.querySelector("." + setting.name).textContent = input.value;
 						}
 
 						dialog.selection = null;
-						dialog.innerHTML = /*html*/`
+						setInnerHTML(dialog, /*html*/`
 							<div class="guiEditor">
 								<table class="editableTable"></table>
 								<div class="rowEdit" hidden=true>
@@ -1125,19 +1090,14 @@ dashboard.registerModule({
 							<input type="button" class="toggleEditMode" value="Toggle edit mode" ><br/>
 							<input type="button" class="apply" value="Apply" />
 							<input type="button" class="cancel" value="Cancel" />
-						`;
+						`);
 
 						//add dynamic settings to templates
 						for (const setting of dashboard.layout.getSettings()) {
 							//display
-							const div = document.createElement("div");
-							const displaySpan = document.createElement("span");
-							displaySpan.classList.add(setting.name + "Display");
-							displaySpan.innerHTML = setting.displayName + ": ";
-							displaySpan.hidden = true;
-
-							const valueSpan = document.createElement("span");
-							valueSpan.classList.add(setting.name);
+							const div = gimme("div").build();
+							gimme("span").class(setting.name + "Display").textContent(setting.displayName + ": ").hidden(true).appendTo(div);
+							gimme("span").class(setting.name).appendTo(div);
 
 							let inst;
 							if (setting.type === "module") {
@@ -1145,23 +1105,16 @@ dashboard.registerModule({
 							} else if (setting.type === "container") {
 								inst = dialog.querySelector(".row_tmplt").content.querySelector(".rowHeader");
 							}
-
-							div.appendChild(displaySpan);
-							div.appendChild(valueSpan);
 							inst.appendChild(div);
 
 							//edit
-							const editDisplay = document.createElement("span");
-							editDisplay.innerHTML = setting.displayName + ": ";
-							const editInput = document.createElement("input");
-							editInput.type = "text";
-							editInput.classList.add(setting.name + "Setting");
-							editInput.pattern = setting.validationString;
+							const editDisplay = gimme("span").textContent(setting.displayName + ": ").build();
+							const editInput = gimme("input").type("text").class(setting.name + "Setting").pattern(setting.validationString).build();
 
 							editInput.addEventListener("change", function(){
 								procValidation(this, setting);
 							});
-							const br = document.createElement("br");
+							const br = gimme("br").build();
 							if (setting.type === "module") {
 								const rEdit = dialog.querySelector(".instEdit");
 								const deleteButton = dialog.querySelector(".cellDelete");
@@ -1170,7 +1123,7 @@ dashboard.registerModule({
 								rEdit.insertBefore(editInput, deleteButton);
 								rEdit.insertBefore(br, deleteButton);
 							} else if (setting.type === "container") {
-								const br2 = document.createElement("br");
+								const br2 = gimme("br").build();
 
 								const rEdit = dialog.querySelector(".rowEdit");
 								rEdit.prepend(br2);
@@ -1226,21 +1179,19 @@ dashboard.registerModule({
 						});
 
 						//Add module select options
+						const dialogBuilder = elementEditor(dialog.querySelector(".moduleSelect"));
 						for (const moduleName in dashboard.modules) {
 							const module = dashboard.modules[moduleName];
 							//don't let the user select overrideLayout modules
 							if (module.overrideLayout)
 								continue;
 
-							const option = document.createElement("option");
-							option.innerHTML = module.displayName;
-							option.value = module.name;
-							dialog.querySelector(".moduleSelect").appendChild(option);
+							dialogBuilder.option(module.name, module.displayName);
 						}
 
 						//settings -> instances
 						dialog.querySelector(".moduleSelect").addEventListener("change", function() {
-							dialog.selection.querySelector(".config_module").innerHTML = dashboard.modules[this.value].displayName;
+							dialog.selection.querySelector(".config_module").textContent = dashboard.modules[this.value].displayName;
 							dialog.selection.querySelector(".config_module_name").value = this.value;
 						});
 
@@ -1254,7 +1205,7 @@ dashboard.registerModule({
 							} else {
 								changeSelection(null);
 
-								dialog.querySelector(".editableTable").innerHTML = "";
+								dialog.querySelector(".editableTable").textContent = "";
 								loadConfig(JSON.parse(dialog.querySelector(".textareaEditor").value));
 
 							}
@@ -1282,23 +1233,17 @@ dashboard.registerModule({
 						loadConfig(JSON.parse(document.querySelector("#dashboard_config").value));
 					}
 
-					const title = document.createElement("span");
-					title.innerHTML = "Layout ";
-					parent.appendChild(title);
+					gimme("span").textContent("Layout ").appendTo(parent);
 
-					const button = document.createElement("input");
-					button.type = "button";
-					button.value = "Edit";
+					const button = gimme("input").type("button").value("Edit").build();
 
-					const realDialog = document.createElement("dialog");
-					realDialog.classList.add("configEditor");
+					const realDialog = gimme("dialog").class("configEditor").build();
 
 					//stop all click propagation to realDialog
-					const dialog = document.createElement("div");
+					const dialog = gimme("div").class("fake-dialog").build();
 					dialog.addEventListener("click", function (e) {
 						e.stopPropagation();
 					});
-					dialog.classList.add("fake-dialog");
 					realDialog.appendChild(dialog);
 
 					realDialog.addEventListener("click", function (e) {

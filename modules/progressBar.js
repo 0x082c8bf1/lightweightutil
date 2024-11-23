@@ -22,7 +22,7 @@ dashboard.registerModule({
 
 		//set the width of the bar
 		progressBarEntry.querySelector(".bar").style.width=percent+"%";
-		progressBarEntry.querySelector(".completionPercent").innerHTML = parseFloat(percent).toFixed(2) + "%";
+		progressBarEntry.querySelector(".completionPercent").textContent = parseFloat(percent).toFixed(2) + "%";
 	},
 
 	//updates all of the progress bar widths
@@ -151,26 +151,26 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-		where.innerHTML = /*html*/`
+		setInnerHTML(where, /*html*/`
 			<div class="fs30b progressTracker">Progress Tracker</div>
 			<div class="bars">
 				<template class="tmplt">
 					<span class="entry">
-						<input type="number" min=0 class="width6 completedNumber" value=0 autocomplete="off"/>
+						<input type="number" min=0 class="width6 completedNumber" value=0/>
 						<span>/</span>
-						<input type="number" min=1 class="width6 totalNumber" value=1 autocomplete="off"/>
+						<input type="number" min=1 class="width6 totalNumber" value=1/>
 						<span class="fullBar">
-							<input type="text" class="label" autocomplete="off"/>
+							<input type="text" class="label"/>
 							<span class="bar"></span>
 						</span>
 						<span class="completionPercent"></span>
-						<input type="button" class="deleteButton" value="X" autocomplete="off"/>
+						<input type="button" class="deleteButton" value="X"/>
 						<br/>
 					</span>
 				</template>
-				<input type="button" class="insertButton" value="+" autocomplete="off"/>
+				<input type="button" class="insertButton" value="+"/>
 			</div>
-		`
+		`);
 	},
 
 	registerSettings: function(){

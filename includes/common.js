@@ -92,3 +92,94 @@ function db_confirm(a) {
 		return true;
 	}
 }
+
+// Chain create document elements
+function gimme(tag) {
+	const element = document.createElement(tag);
+	applySpecialElementProperties(element);
+
+	return elementEditor(element);
+}
+
+function elementEditor(element) {
+	// Tags that don't have any additonal processing
+	const attributes = [
+		"for",
+		"hidden",
+		"href",
+		"id",
+		"innerHTML",
+		"pattern",
+		"textContent",
+		"type",
+	];
+
+	let funcs = {
+		class: function(value) {
+			const classes = value.split(/\s/);
+			for(let i=0; i<classes.length; i++) {
+				element.classList.add(classes[i]);
+			}
+			return this;
+		},
+
+		// Use true/false for checkboxes checked/unchecked
+		value: function(value) {
+			if (element.type === "checkbox") {
+				element.checked = value;
+			} else {
+				element.value = value;
+			}
+			return this;
+		},
+
+		// used for adding selectElements
+		option: function(value, displayValue) {
+			gimme("option").value(value).textContent(displayValue).appendTo(element);
+			return this;
+		},
+
+		// return final element
+		build: function() {
+			return element;
+		},
+
+		//append the final element to parent
+		appendTo: function(parent) {
+			parent.appendChild(element);
+			return element;
+		}
+	};
+
+	//add generic attributes
+	for(let i=0; i<attributes.length; i++) {
+		funcs[attributes[i]] = function(value) {
+			element[attributes[i]] = value;
+			return this;
+		}
+
+	}
+	return funcs;
+}
+
+// Take an element and apply all of the standard effects to it's children
+function applySpecialElementProperties(element){
+	let elements = element.querySelectorAll("input");
+	for(let e of elements) {
+		e.autocomplete="off";
+	}
+}
+
+// Append children from a string while applying all standard effects
+function setInnerHTML(parent, string) {
+	// Remove leading and trailing whitespace
+	string = string.split('\n').map(line => line.trim()).join('\n');
+
+	// Create temporary div and apply effects
+	let tempDiv = document.createElement("div");
+	tempDiv.innerHTML = string;
+	applySpecialElementProperties(tempDiv);
+
+	// Move the children to the real parent
+	parent.innerHTML = tempDiv.innerHTML;
+}

@@ -10,7 +10,7 @@ dashboard.registerModule({
 		const input = inst.q(".textarea").value;
 
 		//character count
-		inst.q(".characterCount").innerHTML = input.length;
+		inst.q(".characterCount").textContent = input.length;
 
 		//word count
 		const truncatedInput = input.trim();
@@ -20,10 +20,10 @@ dashboard.registerModule({
 		if(truncatedInput != "")
 			wordCount = words.length;
 
-		inst.q(".wordCount").innerHTML = wordCount;
+		inst.q(".wordCount").textContent = wordCount;
 
 		const lines = input.split("\n").length;
-		inst.q(".lineCount").innerHTML = lines;
+		inst.q(".lineCount").textContent = lines;
 	},
 
 	//sorts all of the lines in the textbox alphabetically (does not ignore case)
@@ -204,30 +204,30 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-		where.innerHTML = /*html*/`
+		setInnerHTML(where, /*html*/`
 			<div class="fs30b textbox">TextBox</div>
 			<textarea class="textarea" placeholder="Your text here."></textarea>
 			<br/>
 			<span><span class="characterCount">0</span> characters, <span class="wordCount">0</span> words, <span class="lineCount">1</span> lines.</span>
 			<br/>
-			<input type="button" class="tb_sort" value="Sort lines" autocomplete="off"/>
-			<input type="button" class="tb_removeDupes" value="Remove duplicate lines" autocomplete="off"/>
-			<input type="button" class="tb_replace" value="Replace" autocomplete="off"/>
-			<input type="button" class="tb_toupper" value="Uppercase" autocomplete="off"/>
-			<input type="button" class="tb_tolower" value="Lowercase" autocomplete="off"/>
-			<input type="button" class="tb_torand" value="Randomcase" autocomplete="off"/>
-			<input type="button" class="tb_toinvert" value="Invertcase" autocomplete="off"/>
+			<input type="button" class="tb_sort" value="Sort lines"/>
+			<input type="button" class="tb_removeDupes" value="Remove duplicate lines" />
+			<input type="button" class="tb_replace" value="Replace"/>
+			<input type="button" class="tb_toupper" value="Uppercase"/>
+			<input type="button" class="tb_tolower" value="Lowercase"/>
+			<input type="button" class="tb_torand" value="Randomcase"/>
+			<input type="button" class="tb_toinvert" value="Invertcase"/>
 			<br/>
 			<span class="findSpan" hidden>
 				<span>Replace </span>
-				<input type="text" class="replaceInputPattern" autocomplete="off"/>
+				<input type="text" class="replaceInputPattern"/>
 				<span> with </span>
-				<input type="text" class="replaceOutputPattern" autocomplete="off"/>
-				<input type="button" class="tb_repace" value="Go" autocomplete="off"/>
-				<input type="checkbox" class="regexSearch" checked=true autocomplete="off"/>
+				<input type="text" class="replaceOutputPattern"/>
+				<input type="button" class="tb_repace" value="Go"/>
+				<input type="checkbox" class="regexSearch" checked=true/>
 				<label class="regexLabel">Regex</label>
 			</span>
-		`
+		`);
 	},
 
 	registerSettings: function(){

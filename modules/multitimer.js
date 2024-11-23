@@ -92,8 +92,8 @@ dashboard.registerModule({
 		}
 		const timeRemaining = timer.duration-(difference+timer.msOffset);
 		const displayTime = this.getDurationAsString(timeRemaining);
-		if (displayTime !== timer.querySelector(".time-display").innerHTML) {
-			timer.querySelector(".time-display").innerHTML = displayTime;
+		if (displayTime !== timer.querySelector(".time-display").textContent) {
+			timer.querySelector(".time-display").textContent = displayTime;
 		}
 
 		if (timer.status != inst.status.ACTIVE)
@@ -257,7 +257,7 @@ dashboard.registerModule({
 	createTimer: function(inst, msTime, name, status, startDate, msOffset){
 		//clone from template
 		const timeFragment = inst.q(".timer_tmplt").content.cloneNode(true);
-		let timer = document.createElement("div");
+		let timer = gimme("div").build();
 
 		//avoid document fragment shenanigans
 		timer.appendChild(timeFragment);
@@ -293,7 +293,7 @@ dashboard.registerModule({
 				timer.msOffset = msOffset ? msOffset : 0;
 				timer.duration = msTime;
 				timer.startDate = null;
-				timer.querySelector(".time-display").innerHTML = this.getDurationAsString(msTime);
+				timer.querySelector(".time-display").textContent = this.getDurationAsString(msTime);
 				this.setTimerStatus(inst, timer, status);
 				break;
 			//if creating a ringing timer, msTime is how long it has been ringing.
@@ -490,32 +490,32 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-		where.innerHTML = /*html*/`
+		setInnerHTML(where, /*html*/`
 			<div class="fs30b">Multi timer</div>
 			<div class="flex-container timers">
 				<template class="timer_tmplt">
 					<span class="timer">
-						<input type="text" class="name" autocomplete="off"/>
-						<input class="x-button" type="button" value="X" autocomplete="off"/>
+						<input type="text" class="name"/>
+						<input class="x-button" type="button" value="X"/>
 						<br/>
-						<input type="button" class="start-button" value="Start" autocomplete="off"/>
+						<input type="button" class="start-button" value="Start"/>
 						<span hidden class="time-display"></span>
 						<span class="time-input">
-							<input class="h-input width2" type="text" placeholder="HH" autocomplete="off"/>
+							<input class="h-input width2" type="text" placeholder="HH"/>
 							<span>:</span>
-							<input class="m-input width2" type="text" placeholder="MM" autocomplete="off"/>
+							<input class="m-input width2" type="text" placeholder="MM"/>
 							<span>:</span>
-							<input class="s-input width2" type="text" placeholder="SS" autocomplete="off"/>
+							<input class="s-input width2" type="text" placeholder="SS"/>
 						</span>
 					</span>
 				</template>
-				<input type="button" class="notifButton" value="Enable notifications" autocomplete="off" hidden/>
+				<input type="button" class="notifButton" value="Enable notifications" hidden/>
 				<span class="trailingGroup">
-					<input type="button" class="insertButton" value="+" autocomplete="off"/>
-					<input type="button" class="sort" value="Sort" autocomplete="off"/>
+					<input type="button" class="insertButton" value="+"/>
+					<input type="button" class="sort" value="Sort"/>
 				<span>
 				</div>
-		`
+		`);
 	},
 
 	//returns an array containing a list of functions and an update version to run at

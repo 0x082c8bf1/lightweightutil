@@ -15,12 +15,13 @@ dashboard.registerModule({
 			const outputDiv = inst.q(".codeEditorOutput");
 			//output(str) - prints value below the textbox
 			const output = function(value){
-				outputDiv.innerHTML += value + "<br/>";
+				elementEditor(outputDiv).textContent(value);
+				gimme("br").appendTo(outputDiv);
 			}
 
 			const input = inst.q(".codeEditorTextarea").value;
 			//reset output span
-			outputDiv.innerHTML = "";
+			elementEditor(outputDiv).textContent("");
 			outputDiv.style.color = "white";
 
 			//eval, catch errors and set output to red
@@ -35,21 +36,21 @@ dashboard.registerModule({
 			//display the return value
 			const retValueSpan = inst.q(".codeEditorReturnValue");
 			if(returnVal != undefined) {
-				retValueSpan.innerHTML = "Return value: " + returnVal;
+				elementEditor(retValueSpan).textContent("Return value: " + returnVal);
 			} else {
-				retValueSpan.innerHTML = "";
+				elementEditor(retValueSpan).textContent("");
 			}
 		}
 	},
 
 	parenWrap: function(inst){
 		const codeEditor = inst.q(".codeEditorTextarea");
-		codeEditor.value = "(" + codeEditor.value + ")";
+		elementEditor(codeEditor).value("(" + codeEditor.value + ")");
 	},
 
 	refreshSaves: function(inst, selectNew){
 		//create the option elements
-		const selector = inst.q(".ce_selector");
+		const selector = elementEditor(inst.q(".ce_selector")).textContent("").option("New Script","New Script");
 		let newSelValue;
 		if (selectNew){
 			newSelValue = "New Script";
@@ -57,26 +58,14 @@ dashboard.registerModule({
 			newSelValue = inst.q(".codeEditorSaveName").value;
 		}
 
-		//delete any existing selection
-		selector.innerHTML = "";
-
-		//create the "new script" element
-		const newOption = document.createElement("option");
-		newOption.innerHTML = "New Script";
-		newOption.value = "New Script";
-		selector.appendChild(newOption);
-
 		//create all the other elements
 		const saves = JSON.parse(localStorage.getItem("CESaves"));
 		for (let save in saves){
-			const option = document.createElement("option");
-			option.innerHTML = save;
-			option.value = save;
-			selector.appendChild(option);
+			selector.option(save, save);
 		}
 
 		//restore the selection
-		selector.value = newSelValue;
+		selector.value(newSelValue);
 	},
 
 	//saves the currently selected code to local storage
@@ -116,27 +105,29 @@ dashboard.registerModule({
 			obj = JSON.parse(save)[name];
 		}
 
-		inst.q(".codeEditorSaveName").value = name;
-		inst.q(".codeEditorTextarea").value = obj;
+		elementEditor(inst.q(".codeEditorSaveName")).value(name);
+		elementEditor(inst.q(".codeEditorTextarea")).value(obj);
 	},
 
 	jsonFormat: function(inst, minify){
 		const codeEditor = inst.q(".codeEditorTextarea");
 		const outputDiv = inst.q(".codeEditorOutput");
-		outputDiv.innerHTML = "";
+		const outputDivEditor = elementEditor(outputDiv).textContent("");
 		outputDiv.style.color = "white";
 
 		try{
+			const codeEditorEditor = elementEditor(codeEditor);
 			const obj = JSON.parse(codeEditor.value);
 			if (minify) {
-				codeEditor.value = JSON.stringify(obj);
+				codeEditorEditor.value(JSON.stringify(obj));
 			} else {
-				codeEditor.value = JSON.stringify(obj, null, "\t");
+				codeEditorEditor.value(JSON.stringify(obj, null, "\t"));
 			}
-			outputDiv.innerHTML = "";
+			outputDivEditor.textContent("");
 		}catch(error){
 			outputDiv.style.color = "red";
-			outputDiv.innerHTML += error + "<br/>";;
+			outputDivEditor.textContent(outputDiv.textContent + error);
+			gimme("br").appendTo(outputDiv);
 		}
 	},
 
@@ -329,25 +320,25 @@ dashboard.registerModule({
 	},
 
 	instantiate: function(where){
-		where.innerHTML = /*html*/`
+		setInnerHTML(where, /*html*/`
 			<div class="fs30b codeEditor">Code Editor</div>
 			<textarea class="codeEditorTextarea" tabIndex="-1" placeholder="Your code here." style="white-space: pre; tab-size: 4;" spellcheck="false"></textarea>
 			<br/>
 			<abbr title="Use output('value') to write to the output. The return value is the return value of the last executed statement.">
-				<input type="button" class="ce_eval" value="JS eval" autocomplete="off"/>
+				<input type="button" class="ce_eval" value="JS eval"/>
 			</abbr>
-			<input type="button" class="ce_pwrap" value="Wrap in ()" autocomplete="off"/>
-			<input type="button" class="ce_beautify" value="JSON beautify" autocomplete="off"/>
-			<input type="button" class="ce_minify" value="JSON minify" autocomplete="off"/>
+			<input type="button" class="ce_pwrap" value="Wrap in ()"/>
+			<input type="button" class="ce_beautify" value="JSON beautify"/>
+			<input type="button" class="ce_minify" value="JSON minify"/>
 			<br/>
 			<span class="codeEditorOutput"></span>
-			<input type="button" class="saveCode" value="Save" autocomplete="off"/>
-			<input type="text" class="codeEditorSaveName" autocomplete="off"/>
+			<input type="button" class="saveCode" value="Save"/>
+			<input type="text" class="codeEditorSaveName"/>
 			<select class="ce_selector"></select>
-			<input type="button" class="deleteSelection" value="Delete selected" autocomplete="off"/>
+			<input type="button" class="deleteSelection" value="Delete selected"/>
 			<br/>
 			<span class="codeEditorReturnValue"></span>
-		`
+		`);
 	},
 
 	registerSettings: function(){

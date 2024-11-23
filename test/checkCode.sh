@@ -23,10 +23,10 @@ testRegex	"$src"	"(\}else|else\{)"		"Use spaces between else and braces"
 testRegex	"$src"	"[\t ]$"				"No trailing whitespace"
 testRegex	"$src"	"(^\s*else|else$)"		"Elses must have braces"
 testRegex	"$src"	"debugger"				"Remove all debugger calls"
-testRegex	"$src"	"/\*(?!html)"			"No block comments (except html specifier)"
+testRegex	"$src"	"/\*(?!html)"			"No block comments (except html specifier and css)"	"--exclude="*.css""
 testRegex	"$src"	"[!=]=\s*(true|false)"	"Don't check equality on true/false"
 testRegex	"$src"	"\r$"					"Line endings should be LF"
-testRegex	"$src"	"^(?!.*//)(?!\r)(?!.*\sif[\s(])(?!\s*$)(?!.*[{};,[\]:>\`(]$)" \
+testRegex	"$src"	"^(?!.*//)(?!\r)(?!.*\sif[\s(])(?!\s*$)(?!.*[{};,[\]:>\`(/]$)" \
 											"Lines should end in a semicolon"
 testRegex	"$src"	"[\s=](confirm|alert)\(" \
 											"Use db_confirm and db_alert"				"--exclude="common.js""
@@ -38,3 +38,4 @@ testRegex	"$src"	"\sif[\s(].*[^=^!^<^>]=[^=].*\)" \
 testRegex	"$src"	"(\w+\s*==\s*\"(\w\s*)+\"|\"(\w\s*)+\"\s*==\s*\w+)" \
 											"Compare strings with ==="
 testRegex	"$src"	"\svar\s"				"Don't use var"
+testRegex	"$src"	"document.createElement"	"Use gimme() to create elements"		"--exclude="common.js""

@@ -53,13 +53,13 @@ dashboard.registerModule({
 		return [
 			{
 				"name": "eventPrefix",
-				"description": "Prefix when displaying output.",
+				"description": "Prefix when displaying output",
 				"type": "text",
 				"default": "",
 			},
 			{
 				"name": "eventSuffix",
-				"description": "Suffix when displaying output.",
+				"description": "Suffix when displaying output",
 				"type": "text",
 				"default": "",
 			},

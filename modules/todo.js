@@ -173,6 +173,8 @@ dashboard.registerModule({
 
 		//save all todos to localStorage
 		this.saveTodos(inst);
+
+		this.updateAlerts(inst);
 	},
 
 	//set the relative days amount and add sets "due" class on colorElement
@@ -186,7 +188,7 @@ dashboard.registerModule({
 
 		element.textContent = text;
 
-		if (days <= 0) {
+		if (days <= 0 && text !== "") { //if there's no text remove class, this diambiguates due today and no date
 			colorElement.classList.add("due");
 		} else {
 			colorElement.classList.remove("due");
@@ -295,6 +297,20 @@ dashboard.registerModule({
 			//the time needs to be appended to the date here to account for time zones
 			this.newTodo(inst, true, saved[i].tasks, date, saved[i].completed, saved[i].description);
 		}
+
+		this.updateAlerts(inst);
+	},
+
+	updateAlerts: function(inst) {
+		let entries = inst.qAll(".todo_entry");
+		let count = 0;
+		for(let e of entries) {
+			let completedDate = e.querySelector(".completedDate").value;
+			if (e.querySelector(".due") && completedDate <= 0) {
+				count++;
+			}
+		}
+		dashboard.alerts.update(inst, count);
 	},
 
 	//Add event listeners to element to make it draggable, used by both the settings modal and display list
@@ -425,6 +441,8 @@ dashboard.registerModule({
 
 					//save
 					_this.saveTodos(inst);
+
+					_this.updateAlerts(inst);
 				});
 			}
 

@@ -116,6 +116,7 @@ dashboard.registerModule({
 				}
 			}
 			inst.numberOfRingingTimers++;
+			dashboard.alerts.update(inst, inst.numberOfRingingTimers);
 			timer.querySelector(".time-display").style.color = "var(--lw-important)";
 			this.setTimerStatus(inst, timer, inst.status.RINGING);
 		} else {
@@ -126,6 +127,7 @@ dashboard.registerModule({
 	resetTimer: function(inst, timer){
 		if (timer.status == inst.status.RINGING) {
 			inst.numberOfRingingTimers--;
+			dashboard.alerts.update(inst, inst.numberOfRingingTimers);
 			if (inst.numberOfRingingTimers < 0) {
 				error("Invalid number of ringing timers: " + inst.numberOfRingingTimers);
 			}

@@ -123,6 +123,27 @@ const dashboard = {
 		dashboard.layout.reload(layout);
 	},
 
+	//dashboard.alerts
+	alerts: {
+		moduleAlerts: [],
+		//dashboard.alerts.update(inst, amount)
+		update(inst, amount) {
+			this.moduleAlerts[inst.getId()] = amount;
+
+			const sum = this.moduleAlerts.reduce((acc, currentValue) => {
+				return acc + currentValue;
+			}, 0);
+
+			let format = getSetting("dashboard", "titleDisplayFormat");
+			if (sum <= 0) {
+				format = format.replaceAll("\\a", "");
+			} else {
+				format = format.replaceAll("\\a", "(" + sum + ")");
+			}
+			document.title = format;
+		},
+	},
+
 	//dashboard.pageLoad()
 	pageLoad: function(){
 		document.querySelector("#settingsToggle").addEventListener("click", function(){
@@ -1277,6 +1298,12 @@ dashboard.registerModule({
 				},
 
 				"default": '[[{"name":"maxHeight","value":"350px"},{"name":"todo","width":"300px"},{"name":"multitimer"}],[{"name":"textbox"}],[{"name":"codeEditor"},{"name":"keyCode","width":"250px"}],[{"name":"progressBar"}]]',
+			},
+			{
+				"name": "titleDisplayFormat",
+				"description": "Tab title format (\\a for alerts)",
+				"type": "text",
+				"default": "\\a Lightweight Utility",
 			}
 		]
 	},

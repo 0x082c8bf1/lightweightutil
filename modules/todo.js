@@ -43,7 +43,7 @@ dashboard.registerModule({
 			_this.saveTodos(inst);
 		});
 
-		//show all button
+		//completed button
 		inst.q(".completed").addEventListener("change", function(){
 			_this.hideFinishedTodos(inst);
 		});
@@ -202,11 +202,10 @@ dashboard.registerModule({
 		return days;
 	},
 
-	//warning: this function does not account for time zones
 	getFormattedDate: function(date){
-		let output = (""+date.getFullYear()).padStart(4,"0") + "-";
-		output += (""+(date.getMonth()+1)).padStart(2,"0") + "-";
-		output += (""+date.getDate()).padStart(2,"0");
+		let output = (''+date.getUTCFullYear()).padStart(4,"0") + "-";
+		output += (''+(date.getUTCMonth()+1)).padStart(2,"0") + "-";
+		output += (''+date.getUTCDate()).padStart(2,"0");
 
 		return output;
 	},
@@ -292,8 +291,10 @@ dashboard.registerModule({
 
 			let date = saved[i].date;
 			if (date && date != "") {
+				//the time needs to be appended to the date here to account for timezones
 				date = new Date(saved[i].date+"T00:00:00.000");
 			}
+
 			//the time needs to be appended to the date here to account for time zones
 			this.newTodo(inst, true, saved[i].tasks, date, saved[i].completed, saved[i].description);
 		}
@@ -639,9 +640,8 @@ dashboard.registerModule({
 				</div>
 				<div class="backgroundFade"></div>
 			</div>
-			<input type="button" class="insertButton" value="+"/>
-			<input type="checkbox" class="completed"/>
-			<label class="completedLabel">Complete</label>
+			<input type="button" class="insertButton" value="+" \>
+			<input type="checkbox" class="completed" \><label class="completedLabel">Complete</label>
 			<br/>
 			<div class="list">
 				<template class="todo_tmplt">
@@ -788,7 +788,7 @@ dashboard.registerModule({
 			"If you decide that you do not want to edit a task at any time you can click cancel, escape, or click on the faded background.",
 			"To save a task, you can either hit the save button or hit enter.",
 			"Once you have your todo, you can mark them as completed from the dashboard.",
-			"When the Show all button is checked, all todos will be shown, when it is not checked only the non-completed todo will be shown.",
+			"When the completed button is checked, all todos will be shown, when it is not checked only the non-completed todo will be shown.",
 			"A completed task must have all of it's tasks checked.",
 			"You can drag tasks around either when viewing them or in edit mode, in edit mode you can make a task the child of another by dragging it to the right side of another task.",
 		]

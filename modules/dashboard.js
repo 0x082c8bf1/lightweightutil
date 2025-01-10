@@ -1344,7 +1344,7 @@ dashboard.registerModule({
 							if (!config[c][m].maxHeight)
 								continue;
 
-							config[c][m].module = "maxHeight";
+							config[c][m].name = "maxHeight";
 							config[c][m].value = config[c][m].maxHeight;
 
 							delete config[c][m].maxHeight;

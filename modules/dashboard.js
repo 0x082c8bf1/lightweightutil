@@ -185,6 +185,11 @@ const dashboard = {
 					localStorage.setItem(k, data);
 				}
 
+				// Handle updates
+				for(let name in dashboard.modules) {
+					dashboard.layout.updateModule(name);
+				}
+
 				dashboard.layout.reload();
 
 				document.querySelector("#importFile").value = "";
@@ -470,9 +475,6 @@ const dashboard = {
 							mSetting.apply(instRoot, mConfig[mSetting.name]);
 						}
 					}
-
-					//handle updates
-					dashboard.layout.updateModule(mConfig.name);
 
 					//process module includes
 					const mObj = dashboard.modules[mConfig.name];

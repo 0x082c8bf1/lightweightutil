@@ -37,7 +37,7 @@ dashboard.registerModule({
 		const _this = this;
 
 		//create from template
-		const element = inst.q(".tmplt").content.cloneNode(true);
+		const element = cloneTemplate(inst.q(".tmplt"));
 		const created = element.querySelector(".entry");
 
 		element.querySelector(".label").value = getSetting(this.name, "defaultName");

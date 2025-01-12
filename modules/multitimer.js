@@ -258,7 +258,7 @@ dashboard.registerModule({
 	//create a timer with specified arguments, and return the timer.
 	createTimer: function(inst, msTime, name, status, startDate, msOffset){
 		//clone from template
-		const timeFragment = inst.q(".timer_tmplt").content.cloneNode(true);
+		const timeFragment = cloneTemplate(inst.q(".timer_tmplt"));
 		let timer = gimme("div").build();
 
 		//avoid document fragment shenanigans

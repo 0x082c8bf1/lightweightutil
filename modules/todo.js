@@ -534,7 +534,7 @@ dashboard.registerModule({
 	newTodo: function(inst, append, JSONTasks, date, completionDate, description){
 		const _this = this;
 
-		const fragment = inst.q(".todo_tmplt").content.cloneNode(true);
+		const fragment = cloneTemplate(inst.q(".todo_tmplt"));
 		const element = fragment.children[0];
 
 		//set the default date

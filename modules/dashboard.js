@@ -957,7 +957,7 @@ dashboard.registerModule({
 						}
 
 						function createRow() {
-							const rowFrag = dialog.querySelector(".row_tmplt").content.cloneNode(true);
+							const rowFrag = cloneTemplate(dialog.querySelector(".row_tmplt"));
 
 							const row = rowFrag.children[0];
 							dialog.querySelector(".editableTable").appendChild(rowFrag);
@@ -970,7 +970,7 @@ dashboard.registerModule({
 						}
 
 						function createInstance(row) {
-							const instFrag = dialog.querySelector(".inst_tmplt").content.cloneNode(true);
+							const instFrag = cloneTemplate(dialog.querySelector(".inst_tmplt"));
 							const inst = instFrag.children[0];
 
 							row.appendChild(instFrag);

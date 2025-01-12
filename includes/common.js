@@ -170,6 +170,12 @@ function applySpecialElementProperties(element){
 	}
 }
 
+function cloneTemplate(template){
+	const clone = template.content.cloneNode(true);
+	applySpecialElementProperties(clone);
+	return clone;
+}
+
 // Append children from a string while applying all standard effects
 function setInnerHTML(parent, string) {
 	// Remove leading and trailing whitespace

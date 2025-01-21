@@ -4,8 +4,8 @@ function log(m){
 	console.log(m);
 }
 
-function error(e){
-	console.error(e);
+function error(errorString, error){
+	console.error(errorString, error);
 }
 
 function getSetting(module, setting){

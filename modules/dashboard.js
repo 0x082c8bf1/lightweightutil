@@ -342,19 +342,27 @@ const dashboard = {
 			if (currentVersion > lastVersion || (!lastVersion && localStorage.length > 0)){
 				const updateFunc = dashboard.modules[name].updates;
 				if (updateFunc){
-					const updates = updateFunc();
-					for(let i=0; i<updates.length; i++){
-						//if the update function is needed for this update
-						if (!lastVersion || (lastVersion <= updates[i].ver && updates[i].ver < currentVersion)){
-							if (!dashboard.layout.exportWarning) {
-								dashboard.layout.exportWarning = true;
-								const shouldExport = db_confirm("The save format of some modules have been changed and are about to be updated, would you like to make an export of your data first? (highly recommended)");
-								if (shouldExport) {
-									dashboard.makeExport();
+					try {
+						const updates = updateFunc();
+						for(let i=0; i<updates.length; i++){
+							//if the update function is needed for this update
+							if (!lastVersion || (lastVersion <= updates[i].ver && updates[i].ver < currentVersion)){
+								if (!dashboard.layout.exportWarning) {
+									dashboard.layout.exportWarning = true;
+									const shouldExport = db_confirm("The save format of some modules have been changed and are about to be updated, would you like to make an export of your data first? (highly recommended)");
+									if (shouldExport) {
+										dashboard.makeExport();
+									}
+								}
+								try {
+									updates[i].func();
+								} catch(e) {
+									error("Error running update func " + updates[i].ver + " for " + name + "\n", e);
 								}
 							}
-							updates[i].func();
 						}
+					} catch(e) {
+						error("Error running updates for " + name + "\n", e);
 					}
 				}
 			}
@@ -442,7 +450,6 @@ const dashboard = {
 				try {
 					dashboard.modules[m].init();
 				} catch (e) {
-					error(e);
 					error("Error running init for " + m + "\n", e);
 				}
 			}
@@ -484,12 +491,17 @@ const dashboard = {
 					const mObj = dashboard.modules[mConfig.name];
 					if (mObj.include) {
 						for(let inc=0; inc<mObj.include.length; inc++) {
-							const include = dashboard.includes[mObj.include[inc]];
+							const includeName = mObj.include[inc];
+							const include = dashboard.includes[includeName];
 							if (!include) {
-								error(mObj.name + ", " + mObj.include[inc] + " - include not found.");
+								error(mObj.name + ", " + includeName + " - include not found.");
 								continue;
 							}
-							include.apply(mObj);
+							try {
+								include.apply(mObj);
+							} catch(e) {
+								error("Error running apply for " + mConfig.name + " -> " + includeName + "\n", e);
+							}
 						}
 					}
 
@@ -498,10 +510,14 @@ const dashboard = {
 					if (!document.querySelector("#" + styleName)) {
 						const styleFunc = dashboard.modules[mConfig.name].getStyle;
 						if (styleFunc){
-							const style = styleFunc();
+							try {
+								const style = styleFunc();
 
-							const styleParent = document.querySelector("#moduleStyles");
-							gimme("style").id(styleName).innerHTML(style).appendTo(styleParent);
+								const styleParent = document.querySelector("#moduleStyles");
+								gimme("style").id(styleName).innerHTML(style).appendTo(styleParent);
+							} catch(e) {
+								error("Error running getStyle for " + mConfig.name + "\n", e);
+							}
 						}
 					}
 
@@ -566,7 +582,6 @@ const dashboard = {
 						try {
 							imodule.init(instance);
 						} catch (e) {
-							error(e);
 							error("Error running init for " + mConfig.name + "\n", e);
 						}
 					}

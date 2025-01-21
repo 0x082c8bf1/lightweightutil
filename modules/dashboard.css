@@ -158,6 +158,10 @@ label:hover {
 	margin-left: 200px;
 }
 
+body:has(dialog[open]) {
+	overflow: hidden;
+}
+
 dialog {
 	background-color: var(--lw-black);
 	border: 1px solid grey;

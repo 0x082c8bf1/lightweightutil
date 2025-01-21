@@ -334,6 +334,10 @@ const dashboard = {
 
 			//if lastVersion is undefined, that means a module previously didn't have an update function
 			const currentVersion = dashboard.modules[name].version;
+			if (lastVersion && currentVersion < lastVersion) {
+				db_alert("WARNING! The saved data is newer than the code supports, close the page now and update or risk losing your data.");
+			}
+
 			//if the version has increased, or loading save from before update functions existed/had a saved version
 			if (currentVersion > lastVersion || (!lastVersion && localStorage.length > 0)){
 				const updateFunc = dashboard.modules[name].updates;

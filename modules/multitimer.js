@@ -81,6 +81,40 @@ dashboard.registerModule({
 		timer.status = status;
 	},
 
+	// Returns a formatted date string for msTime ms in the future.
+	getFormattedTime: function(msTime) {
+		const ringAt = new Date(Date.now() + msTime);
+
+		const date = getFormattedDate(ringAt, false);
+		const today = getFormattedDate(new Date(), false);
+		let str = "";
+		if (date != today) {
+			str = date + " @ ";
+		}
+
+		// Check if it's am or pm and set suffix/hours accordingly
+		let hours = ringAt.getHours();
+		let hoursSuffix = "";
+		if (!getSetting(this.name, "twentyFourHourTime")) {
+			if (hours > 12) {
+				hours -= 12;
+				hoursSuffix = "pm";
+			} else {
+				// 0 means that it's 12am
+				if (hours == 0) {
+					hours = 12;
+				}
+				hoursSuffix = "am";
+			}
+		}
+		let time = (''+hours).padStart(2,"0") + ":";
+		time += (''+ringAt.getMinutes()).padStart(2,"0") + ":";
+		time += (''+ringAt.getSeconds()).padStart(2,"0") + hoursSuffix;
+
+		str += time;
+		return str;
+	},
+
 	tick: function(inst, timer) {
 		if (timer.status == inst.status.INACTIVE)
 			return;
@@ -95,6 +129,10 @@ dashboard.registerModule({
 		if (displayTime !== timer.querySelector(".time-display").textContent) {
 			timer.querySelector(".time-display").textContent = displayTime;
 		}
+
+		//update time display hint
+		let ringAt = this.getFormattedTime(timeRemaining);
+		timer.querySelector(".time-hint").title=ringAt;
 
 		if (timer.status != inst.status.ACTIVE)
 			return;
@@ -501,7 +539,9 @@ dashboard.registerModule({
 						<input class="x-button" type="button" value="X"/>
 						<br/>
 						<input type="button" class="start-button" value="Start"/>
-						<span hidden class="time-display"></span>
+						<abbr class="time-hint">
+							<span hidden class="time-display"></span>
+						</abbr>
 						<span class="time-input">
 							<input class="h-input width2" type="text" placeholder="HH"/>
 							<span>:</span>
@@ -636,6 +676,12 @@ dashboard.registerModule({
 				"description": "Timer gap pixels",
 				"type": "number",
 				"default": 40,
+			},
+			{
+				"name": "twentyFourHourTime",
+				"description": "24 hour time",
+				"type": "bool",
+				"default": false,
 			},
 		]
 	},

@@ -10,7 +10,7 @@ dashboard.registerModule({
 		//due now button
 		inst.q(".dueNow").addEventListener("click", function(){
 			const today = new Date();
-			const now = _this.getFormattedDate(today);
+			const now = getFormattedDate(today);
 
 			inst.q(".dueSetting").value = now;
 		});
@@ -197,17 +197,9 @@ dashboard.registerModule({
 
 	getRelativeDate: function(date){
 		const msPerDay = 1000*60*60*24;
-		const currentDay = new Date(this.getFormattedDate(new Date()));
+		const currentDay = new Date(getFormattedDate(new Date()));
 		const days = (date/msPerDay - Math.floor(currentDay/msPerDay));
 		return days;
-	},
-
-	getFormattedDate: function(date){
-		let output = (''+date.getUTCFullYear()).padStart(4,"0") + "-";
-		output += (''+(date.getUTCMonth()+1)).padStart(2,"0") + "-";
-		output += (''+date.getUTCDate()).padStart(2,"0");
-
-		return output;
 	},
 
 	setSettingsHidden: function(inst, value){
@@ -524,7 +516,7 @@ dashboard.registerModule({
 		if (!unchecked) {
 			//set the datetime that it was completed
 			dateElement.value = Date.now();
-			todo.querySelector(".completedDisplay").textContent = "Completed: " + this.getFormattedDate(new Date(+dateElement.value));
+			todo.querySelector(".completedDisplay").textContent = "Completed: " + getFormattedDate(new Date(+dateElement.value));
 		} else {
 			dateElement.value = 0;
 			todo.querySelector(".completedDisplay").textContent = "";
@@ -546,8 +538,8 @@ dashboard.registerModule({
 		}
 
 		if (todoDate != ""){
-			element.querySelector(".dueDate").textContent = _this.getFormattedDate(todoDate);
-			this.setDateDisplay(element.querySelector(".relativeDate"), new Date(_this.getFormattedDate(todoDate)), element.querySelector(".date"));
+			element.querySelector(".dueDate").textContent = getFormattedDate(todoDate);
+			this.setDateDisplay(element.querySelector(".relativeDate"), new Date(getFormattedDate(todoDate)), element.querySelector(".date"));
 		}
 
 		//set the description
@@ -558,7 +550,7 @@ dashboard.registerModule({
 		if (!completionDate) {
 			completionDate = 0;
 		} else if (completionDate !== "0") {
-			element.querySelector(".completedDisplay").textContent = "Completed: " + this.getFormattedDate(new Date(+completionDate));
+			element.querySelector(".completedDisplay").textContent = "Completed: " + getFormattedDate(new Date(+completionDate));
 		}
 		element.querySelector(".completedDate").value = completionDate;
 

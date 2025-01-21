@@ -189,3 +189,20 @@ function setInnerHTML(parent, string) {
 	// Move the children to the real parent
 	parent.innerHTML = tempDiv.innerHTML;
 }
+
+// Format a Date object in yyyy-mm-dd, if utc is true it's assumed
+// that the date is not in the current timezone.
+function getFormattedDate(date, utc=true){
+	let output;
+	if (utc) {
+		output = (''+date.getUTCFullYear()).padStart(4,"0") + "-";
+		output += (''+(date.getUTCMonth()+1)).padStart(2,"0") + "-";
+		output += (''+date.getUTCDate()).padStart(2,"0");
+	} else {
+		output = (''+date.getFullYear()).padStart(4,"0") + "-";
+		output += (''+(date.getMonth()+1)).padStart(2,"0") + "-";
+		output += (''+date.getDate()).padStart(2,"0");
+	}
+
+	return output;
+}

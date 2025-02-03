@@ -191,8 +191,8 @@ function setInnerHTML(parent, string) {
 }
 
 // Format a Date object in yyyy-mm-dd, if utc is true it's assumed
-// that the date is not in the current timezone.
-function getFormattedDate(date, utc=true){
+// that the date is in the current timezone.
+function getFormattedDate(date, utc=false){
 	let output;
 	if (utc) {
 		output = (''+date.getUTCFullYear()).padStart(4,"0") + "-";

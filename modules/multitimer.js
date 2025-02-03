@@ -85,8 +85,8 @@ dashboard.registerModule({
 	getFormattedTime: function(msTime) {
 		const ringAt = new Date(Date.now() + msTime);
 
-		const date = getFormattedDate(ringAt, false);
-		const today = getFormattedDate(new Date(), false);
+		const date = getFormattedDate(ringAt);
+		const today = getFormattedDate(new Date());
 		let str = "";
 		if (date != today) {
 			str = date + " @ ";

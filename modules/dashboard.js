@@ -103,11 +103,7 @@ const dashboard = {
 
 		//download the file
 
-		const date = new Date();
-		let dateStr = date.getFullYear();
-		dateStr += "-" + ((date.getMonth()+1) + "").padStart(2,0);
-		dateStr += "-" + ((date.getDate() + "").padStart(2,0));
-
+		const dateStr = getFormattedDate(new Date());
 		const ref = 'data:text/plain;charset=utf-8,' + encodeURIComponent(string);
 		const downloadAnchor = gimme("a").href(ref).build();
 		downloadAnchor.setAttribute("download","lwutilExport-" + dateStr + ".json");

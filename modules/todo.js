@@ -539,8 +539,8 @@ dashboard.registerModule({
 		}
 
 		if (todoDate != ""){
-			element.querySelector(".dueDate").textContent = getFormattedDate(todoDate);
-			this.setDateDisplay(element.querySelector(".relativeDate"), new Date(getFormattedDate(todoDate)), element.querySelector(".date"));
+			element.querySelector(".dueDate").textContent = getFormattedDate(todoDate, true);
+			this.setDateDisplay(element.querySelector(".relativeDate"), new Date(getFormattedDate(todoDate, true)), element.querySelector(".date"));
 		}
 
 		//set the description

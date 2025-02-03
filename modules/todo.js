@@ -183,7 +183,8 @@ dashboard.registerModule({
 		let days = 0;
 		if (date !== "") {
 			days = this.getRelativeDate(new Date(date));
-			text = ", " + days + " days";
+			let dayString = days == 1 ? "day" : "days";
+			text = ", " + days + " " + dayString;
 		}
 
 		element.textContent = text;

@@ -96,16 +96,8 @@ dashboard.registerModule({
 		let hours = ringAt.getHours();
 		let hoursSuffix = "";
 		if (!getSetting(this.name, "twentyFourHourTime")) {
-			if (hours > 12) {
-				hours -= 12;
-				hoursSuffix = "pm";
-			} else {
-				// 0 means that it's 12am
-				if (hours == 0) {
-					hours = 12;
-				}
-				hoursSuffix = "am";
-			}
+			hoursSuffix = hours >= 12 ? "pm" : "am";
+			hours = (hours % 12) || 12; // Convert 0 to 12 and adjust hours for pm
 		}
 		let time = (''+hours).padStart(2,"0") + ":";
 		time += (''+ringAt.getMinutes()).padStart(2,"0") + ":";

@@ -117,10 +117,21 @@ dashboard.registerModule({
 			difference = new Date()-timer.startDate;
 		}
 		const timeRemaining = timer.duration-(difference+timer.msOffset);
-		const displayTime = this.getDurationAsString(timeRemaining);
+		let displayTime = this.getDurationAsString(timeRemaining);
+		if (timer.isStopwatch) {
+			if (displayTime.startsWith("-")) {
+				// Remove negative sign from stopwatches
+				displayTime = displayTime.substring(1);
+			}
+			displayTime = "+" + displayTime;
+		}
 		if (displayTime !== timer.querySelector(".time-display").textContent) {
 			timer.querySelector(".time-display").textContent = displayTime;
 		}
+
+		// Don't continue processing stopwatches, so they don't ring or have a display hint
+		if (timer.isStopwatch)
+			return;
 
 		//update time display hint
 		let ringAt = this.getFormattedTime(timeRemaining);
@@ -209,16 +220,26 @@ dashboard.registerModule({
 		const s = this.makeValidNumber(sInput);
 
 		return this.createDuration(h ? h : 0, m ? m : 0, s ? s : 0).totalMS;
-
 	},
 
 	startButtonEvent: function(inst, timer) {
 		switch(timer.status) {
 			case inst.status.INACTIVE:
 				{
+					let hInput = timer.querySelector(".h-input").value;
+					//Handle stopwatches
+					if (hInput.startsWith("+")) {
+						hInput = hInput.substring(1);
+						timer.isStopwatch = true;
+					}
+
 					//handle hour input
-					timer.duration = this.valuesToDuration(timer.querySelector(".h-input").value,
+					timer.duration = this.valuesToDuration(hInput,
 						timer.querySelector(".m-input").value, timer.querySelector(".s-input").value);
+					if (timer.isStopwatch){
+						// Timer starts at input instead of counting down from it
+						timer.duration *= -1;
+					}
 					timer.startDate = new Date();
 					this.setTimerStatus(inst, timer, inst.status.ACTIVE);
 					this.tick(inst, timer);
@@ -286,7 +307,7 @@ dashboard.registerModule({
 	},
 
 	//create a timer with specified arguments, and return the timer.
-	createTimer: function(inst, msTime, name, status, startDate, msOffset){
+	createTimer: function(inst, msTime, name, status, startDate, msOffset, isStopwatch){
 		//clone from template
 		const timeFragment = cloneTemplate(inst.q(".timer_tmplt"));
 		let timer = gimme("div").build();
@@ -304,7 +325,9 @@ dashboard.registerModule({
 		timer.querySelector(".m-input").value = duration.minutes ? duration.minutes : "";
 		timer.querySelector(".s-input").value = duration.seconds ? duration.seconds : "";
 
-		this.notifSent = false;//because this is not saved, it will alert you when you start the page.
+		this.notifSent = false; //because this is not saved, it will alert you when you start the page.
+
+		timer.isStopwatch = isStopwatch;
 
 		//set timer status
 		switch(status) {
@@ -347,7 +370,7 @@ dashboard.registerModule({
 	addTimer: function(inst){
 		const defaultMs = getSetting(this.name, "defaultTime")*1000;
 		const name = getSetting(this.name, "defaultName");
-		this.createTimer(inst, defaultMs, name, inst.status.INACTIVE);
+		this.createTimer(inst, defaultMs, name, inst.status.INACTIVE, false);
 	},
 
 	//save all of the timers to localStorage
@@ -361,6 +384,8 @@ dashboard.registerModule({
 			oneTimer.msOffset = timers[i].msOffset;
 			oneTimer.startDate = timers[i].startDate;
 			oneTimer.duration = timers[i].duration;
+			if (timers[i].isStopwatch)
+				oneTimer.isStopwatch = true;
 
 			//save user facing values
 			oneTimer.hh = timers[i].querySelector(".h-input").value;
@@ -389,8 +414,8 @@ dashboard.registerModule({
 			if (tempStatus == inst.status.RINGING) {
 				tempStatus = inst.status.ACTIVE;
 			}
-
-			const timer = this.createTimer(inst, obj[i].duration, obj[i].name, tempStatus, obj[i].startDate, obj[i].msOffset);
+			const timer = this.createTimer(inst, obj[i].duration, obj[i].name, tempStatus, obj[i].startDate,
+				obj[i].msOffset, obj[i].isStopwatch);
 			if (obj[i].status == inst.status.PAUSED) {
 				this.tick(inst, timer);
 			}
@@ -685,6 +710,7 @@ dashboard.registerModule({
 			"While a timer is running, you can click the Pause button to put the timer on hold temporarily, and then hit the Resume button for it to continue.",
 			"Hitting the X button while a timer is running will reset the timer, hitting the timer from it's reset state will remove the timer.",
 			"If you type a \"d\" into the hh field, the number to the left of the \"d\" will be days, and the number to the right will be hours.",
+			"If the hh field starts with a \"+\", the timer will count up instead of down."
 		]
 	},
 });

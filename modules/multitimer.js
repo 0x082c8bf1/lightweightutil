@@ -231,6 +231,8 @@ dashboard.registerModule({
 					if (hInput.startsWith("+")) {
 						hInput = hInput.substring(1);
 						timer.isStopwatch = true;
+					} else {
+						timer.isStopwatch = false;
 					}
 
 					//handle hour input

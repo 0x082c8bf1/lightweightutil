@@ -574,8 +574,8 @@ dashboard.registerModule({
 				<span class="trailingGroup">
 					<input type="button" class="insertButton" value="+"/>
 					<input type="button" class="sort" value="Sort"/>
-				<span>
-				</div>
+				</span>
+			</div>
 		`);
 	},
 
@@ -647,13 +647,16 @@ dashboard.registerModule({
 				width: 40px;
 				height: 40px;
 				font-size: 30px;
-				font-size: 30px;
-				margin-top: 10px;
-				margin-bottom: 10px;
 			}
 
 			.multitimer .name {
 				margin-bottom: 4px;
+			}
+
+			.multitimer .trailingGroup {
+				display: flex;
+				align-items: end;
+				column-gap: 5px;
 			}
 		`;
 	},

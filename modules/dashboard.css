@@ -5,7 +5,8 @@
 	--lw-input-border: #575757;
 	--lw-important: #ff0000;
 	--lw-link: #add8e6;
-	--lw-selected: #242424;
+	--lw-selected: #4f4f4f;
+	--lw-pressed: #666666;
 	--lw-instance-background: #161616;
 }
 
@@ -57,7 +58,7 @@ input[type=button],
 }
 
 input[type=button]:active {
-	background-color: var(--lw-black);
+	background-color: var(--lw-pressed);
 }
 
 input[type=button]:hover:not(:active) {

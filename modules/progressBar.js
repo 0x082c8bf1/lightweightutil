@@ -217,6 +217,11 @@ dashboard.registerModule({
 				margin-top: 10px;
 				margin-bottom: 10px;
 			}
+
+			.completionPercent {
+				display: inline-block;
+				width: 7ch;
+			}
 		`;
 	},
 

@@ -191,6 +191,20 @@ const dashboard = {
 				document.querySelector("#importFile").value = "";
 			});
 		});
+
+		// Allow ctrl+s to save the settings on the settings pane
+		document.querySelector("body").addEventListener("keydown", function(e) {
+			if (e.code === "KeyS" && e.ctrlKey) {
+				if (document.querySelector("#settingsPane").hidden) {
+					return;
+				}
+
+				e.preventDefault();
+				e.stopPropagation();
+				dashboard.settings.saveSettings();
+			}
+		});
+
 		document.querySelector("#saveSettings").addEventListener("click", function(){
 			dashboard.settings.saveSettings();
 		});

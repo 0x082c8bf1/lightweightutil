@@ -715,7 +715,7 @@ dashboard.registerModule({
 			"While a timer is running, you can click the Pause button to put the timer on hold temporarily, and then hit the Resume button for it to continue.",
 			"Hitting the X button while a timer is running will reset the timer, hitting the timer from it's reset state will remove the timer.",
 			"If you type a \"d\" into the hh field, the number to the left of the \"d\" will be days, and the number to the right will be hours.",
-			"If the hh field starts with a \"+\", the timer will count up instead of down."
+			"If the hh field starts with a \"+\", the timer will count up instead of down.",
 		]
 	},
 });

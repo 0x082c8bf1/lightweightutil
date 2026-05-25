@@ -65,7 +65,7 @@ input[type=button]:hover:not(:active) {
 	background-color: var(--lw-selected);
 }
 
-input[type=checkbox] {
+input[type=checkbox], input[type=radio] {
 	cursor: pointer;
 }
 

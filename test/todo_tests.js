@@ -4,9 +4,9 @@ dashboard.tests.registerTester(
 	[
 		//test adding todo
 		{name: "add", test: function(inst){
-			const count = inst.qAll(".todo_entry").length;
+			const count = inst.qAll(".task_entry").length;
 			dashboard.tests.click(inst.q(".insertButton"));
-			const newCount = inst.qAll(".todo_entry").length;
+			const newCount = inst.qAll(".task_entry").length;
 			return (count+1 == newCount);
 		}},
 
@@ -21,7 +21,7 @@ dashboard.tests.registerTester(
 			inst.q(".descriptionSetting").value = value+2;
 			dashboard.tests.click(inst.q(".saveSetting"));
 
-			const todo = inst.qAll(".todo_entry")[0];
+			const todo = inst.qAll(".task_entry")[0];
 			if (todo.querySelector(".title").textContent !== ""+(value + 1))
 				return false;
 			if (todo.querySelector(".description").textContent !== ""+(value + 2))
@@ -40,7 +40,7 @@ dashboard.tests.registerTester(
 
 			dashboard.tests.click(inst.qAll(".listEntry")[1]);
 
-			const todo = inst.qAll(".todo_entry")[0];
+			const todo = inst.qAll(".task_entry")[0];
 			let pass = true;
 			if (inst.q(".dueSetting").value !== todo.querySelector(".dueDate").textContent)
 				pass = false;
@@ -54,7 +54,7 @@ dashboard.tests.registerTester(
 
 		//test completing a todo
 		{name: "complete", test: function(inst){
-			const todo = inst.qAll(".todo_entry")[0];
+			const todo = inst.qAll(".task_entry")[0];
 
 			dashboard.tests.click(todo.querySelector(".checkbox"));
 
@@ -63,13 +63,13 @@ dashboard.tests.registerTester(
 
 		//test removing todo
 		{name: "remove", test: function(inst){
-			const count = inst.qAll(".todo_entry").length;
+			const count = inst.qAll(".task_entry").length;
 
 			dashboard.tests.click(inst.qAll(".listEntry")[1]);
 			dashboard.tests.click(inst.q(".deleteSetting"));
 
-			const newCount = inst.qAll(".todo_entry").length;
-			return (count-1 == newCount);
+			const newCount = inst.qAll(".task_entry").length;
+			return (count - 1 == newCount);
 		}},
 	]
 );

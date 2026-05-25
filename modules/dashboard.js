@@ -501,13 +501,13 @@ const dashboard = {
 						}
 					}
 
-					//apply module style
+					// Apply module style
+					const imodule = dashboard.modules[mConfig.name];
 					const styleName = mConfig.name + "Style";
 					if (!document.querySelector("#" + styleName)) {
-						const styleFunc = dashboard.modules[mConfig.name].getStyle;
-						if (styleFunc){
+						if (imodule.getStyle){
 							try {
-								const style = styleFunc();
+								const style = imodule.getStyle();
 
 								const styleParent = document.querySelector("#moduleStyles");
 								gimme("style").id(styleName).innerHTML(style).appendTo(styleParent);
@@ -517,11 +517,10 @@ const dashboard = {
 						}
 					}
 
-					//call instantiate for the instance
-					const instFunc = dashboard.modules[mConfig.name].instantiate;
-					if (instFunc){
+					// Call instantiate for the instance
+					if (imodule.instantiate){
 						try {
-							instFunc(instRoot);
+							imodule.instantiate(instRoot);
 						} catch (e) {
 							error("Error running instantiate for " + mConfig.name + "\n", e);
 						}
@@ -567,7 +566,6 @@ const dashboard = {
 						},
 					};
 
-					const imodule = dashboard.modules[mConfig.name];
 					//save the instance on the module
 					if (!imodule.instances)
 						imodule.instances = [];
@@ -799,6 +797,8 @@ const dashboard = {
 		enabled: false,
 		//dashboard.tests.testers
 		testers: {},
+		//dashboard.tests.testUtilities
+		testUtilities: {},
 		//dashboard.tests.loadedTests
 		loadedTests: 0,
 		//dashboard.test.overrideSettings
@@ -826,8 +826,10 @@ const dashboard = {
 		},
 
 		//dashboard.test.registerTester(tests)
-		registerTester: function(name, tests){
+		registerTester: function(name, tests, util){
 			dashboard.tests.testers[name] = tests;
+			if (util)
+				dashboard.tests.testUtilities[name] = util;
 		},
 
 		//dashboard.test.runTests
@@ -842,9 +844,10 @@ const dashboard = {
 				for(let i=0; i<tests.length; i++) {
 					const module = dashboard.modules[name];
 					const instance = module.instances[0];
+					const util = dashboard.tests.testUtilities[name];
 					let result;
 					try {
-						result = tests[i].test(instance, module);
+						result = tests[i].test(instance, module, util);
 					} catch (e) {
 						error(e);
 						result = false;
@@ -865,6 +868,7 @@ const dashboard = {
 
 			//go back to the user defined layout
 			dashboard.layout.reload();
+			dashboard.tests.enabled = false; // Reset tests so we get alerts in further use
 
 			//log the results
 			log(output);
@@ -1313,8 +1317,7 @@ dashboard.registerModule({
 					});
 					parent.appendChild(button);
 				},
-
-				"default": '[[{"name":"maxHeight","value":"350px"},{"name":"todo","width":"300px"},{"name":"multitimer"}],[{"name":"textbox"}],[{"name":"codeEditor"},{"name":"keyCode","width":"250px"}],[{"name":"progressBar"}]]',
+				"default": '[[{"name":"maxHeight","value":"350px"},{"name":"todo","width":"300px"},{"name":"dailies","width":"300px"},{"name":"multitimer"}],[{"name":"textbox"}],[{"name":"codeEditor"},{"name":"keyCode","width":"250px"}],[{"name":"progressBar"}]]',
 			},
 			{
 				"name": "titleDisplayFormat",

@@ -757,12 +757,11 @@ const dashboard = {
 						break;
 				}
 
-				//disable if defaulted
+				// Disable if defaulted
+				input = input.id(tempId).class("settingInput").build();
 				if (document.querySelector("#default_"+tempId).checked) {
 					input.disabled = true;
 				}
-				input = input.id(tempId).class("settingInput").build();
-
 
 				//tell the element what it is
 				input.dataType = mSettings[i].type;

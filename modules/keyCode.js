@@ -17,8 +17,8 @@ dashboard.registerModule({
 			const post = getSetting(_this.name, "eventSuffix");
 
 			let output = "";
-			output += pre + "code == \"" + event.code + "\"" + post + "<br/>";
-			output += pre + "key == '" + event.key + "'" + post + "<br/>";
+			output += pre + "code === \"" + event.code + "\"" + post + "<br/>";
+			output += pre + "key === '" + event.key + "'" + post + "<br/>";
 			output += pre + "ctrlKey == " + event.ctrlKey + post + "<br/>";
 			output += pre + "altKey == " + event.altKey + post + "<br/>";
 			output += pre + "shiftKey == " + event.shiftKey + post + "<br/>";

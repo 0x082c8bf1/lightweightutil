@@ -124,6 +124,12 @@ dashboard.registerModule({
 			} else {
 				entry.hidden = hideDue;
 			}
+
+			// This seems weird but is intentional:
+			// When the user changes the due date of a daily, we don't want to then hide it,
+			// even if their filters say we should so that the user can see their change.
+			// This also handles updating the due/notDue classes for the alerts to function.
+			this.updateDue(inst, entry);
 		}
 
 		if (changed) {
